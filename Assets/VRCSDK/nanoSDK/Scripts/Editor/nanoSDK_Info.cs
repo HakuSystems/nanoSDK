@@ -121,7 +121,7 @@ VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
         ┠ playmode warning message
         ┖ Replaced some nanoSDK text to VRCSdk because it sounds better.
 
-GithubCommitLink: 
+GithubCommitLink: https://github.com/HakuSystems/nanoSDK/commit/eb2b322cdcf20d808e883c2828039d67ca0727d6
 
 == V1.4.1 ==
 VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
