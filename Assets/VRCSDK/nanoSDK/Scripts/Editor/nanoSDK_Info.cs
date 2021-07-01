@@ -113,6 +113,16 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.4.2 ==
+VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
+    ┠ Added
+        ┖ Added a Error when Credenials are Null
+    ┠ Changed
+        ┠ playmode warning message
+        ┖ Replaced some nanoSDK text to VRCSdk because it sounds better.
+
+GithubCommitLink: 
+
 == V1.4.1 ==
 VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
     ┠ Moved

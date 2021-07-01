@@ -172,7 +172,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             GUI.enabled = false;
             GUILayout.Space(20);
-            EditorGUILayout.LabelField("Unity Application is running ...\nStop it to access the Control Panel", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            EditorGUILayout.LabelField("You are in Playmode ...\nStop it to access the Upload Panel", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
             GUI.enabled = true;
             GUILayout.EndVertical();
             GUILayout.FlexibleSpace();

@@ -132,7 +132,18 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         if (signingIn)
         {
-            EditorGUILayout.LabelField("Signing in as " + username + ".");
+            if (username == null | password == null)
+            {
+                EditorGUILayout.LabelField("Wrong Credentials..");
+                if (GUILayout.Button("Close"))
+                {
+                    window.Close();
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField("Signing in as " + username + ".");
+            }
         }
         else if (APIUser.IsLoggedInWithCredentials)
         {
@@ -171,7 +182,10 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (GUILayout.Button("Sign In"))
                 SignIn(true);
             if (GUILayout.Button("Sign up"))
+            {
                 Application.OpenURL("http://vrchat.com/register");
+            }
+
         }
 
         if (showTwoFactorAuthenticationEntry)
