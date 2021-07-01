@@ -30,6 +30,11 @@ VRChat TOS: https://hello.vrchat.com/legal
 
 *More to come!*
 
+## Download
+You can download NanoSDK from our website
+> [NanoSDK Website](https://nanosdk.net/)
+
+
 ## Requirements
 To use NanoSDK you need unity 2018.4.20f1
 
