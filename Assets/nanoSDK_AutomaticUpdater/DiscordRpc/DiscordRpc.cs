@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using AOT;
-//indev section
+
 public class DiscordRpc
 {
     [MonoPInvokeCallback(typeof(OnReadyInfo))]
