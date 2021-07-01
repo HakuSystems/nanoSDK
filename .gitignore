@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/VRC.SDKBase.Editor.ShaderStripping.csproj
+/VRC.SDKBase.Editor.BuildPipeline.csproj
+/Temp
+/ProjectSettings
+/new nanoProject.sln
+/Library
+/Assembly-CSharp.csproj
+/Assembly-CSharp-Editor.csproj
+/.vsconfig
