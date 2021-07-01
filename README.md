@@ -26,7 +26,7 @@ VRChat TOS: https://hello.vrchat.com/legal
 - Hide console logs
 - Customize splash screen
 - Add your own avatar thumbnail
-- NanoSDK updator
+- nanoSDK updater
 
 *More to come!*
 
