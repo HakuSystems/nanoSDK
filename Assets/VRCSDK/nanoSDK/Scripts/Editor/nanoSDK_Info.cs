@@ -113,6 +113,13 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.4.3 ==
+VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
+    ┠ Fixed
+        ┖ discordRPC wont update after unity Closing
+
+GithubCommitLink: 
+
 == V1.4.2 ==
 VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
     ┠ Added

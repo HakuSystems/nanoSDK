@@ -41,22 +41,47 @@ namespace nanoSDK
             Directory.CreateDirectory(assetPath);
             return assetPath;
         }
-        //Added this
-        public static void CloseUntiy()
+
+        public static void EnableCloseMessage()
         {
-            if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
+            if (EditorPrefs.GetBool("nanoSDK_discordRPC")) // if bool is true
             {
-                EditorPrefs.SetBool("nanoSDK_discordRPC", true);
-                Debug.Log("Closing Unity");
-                EditorApplication.Exit(0);
+                //Debug.Log("ON");
+                if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
+                {
+                    //Debug.Log("set to on");
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", true);
+                    RealCloseProgram();
+                }
+                else
+                {
+                    //Debug.Log("set to off");
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", false);
+                }
             }
-            else
+            else // if bool is false
             {
-                Debug.Log("Change Discord RPC is cancelled");
-                EditorPrefs.SetBool("nanoSDK_discordRPC", false);
+                //Debug.Log("OFF");
+                if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
+                {
+                    //Debug.Log("set to off");
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", false);
+                    RealCloseProgram();
+                }
+                else
+                {
+                   //Debug.Log("set to on");
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", true);
+                }
             }
         }
-        //End
+
+        private static void RealCloseProgram()
+        {
+            Debug.Log("Closing Unity");
+            EditorApplication.Exit(0);
+        }
+
         public void OnEnable()
         {
             titleContent = new GUIContent("nanoSDK Settings");
@@ -118,7 +143,7 @@ namespace nanoSDK
             if (enableDiscord != isDiscordEnabled)
             {
                 EditorPrefs.SetBool("nanoSDK_discordRPC", enableDiscord);
-                CloseUntiy();
+                EnableCloseMessage();
             }
             //Hide Console logs
             GUILayout.EndHorizontal();
@@ -152,23 +177,6 @@ namespace nanoSDK
             }
 
             GUILayout.EndHorizontal();
-
-            /*Lyze fix pls
-            GUILayout.Space(4);
-            GUILayout.BeginHorizontal();
-            var isUITextRainbowEnabled = EditorPrefs.GetBool("nanoSDK_UITextRainbow", false);
-            var enableUITextRainbow = EditorGUILayout.ToggleLeft("Rainbow Text", isUITextRainbowEnabled);
-            if (enableUITextRainbow != isUITextRainbowEnabled)
-            {
-                EditorPrefs.SetBool("nanoSDK_UITextRainbow", enableUITextRainbow);
-                UITextRainbow = true;
-            }else
-            {
-                UITextRainbow = false;
-            }
-            */
-
-
 
             GUILayout.Space(4);
             GUILayout.Label("Import panel:");
