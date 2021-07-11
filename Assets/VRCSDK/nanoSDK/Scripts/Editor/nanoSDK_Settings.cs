@@ -46,31 +46,31 @@ namespace nanoSDK
         {
             if (EditorPrefs.GetBool("nanoSDK_discordRPC")) // if bool is true
             {
-                Debug.Log("ON");
+                //Debug.Log("ON");
                 if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
                 {
-                    Debug.Log("set to on");
+                    //Debug.Log("set to on");
                     EditorPrefs.SetBool("nanoSDK_discordRPC", true);
                     RealCloseProgram();
                 }
                 else
                 {
-                    Debug.Log("set to off");
+                    //Debug.Log("set to off");
                     EditorPrefs.SetBool("nanoSDK_discordRPC", false);
                 }
             }
             else // if bool is false
             {
-                Debug.Log("OFF");
+                //Debug.Log("OFF");
                 if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
                 {
-                    Debug.Log("set to off");
+                    //Debug.Log("set to off");
                     EditorPrefs.SetBool("nanoSDK_discordRPC", false);
                     RealCloseProgram();
                 }
                 else
                 {
-                    Debug.Log("set to on");
+                   //Debug.Log("set to on");
                     EditorPrefs.SetBool("nanoSDK_discordRPC", true);
                 }
             }
