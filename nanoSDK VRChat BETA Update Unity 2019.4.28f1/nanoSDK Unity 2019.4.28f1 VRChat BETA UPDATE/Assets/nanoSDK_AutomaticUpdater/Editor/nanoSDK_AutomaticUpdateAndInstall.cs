@@ -48,7 +48,7 @@ namespace nanoSDK
                     //up to date
                     nanoLog("you are using the newest version of nanoSDK!");
                     EditorUtility.DisplayDialog("You are up to date",
-                        "Current nanoSDK version: " + currentVersion,
+                        "Current nanoSDK version: V" + currentVersion,
                         "Okay"
                         );
                 }
