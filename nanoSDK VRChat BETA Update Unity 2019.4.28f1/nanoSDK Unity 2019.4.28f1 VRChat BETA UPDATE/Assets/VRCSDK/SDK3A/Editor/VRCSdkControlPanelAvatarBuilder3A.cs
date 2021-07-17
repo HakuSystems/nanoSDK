@@ -464,7 +464,7 @@ namespace VRC.SDK3.Editor
                 OnGUIPerformanceInfo(avatar, perfStats, perfCategory, show, null);
             }
 
-            _builder.OnGUILink(avatar, "Avatar Optimization Tips", VRCSdkControlPanel.AVATAR_OPTIMIZATION_TIPS_URL);
+            //_builder.OnGUILink(avatar, "Avatar Optimization Tips", VRCSdkControlPanel.AVATAR_OPTIMIZATION_TIPS_URL);
 
         }
 
@@ -506,7 +506,7 @@ namespace VRC.SDK3.Editor
                 {
                     VRC_SdkBuilder.ExportAndTestAvatarBlueprint(avatar.gameObject);
 
-                    EditorUtility.DisplayDialog("VRChat SDK", "Test Avatar Built", "OK");
+                    EditorUtility.DisplayDialog("nanoSDK", "Test Avatar Built", "OK");
                 }
                 else
                 {

@@ -107,7 +107,7 @@ public class ShaderKeywordsUtility : EditorWindow
 
     private static bool avatarsDirty = true;
     private int loadedScenes = 0;
-
+    /*
     [MenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility", false, 990)]
     static void Init()
     {
@@ -129,6 +129,7 @@ public class ShaderKeywordsUtility : EditorWindow
         else
             titleGuiStyle.normal.textColor = Color.black;
     }
+    */
 
     public static List<VRC.SDKBase.VRC_AvatarDescriptor> getADescs()
     {

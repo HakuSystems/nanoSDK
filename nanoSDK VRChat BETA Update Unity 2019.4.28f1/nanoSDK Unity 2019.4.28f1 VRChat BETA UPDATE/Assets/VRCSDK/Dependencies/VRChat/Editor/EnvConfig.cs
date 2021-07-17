@@ -186,7 +186,7 @@ public class EnvConfig
             return false;
         }
 
-        ConfigurePlayerSettings();
+        //ConfigurePlayerSettings();
 
         if(!VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
         {
@@ -271,7 +271,7 @@ public class EnvConfig
         }
     }
     #endif
-
+    /*
     [MenuItem("VRChat SDK/Utilities/Force Configure Player Settings")]
     public static void ConfigurePlayerSettings()
     {
@@ -343,7 +343,7 @@ public class EnvConfig
         }
         #endif
     }
-
+    */
     private static void EnableBatching(bool enable)
     {
         PlayerSettings[] playerSettings = Resources.FindObjectsOfTypeAll<PlayerSettings>();
@@ -688,6 +688,7 @@ public class EnvConfig
         AudioSettings.Reset(config);
     }
 
+    [Obsolete]
     private static void SetPlayerSettings()
     {
         // asset bundles MUST be built with settings that are compatible with VRC client

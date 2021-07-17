@@ -73,9 +73,9 @@ namespace VRC.SDKBase.Editor
             message = null;
             if (_avatars != null && _avatars.Length > 0) return true;
 #if VRC_SDK_VRCSDK2
-            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat SDK Content";
+            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build SDK Content";
 #elif VRC_SDK_VRCSDK3
-            message = "A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build VRChat SDK Content";
+            message = "A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build SDK Content";
 #endif
             return false;
         }
@@ -170,14 +170,14 @@ namespace VRC.SDKBase.Editor
                 {
 #if VRC_SDK_VRCSDK2
                     EditorGUILayout.LabelField(
-                            "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat SDK Content",
+                            "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build SDK Content",
                             VRCSdkControlPanel.titleGuiStyle, GUILayout.Width(VRCSdkControlPanel.SdkWindowWidth));
 #elif VRC_SDK_VRCSDK3
                     EditorGUILayout.LabelField(
-                            "A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build VRChat SDK Content",
+                            "A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build SDK Content",
                             VRCSdkControlPanel.titleGuiStyle, GUILayout.Width(VRCSdkControlPanel.SdkWindowWidth));
 #else
-                    EditorGUILayout.LabelField("A SceneDescriptor or AvatarDescriptor\nis required to build VRChat SDK Content", VRCSdkControlPanel.titleGuiStyle, GUILayout.Width(VRCSdkControlPanel.SdkWindowWidth));
+                    EditorGUILayout.LabelField("A SceneDescriptor or AvatarDescriptor\nis required to build SDK Content", VRCSdkControlPanel.titleGuiStyle, GUILayout.Width(VRCSdkControlPanel.SdkWindowWidth));
 #endif
                 }
             }
@@ -238,7 +238,7 @@ namespace VRC.SDKBase.Editor
                 avatar.VisemeSkinnedMesh == null)
                 _builder.OnGUIError(avatar, "This avatar uses Visemes but the Face Mesh is not specified.",
                     delegate { Selection.activeObject = avatar.gameObject; }, null);
-
+            /*
             if (ShaderKeywordsUtility.DetectCustomShaderKeywords(avatar))
                 _builder.OnGUIWarning(avatar,
                     "A Material on this avatar has custom shader keywords. Please consider optimizing it using the Shader Keywords Utility.",
@@ -247,7 +247,7 @@ namespace VRC.SDKBase.Editor
                     {
                         EditorApplication.ExecuteMenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility");
                     });
-
+            */
             VerifyAvatarMipMapStreaming(avatar);
 
             Animator anim = avatar.GetComponent<Animator>();
@@ -594,7 +594,7 @@ namespace VRC.SDKBase.Editor
             bool hasHead;
             bool hasFeet;
             bool hasHands;
-            bool hasThreeFingers;
+            //bool hasThreeFingers;
             bool correctSpineHierarchy;
             bool correctLeftArmHierarchy;
             bool correctRightArmHierarchy;

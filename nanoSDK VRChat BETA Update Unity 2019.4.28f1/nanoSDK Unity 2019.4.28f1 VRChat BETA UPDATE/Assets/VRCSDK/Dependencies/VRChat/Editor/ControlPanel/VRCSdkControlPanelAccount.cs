@@ -132,7 +132,18 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         if (signingIn)
         {
-            EditorGUILayout.LabelField("Signing in as " + username + ".");
+            if (username == null || password == null)
+            {
+                EditorGUILayout.LabelField("Credentials cant be Empty.");
+                if (GUILayout.Button("Back"))
+                {
+                    Logout();
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField("Signing in as " + username + ".");
+            }
         }
         else if (APIUser.IsLoggedIn)
         {
@@ -217,6 +228,7 @@ public partial class VRCSdkControlPanel : EditorWindow
     {
         if (VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
         {
+            /* no need to check its a beta version.
             if (VRC.Core.ConfigManager.RemoteConfig.HasKey("sdkUnityVersion"))
             {
                 string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
@@ -228,6 +240,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                     EditorGUILayout.LabelField("Wrong Unity version. Please use " + sdkUnityVersion);
                 }
             }
+            */
         }
         else
         {
