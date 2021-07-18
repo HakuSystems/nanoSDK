@@ -111,7 +111,7 @@ namespace VRC.SDK3.Validation
             "VRC.SDK3.Avatars.Components.VRCStation",
         };
 
-        private static string[] CombinedComponentTypeWhiteListSdk2 = null;
+        //private static string[] CombinedComponentTypeWhiteListSdk2 = null;
         private static string[] CombinedComponentTypeWhiteListSdk3 = null;
 
         public static readonly string[] ShaderWhiteList = new string[]
