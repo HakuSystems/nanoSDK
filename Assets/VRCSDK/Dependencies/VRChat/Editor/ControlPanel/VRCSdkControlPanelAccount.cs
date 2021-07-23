@@ -132,12 +132,12 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         if (signingIn)
         {
-            if (username == null | password == null)
+            if (username == null || password == null)
             {
-                EditorGUILayout.LabelField("Wrong Credentials..");
-                if (GUILayout.Button("Close"))
+                EditorGUILayout.LabelField("Credentials cant be Empty.");
+                if (GUILayout.Button("Back"))
                 {
-                    window.Close();
+                    Logout();
                 }
             }
             else
