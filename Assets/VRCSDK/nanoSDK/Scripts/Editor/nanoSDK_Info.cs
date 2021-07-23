@@ -52,10 +52,10 @@ namespace nanoSDK
                 normal =
                     {
                     //Top
-                       background = Resources.Load("nanoSdkHeader") as Texture2D,
+                       background = Resources.Load("nanosdkInfo") as Texture2D,
                        textColor = Color.white
                     },
-                fixedHeight = 200
+                fixedHeight = 250
             };
 
             nanoSdkBottomHeader = new GUIStyle

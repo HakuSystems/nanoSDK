@@ -11,6 +11,7 @@ public partial class VRCSdkControlPanel : EditorWindow
     [MenuItem("nanoSDK/Upload Panel", false, 600)]
     static void ShowControlPanel()
     {
+        UnityEngine.Debug.Log("Thanks for using nanoSDK");
         if (!ConfigManager.RemoteConfig.IsInitialized())
         {
             VRC.Core.API.SetOnlineMode(true, "vrchat");

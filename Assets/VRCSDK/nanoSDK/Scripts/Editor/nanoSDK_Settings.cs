@@ -86,17 +86,17 @@ namespace nanoSDK
         {
             titleContent = new GUIContent("nanoSDK Settings");
 
-            maxSize = new Vector2(400, 475);
+            maxSize = new Vector2(400, 520);
             minSize = maxSize;
 
             vrcSdkHeader = new GUIStyle
             {
                 normal =
                 {
-                    background = Resources.Load("nanoSdkHeader") as Texture2D,
+                    background = Resources.Load("nanosdkSettings") as Texture2D,
                     textColor = Color.white
                 },
-                fixedHeight = 200
+                fixedHeight = 250
             };
             
             if (!EditorPrefs.HasKey("nanoSDK_discordRPC"))
