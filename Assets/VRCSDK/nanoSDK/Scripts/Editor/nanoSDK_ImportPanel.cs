@@ -37,10 +37,10 @@ namespace nanoSDK
             {
                 normal =
                 {
-                    background = Resources.Load("nanoSdkHeader") as Texture2D,
+                    background = Resources.Load("nanosdkImportPanel") as Texture2D,
                     textColor = Color.white
                 },
-                fixedHeight = 200
+                fixedHeight = 250
             };
         }
 
