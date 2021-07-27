@@ -556,6 +556,10 @@ public partial class VRCSdkControlPanel : EditorWindow
     public static void DrawBuildTargetSwitcher()
     {
         EditorGUILayout.LabelField("Active Build Target: " + EditorUserBuildSettings.activeBuildTarget);
+        if (GUILayout.Button("Delete All Missing Scripts in selected GameObject"))
+        {
+            nanoSDK.nanoSDK_FindMissingScripts.FindAndRemoveMissingInSelected();
+        }
         if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows || EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64 && GUILayout.Button("Switch Build Target to Android"))
         {
             if (EditorUtility.DisplayDialog("Build Target Switcher", "Are you sure you want to switch your build target to Android? This could take a while.", "Confirm", "Cancel"))
