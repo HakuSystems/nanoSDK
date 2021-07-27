@@ -21,7 +21,7 @@ namespace nanoSDK
         {
             if (EditorPrefs.GetBool("nanoSDK_discordRPC", true))
             {
-                nanosdk_Security.CheckForValidSecurity();
+                nanoSDK_Security.CheckForValidSecurity();
                 nanoLog("Starting discord rpc");
                 DiscordRpc.EventHandlers eventHandlers = default(DiscordRpc.EventHandlers);
                 DiscordRpc.Initialize("612263853442465793", ref eventHandlers, false, string.Empty);
@@ -31,7 +31,7 @@ namespace nanoSDK
 
         public static void updateDRPC()
         {
-            nanosdk_Security.CheckForValidSecurity();
+            nanoSDK_Security.CheckForValidSecurity();
             nanoLog("Updating everything");
             SceneName = SceneManager.GetActiveScene().name;
             presence.details = string.Format("Project: {0} Scene: {1}", GameName, SceneName);
@@ -44,7 +44,7 @@ namespace nanoSDK
 
         public static void updateState(RpcState state)
         {
-            nanosdk_Security.CheckForValidSecurity();
+            nanoSDK_Security.CheckForValidSecurity();
             nanoLog("Updating state to '" + state.StateName() + "'");
             rpcState = state;
             presence.state = "State: " + state.StateName();
@@ -53,7 +53,7 @@ namespace nanoSDK
 
         public static void sceneChanged(Scene newScene)
         {
-            nanosdk_Security.CheckForValidSecurity();
+            nanoSDK_Security.CheckForValidSecurity();
             nanoLog("Updating scene name");
             SceneName = newScene.name;
             presence.details = string.Format("Project: {0} Scene: {1}", GameName, SceneName);
@@ -62,7 +62,7 @@ namespace nanoSDK
 
         public static void ResetTime()
         {
-            nanosdk_Security.CheckForValidSecurity();
+            nanoSDK_Security.CheckForValidSecurity();
             nanoLog("Reseting timer");
             time = (DateTime.UtcNow - new DateTime(1970, 1, 1));
             timestamp = (long)time.TotalSeconds;
