@@ -113,6 +113,14 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.4.6 ==
+VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
+    ┠ Added
+        ┖ LocomotionFix contoller (by edward7)
+    ┠ Moved
+        ┖ nanoSDK_FindMissingScripts is now on Upload panel.
+
+
 == V1.4.5 ==
 VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
     ┠ Fixed

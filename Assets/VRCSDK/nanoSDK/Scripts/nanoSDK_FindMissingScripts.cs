@@ -1,57 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
 namespace nanoSDK
 {
-    public class nanoSDK_FindMissingScripts : EditorWindow
+    public class nanoSDK_FindMissingScripts
     {
         static int go_count = 0, components_count = 0, missing_count = 0;
-        private static int _sizeX = 310;
-        private static int _sizeY = 75;
-
-        [MenuItem("nanoSDK/Help/Utilities/FindAndDelteMissingScripts")]
-        public static void OpenMissingScriptWindow()
-        {
-            GetWindow<nanoSDK_FindMissingScripts>(true);
-        }
-        private void OnEnable()
-        {
-            titleContent = new GUIContent("FindAndDelteMissingScripts");
-            maxSize = new Vector2(_sizeX, _sizeY);
-            minSize = maxSize;
-        }
-        public void OnGUI()
-        {
-            GUILayout.Label("Logs will be displayed in Console.");
-            GUILayout.Space(4);
-            if (GUILayout.Button("Find Missing Scripts in selected GameObjects"))
-            {
-                FindInSelectedGameObjects();
-            }
-            GUILayout.Space(4);
-            if (GUILayout.Button("Delete All Missing Scripts in selected GameObjects"))
-            {
-                FindAndRemoveMissingInSelected();
-            }
-        }
-        private static void FindInSelectedGameObjects()
-        {
-            GameObject[] go = Selection.gameObjects;
-            go_count = 0;
-            components_count = 0;
-            missing_count = 0;
-            foreach (GameObject g in go)
-            {
-                FindInGO(g);
-            }
-
-            Debug.Log(string.Format("nanoSDK FindMissingScripts:  Searched {0} GameObjects, {1} components, found {2} missing", go_count, components_count, missing_count));
-        }
+        
         private static void FindInGO(GameObject g)
         {
             go_count++;
@@ -80,7 +35,7 @@ namespace nanoSDK
             }
         }
 
-        private static void FindAndRemoveMissingInSelected()
+        public static void FindAndRemoveMissingInSelected()
         {
             var deepSelection = EditorUtility.CollectDeepHierarchy(Selection.gameObjects);
             int compCount = 0;
