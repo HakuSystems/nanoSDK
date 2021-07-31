@@ -343,7 +343,7 @@ namespace VRC.SDK3.Editor
                     () => { Selection.objects = VRCSdkControlPanel.GetSubstanceObjects(avatar.gameObject); },
                     null);
             }
-
+            //Broken
             {
                 if (contentType != ContentType.Avatar)
                 {
@@ -361,7 +361,7 @@ namespace VRC.SDK3.Editor
                 }
             }
 #endif
-
+            //end
             CheckAvatarMeshesForLegacyBlendShapesSetting(avatar);
 //BYPASSED
 #if UNITY_ANDROID
