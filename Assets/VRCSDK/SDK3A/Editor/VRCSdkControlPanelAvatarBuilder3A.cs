@@ -344,6 +344,24 @@ namespace VRC.SDK3.Editor
                     null);
             }
 
+            {
+                if (contentType != ContentType.Avatar)
+                {
+                    _builder.OnGUIWarning(avatar, ((contentSize > 0) ? ("Current size: " +
+                    ValidationHelpers.FormatFileSize((long)contentSize)) : ""));
+                }
+            }
+#if UNITY_ANDROID
+{
+            {
+                if (contentType != ContentType.Avatar)
+                {
+                    _builder.OnGUIWarning(avatar, "The max size of avatar is 10 mb. "+((contentSize > 0) ? ("Current size: " +
+                    ValidationHelpers.FormatFileSize((long)contentSize)) : ""));
+                }
+            }
+#endif
+
             CheckAvatarMeshesForLegacyBlendShapesSetting(avatar);
 //BYPASSED
 #if UNITY_ANDROID
