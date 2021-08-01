@@ -33,6 +33,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Info", false, 500)]
         public static void OpenSplashScreen()
         {
+            nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
             GetWindow<nanoSDK_Info>(true);
         }
 
@@ -113,6 +114,14 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.4.7 ==
+VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
+    ┠ Added
+        ┠ Security Warning
+        ┖ Login System
+    ┠ Removed
+        ┖ nanoSDK_FindMissingScripts it gets too many ERRs will implement with next update maybe again.
+
 == V1.4.6 ==
 VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
     ┠ Added

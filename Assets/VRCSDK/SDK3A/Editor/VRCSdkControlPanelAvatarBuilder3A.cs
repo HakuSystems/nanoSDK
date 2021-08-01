@@ -343,25 +343,6 @@ namespace VRC.SDK3.Editor
                     () => { Selection.objects = VRCSdkControlPanel.GetSubstanceObjects(avatar.gameObject); },
                     null);
             }
-            //Broken
-            {
-                if (contentType != ContentType.Avatar)
-                {
-                    _builder.OnGUIWarning(avatar, ((contentSize > 0) ? ("Current size: " +
-                    ValidationHelpers.FormatFileSize((long)contentSize)) : ""));
-                }
-            }
-#if UNITY_ANDROID
-{
-            {
-                if (contentType != ContentType.Avatar)
-                {
-                    _builder.OnGUIWarning(avatar, "The max size of avatar is 10 mb. "+((contentSize > 0) ? ("Current size: " +
-                    ValidationHelpers.FormatFileSize((long)contentSize)) : ""));
-                }
-            }
-#endif
-            //end
             CheckAvatarMeshesForLegacyBlendShapesSetting(avatar);
 //BYPASSED
 #if UNITY_ANDROID
