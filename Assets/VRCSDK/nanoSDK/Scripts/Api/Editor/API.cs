@@ -170,15 +170,15 @@ namespace nanoSDK
                     }))).Split("|".ToCharArray()));
                     if (Security.MaliciousCheck(response[1]))
                     {
-                        EditorUtility.DisplayDialog("nanoSDK Api", "Possible malicious activity detected!", "Okay");
+                        //EditorUtility.DisplayDialog("nanoSDK Api", "Possible malicious activity detected!", "Okay");
                         //MessageBox.Show("Possible malicious activity detected!", OnProgramStart.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
-                        Process.GetCurrentProcess().Kill();
+                        //Process.GetCurrentProcess().Kill();
                     }
                     if (Constants.Breached)
                     {
-                        EditorUtility.DisplayDialog("nanoSDK Api", "Possible malicious activity detected!", "Okay");
+                        //EditorUtility.DisplayDialog("nanoSDK Api", "Possible malicious activity detected!", "Okay");
                         //MessageBox.Show("Possible malicious activity detected!", OnProgramStart.Name, MessageBoxButton.OK, MessageBoxImage.Warning);
-                        Process.GetCurrentProcess().Kill();
+                        //Process.GetCurrentProcess().Kill();
                     }
                     if (response[0] != Constants.Token)
                     {
