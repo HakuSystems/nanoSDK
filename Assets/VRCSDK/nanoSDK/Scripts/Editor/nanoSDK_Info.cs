@@ -114,6 +114,12 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.4.8 ==
+VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
+    ┠ Fixed
+        ┠ Possible malicious activity detected
+        ┖ HWID Login on Multi Accounts
+
 == V1.4.7 ==
 VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
     ┠ Added
