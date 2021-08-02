@@ -164,8 +164,19 @@ namespace nanoSDK
             if (GUILayout.Button("Login"))
             {
                 if (API.Login(userinputText, passinputText))
-                { 
-                    EditorUtility.DisplayDialog("nanoSDK Api", "Thanks for using nanoSDK!", "Okay");
+                {
+                    if (User.UserVariable == "Developer")
+                    {
+                        EditorUtility.DisplayDialog("nanoSDK Api", $"Welcome back, {User.UserVariable} {User.Username}!", "Okay");
+                    }
+                    else if (User.UserVariable == "Moderator")
+                    {
+                        EditorUtility.DisplayDialog("nanoSDK Api", $"Welcome back, {User.UserVariable} {User.Username}!", "Okay");
+                    }
+                    else
+                    {
+                        EditorUtility.DisplayDialog("nanoSDK Api", $"Thanks for using nanoSDK, {User.Username}!", "Okay");
+                    }
                     Close();
                 }
             }

@@ -45,8 +45,6 @@ namespace nanoSDK
     }
     internal class Constants
     {
-        public static string hwidfilePath = File.ReadAllText("Assets\\VRCSDK\\nanoSDK\\Configs\\currentHWID.txt");
-
         public static string Token { get; set; }
 
         public static string Date { get; set; }
