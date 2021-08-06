@@ -8,10 +8,9 @@ public partial class VRCSdkControlPanel : EditorWindow
 {
     public static VRCSdkControlPanel window;
 
-    [MenuItem("nanoSDK/Upload Panel", false, 600)]
+    [MenuItem("VRChat SDK/Show Control Panel", false, 600)]
     static void ShowControlPanel()
     {
-        UnityEngine.Debug.Log("Thanks for using nanoSDK");
         if (!ConfigManager.RemoteConfig.IsInitialized())
         {
             VRC.Core.API.SetOnlineMode(true, "vrchat");
@@ -20,7 +19,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
 
         window = (VRCSdkControlPanel)EditorWindow.GetWindow(typeof(VRCSdkControlPanel));
-        window.titleContent.text = "Modded SDK";
+        window.titleContent.text = "VRChat SDK";
         window.minSize = new Vector2(SdkWindowWidth + 4, 600);
         window.maxSize = new Vector2(SdkWindowWidth + 4, 2000);
         window.Init();
@@ -161,7 +160,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
 
         if (_bannerImage == null)
-            _bannerImage = Resources.Load("nanoSdkBanner") as Texture2D;
+            _bannerImage = AssetDatabase.LoadAssetAtPath("Assets/VRCSDK/Dependencies/VRChat/SdkGraphics/SDK_Panel_Banner.png", typeof(Texture2D)) as Texture2D;
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
@@ -173,7 +172,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             GUI.enabled = false;
             GUILayout.Space(20);
-            EditorGUILayout.LabelField("You are in Playmode ...\nStop it to access the Upload Panel", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            EditorGUILayout.LabelField("Unity Application is running ...\nStop it to access the Control Panel", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
             GUI.enabled = true;
             GUILayout.EndVertical();
             GUILayout.FlexibleSpace();
@@ -185,14 +184,14 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         EnvConfig.SetActiveSDKDefines();
 
-            VRCSettings.ActiveWindowPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, new string[] { "Authentication", "Upload", "Uploaded Content", "Settings" }, GUILayout.Width(SdkWindowWidth));
+            VRCSettings.ActiveWindowPanel = GUILayout.Toolbar(VRCSettings.ActiveWindowPanel, new string[] { "Authentication", "Builder", "Content Manager", "Settings" }, GUILayout.Width(SdkWindowWidth));
             int showPanel = VRCSettings.ActiveWindowPanel;
 
         GUILayout.EndVertical();
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
-        if (APIUser.IsLoggedInWithCredentials == false && showPanel != 3)
+        if (APIUser.IsLoggedIn == false && showPanel != 3)
             showPanel = 0;
 
         switch (showPanel)

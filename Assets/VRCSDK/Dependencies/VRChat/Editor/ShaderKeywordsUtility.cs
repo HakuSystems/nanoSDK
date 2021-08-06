@@ -13,7 +13,7 @@ public class ShaderKeywordsUtility : EditorWindow
     private static Dictionary<VRC.SDKBase.VRC_AvatarDescriptor, Dictionary<Material, bool>> avatars = new Dictionary<VRC.SDKBase.VRC_AvatarDescriptor, Dictionary<Material, bool>>();
     private Dictionary<VRC.SDKBase.VRC_AvatarDescriptor, bool> avatarsOpened = new Dictionary<VRC.SDKBase.VRC_AvatarDescriptor, bool>();
     private Vector2 scrollPos;
-    //private static GUIStyle titleGuiStyle;
+    private static GUIStyle titleGuiStyle;
     public static HashSet<string> keywordBlacklist = new HashSet<string>(new string[]
     { 
         // Unity Keywords, these don't matter at all. (They should be loaded)
@@ -107,7 +107,7 @@ public class ShaderKeywordsUtility : EditorWindow
 
     private static bool avatarsDirty = true;
     private int loadedScenes = 0;
-    /*
+
     [MenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility", false, 990)]
     static void Init()
     {
@@ -129,7 +129,7 @@ public class ShaderKeywordsUtility : EditorWindow
         else
             titleGuiStyle.normal.textColor = Color.black;
     }
-    */
+
     public static List<VRC.SDKBase.VRC_AvatarDescriptor> getADescs()
     {
         List<GameObject> GOs = new List<GameObject>();
@@ -183,7 +183,7 @@ public class ShaderKeywordsUtility : EditorWindow
         GUILayout.Space(10);
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        //GUILayout.Label("Shader Keywords Utility", titleGuiStyle);
+        GUILayout.Label("Shader Keywords Utility", titleGuiStyle);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
         GUILayout.Space(15);

@@ -15,8 +15,6 @@ using VRC.SDKBase.Validation;
 using VRC.SDKBase.Validation.Performance.Stats;
 using VRCStation = VRC.SDK3.Avatars.Components.VRCStation;
 using VRC.SDK3.Validation;
-using ExpressionParameters = VRC.SDK3.Avatars.ScriptableObjects.VRCExpressionParameters;
-using ExpressionParameter = VRC.SDK3.Avatars.ScriptableObjects.VRCExpressionParameters.Parameter;
 
 [assembly: VRCSdkControlPanelBuilder(typeof(VRCSdkControlPanelAvatarBuilder3A))]
 
@@ -165,11 +163,11 @@ namespace VRC.SDK3.Editor
                     if (!ValidateTexture(texture))
                         isValid = false;
                 }
-                //Also Bypassed
+
                 if (!isValid)
-                    _builder.OnGUIWarning(avatar, "Images used for Actions & Moods are too large. Max image size: " + MAX_ACTION_TEXTURE_SIZE,
+                    _builder.OnGUIError(avatar, "Images used for Actions & Moods are too large.",
                         delegate { Selection.activeObject = avatar.gameObject; }, FixTextures);
-                //end
+
                 //Fix
                 void FixTextures()
                 {
@@ -194,15 +192,16 @@ namespace VRC.SDK3.Editor
                         _builder.OnGUIError(avatar, "VRCExpressionParameters object reference is missing.",
                             delegate { Selection.activeObject = avatarSDK3; }, null);
                 }
+
                 //Check if parameters is valid
-                //BYPASSED
                 if (avatarSDK3.expressionParameters != null && avatarSDK3.expressionParameters.CalcTotalCost() > VRCExpressionParameters.MAX_PARAMETER_COST)
                 {
-                    _builder.OnGUIInformation(avatar, "VRCExpressionParameters has too many parameters defined");
+                    _builder.OnGUIError(avatar, "VRCExpressionParameters has too many parameters defined.",
+                        delegate { Selection.activeObject = avatarSDK3.expressionParameters; }, null);
                 }
-                //END
-                    //Find all existing parameters
-                    if (avatarSDK3.expressionsMenu != null && avatarSDK3.expressionParameters != null)
+
+                //Find all existing parameters
+                if (avatarSDK3.expressionsMenu != null && avatarSDK3.expressionParameters != null)
                 {
                     List<VRCExpressionsMenu> menuStack = new List<VRCExpressionsMenu>();
                     List<string> parameters = new List<string>();
@@ -323,19 +322,27 @@ namespace VRC.SDK3.Editor
                 if (componentsToRemoveNames.Contains(c.GetType().Name) == false)
                     componentsToRemoveNames.Add(c.GetType().Name);
             }
-            //BYPASSED
+
             if (componentsToRemoveNames.Count > 0)
-                _builder.OnGUIInformation(avatar,
-                    "Unsupported Components/Scripts: " +
-                    string.Join(", ", componentsToRemoveNames.ToArray()));
-            //END
-            //AUDIO SORCE LIMIT WAS HERE
-            //BYPASSED
+                _builder.OnGUIError(avatar,
+                    "The following component types are found on the Avatar and will be removed by the client: " +
+                    string.Join(", ", componentsToRemoveNames.ToArray()),
+                    delegate { ShowRestrictedComponents(toRemove); },
+                    delegate { FixRestrictedComponents(toRemove); });
+
+            List<AudioSource> audioSources =
+                avatar.gameObject.GetComponentsInChildren<AudioSource>(true).ToList();
+            if (audioSources.Count > 0)
+                _builder.OnGUIWarning(avatar,
+                    "Audio sources found on Avatar, they will be adjusted to safe limits, if necessary.",
+                    GetAvatarSubSelectAction(avatar, typeof(AudioSource)), null);
+
             List<VRCStation> stations =
                 avatar.gameObject.GetComponentsInChildren<VRCStation>(true).ToList();
             if (stations.Count > 0)
-                _builder.OnGUIInformation(avatar, "Station Count: " + stations.Count);
-            //END
+                _builder.OnGUIWarning(avatar, "Stations found on Avatar, they will be adjusted to safe limits, if necessary.",
+                    GetAvatarSubSelectAction(avatar, typeof(VRCStation)), null);
+
             if (VRCSdkControlPanel.HasSubstances(avatar.gameObject))
             {
                 _builder.OnGUIWarning(avatar,
@@ -343,16 +350,19 @@ namespace VRC.SDK3.Editor
                     () => { Selection.objects = VRCSdkControlPanel.GetSubstanceObjects(avatar.gameObject); },
                     null);
             }
+
             CheckAvatarMeshesForLegacyBlendShapesSetting(avatar);
-//BYPASSED
+            CheckAvatarMeshesForMeshReadWriteSetting(avatar);
+
 #if UNITY_ANDROID
         IEnumerable<Shader> illegalShaders = AvatarValidation.FindIllegalShaders(avatar.gameObject);
         foreach (Shader s in illegalShaders)
         {
-                _builder.OnGUIInformation(avatar, "Quest Unsupported Shader: " + s.name);
+            _builder.OnGUIError(avatar, "Avatar uses unsupported shader '" + s.name + "'. You can only use the shaders provided in 'VRChat/Mobile' for Quest avatars.", delegate () { Selection.activeObject
+ = avatar.gameObject; }, null);
         }
 #endif
-//END
+
             foreach (AvatarPerformanceCategory perfCategory in Enum.GetValues(typeof(AvatarPerformanceCategory)))
             {
                 if (perfCategory == AvatarPerformanceCategory.Overall ||
@@ -455,7 +465,7 @@ namespace VRC.SDK3.Editor
                 OnGUIPerformanceInfo(avatar, perfStats, perfCategory, show, null);
             }
 
-            //_builder.OnGUILink(avatar, "Avatar Optimization Tips", VRCSdkControlPanel.AVATAR_OPTIMIZATION_TIPS_URL);
+            _builder.OnGUILink(avatar, "Avatar Optimization Tips", VRCSdkControlPanel.AVATAR_OPTIMIZATION_TIPS_URL);
 
         }
 
@@ -497,7 +507,7 @@ namespace VRC.SDK3.Editor
                 {
                     VRC_SdkBuilder.ExportAndTestAvatarBlueprint(avatar.gameObject);
 
-                    EditorUtility.DisplayDialog("nanoSDK", "Test Avatar Built", "OK");
+                    EditorUtility.DisplayDialog("VRChat SDK", "Test Avatar Built", "OK");
                 }
                 else
                 {

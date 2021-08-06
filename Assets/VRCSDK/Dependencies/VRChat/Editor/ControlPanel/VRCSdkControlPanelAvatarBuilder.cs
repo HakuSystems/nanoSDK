@@ -73,9 +73,9 @@ namespace VRC.SDKBase.Editor
             message = null;
             if (_avatars != null && _avatars.Length > 0) return true;
 #if VRC_SDK_VRCSDK2
-            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat Content";
+            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat SDK Content";
 #elif VRC_SDK_VRCSDK3
-            message = "A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build VRChat Content";
+            message = "A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build VRChat SDK Content";
 #endif
             return false;
         }
@@ -170,14 +170,14 @@ namespace VRC.SDKBase.Editor
                 {
 #if VRC_SDK_VRCSDK2
                     EditorGUILayout.LabelField(
-                            "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat Content",
+                            "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat SDK Content",
                             VRCSdkControlPanel.titleGuiStyle, GUILayout.Width(VRCSdkControlPanel.SdkWindowWidth));
 #elif VRC_SDK_VRCSDK3
                     EditorGUILayout.LabelField(
-                            "A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build VRChat Content",
+                            "A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build VRChat SDK Content",
                             VRCSdkControlPanel.titleGuiStyle, GUILayout.Width(VRCSdkControlPanel.SdkWindowWidth));
 #else
-                    EditorGUILayout.LabelField("A SceneDescriptor or AvatarDescriptor\nis required to build VRChat Content", VRCSdkControlPanel.titleGuiStyle, GUILayout.Width(VRCSdkControlPanel.SdkWindowWidth));
+                    EditorGUILayout.LabelField("A SceneDescriptor or AvatarDescriptor\nis required to build VRChat SDK Content", VRCSdkControlPanel.titleGuiStyle, GUILayout.Width(VRCSdkControlPanel.SdkWindowWidth));
 #endif
                 }
             }
@@ -239,16 +239,15 @@ namespace VRC.SDKBase.Editor
                 _builder.OnGUIError(avatar, "This avatar uses Visemes but the Face Mesh is not specified.",
                     delegate { Selection.activeObject = avatar.gameObject; }, null);
 
-        /*
             if (ShaderKeywordsUtility.DetectCustomShaderKeywords(avatar))
                 _builder.OnGUIWarning(avatar,
                     "A Material on this avatar has custom shader keywords. Please consider optimizing it using the Shader Keywords Utility.",
                     () => { Selection.activeObject = avatar.gameObject; },
                     () =>
                     {
-                        //EditorApplication.ExecuteMenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility");
+                        EditorApplication.ExecuteMenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility");
                     });
-        */
+
             VerifyAvatarMipMapStreaming(avatar);
 
             Animator anim = avatar.GetComponent<Animator>();
@@ -297,18 +296,18 @@ namespace VRC.SDKBase.Editor
                 if (lShoulder != null && rShoulder != null)
                 {
                     Vector3 shoulderPosition = lShoulder.position - avatar.transform.position;
-                    //Bypassed
                     if (shoulderPosition.y < 0.2f)
-                        _builder.OnGUIInformation(avatar, "Avatar hight:" + shoulderPosition.y + ".The minimum is 20cm shoulder height.");
+                        _builder.OnGUIError(avatar, "This avatar is too short. The minimum is 20cm shoulder height.",
+                            delegate { Selection.activeObject = avatar.gameObject; }, null);
                     else if (shoulderPosition.y < 1.0f)
-                        //You found the easter egg defoult
-                        _builder.OnGUIInformation(avatar, "This avatar is short. This is probably shorter than you want. Or its a loli ;3");
-                    //End
+                        _builder.OnGUIWarning(avatar, "This avatar is shorter than average.",
+                            delegate { Selection.activeObject = avatar.gameObject; }, null);
                     else if (shoulderPosition.y > 5.0f)
-                        _builder.OnGUIInformation(avatar, "Avatar hight:" + shoulderPosition.y + ".The maximum is 5m shoulder height.");
+                        _builder.OnGUIWarning(avatar, "This avatar is too tall. The maximum is 5m shoulder height.",
+                            delegate { Selection.activeObject = avatar.gameObject; }, null);
                     else if (shoulderPosition.y > 2.5f)
-                        _builder.OnGUIInformation(avatar, "This avatar is tall. This is probably taller than you want.");
-                    //END
+                        _builder.OnGUIWarning(avatar, "This avatar is taller than average.",
+                            delegate { Selection.activeObject = avatar.gameObject; }, null);
                 }
 
                 if (AnalyzeIK(avatar, anim) == false)
@@ -595,9 +594,7 @@ namespace VRC.SDKBase.Editor
             bool hasHead;
             bool hasFeet;
             bool hasHands;
-            //This gives error
-            //bool hasThreeFingers;
-            //END
+            bool hasThreeFingers;
             bool correctSpineHierarchy;
             bool correctLeftArmHierarchy;
             bool correctRightArmHierarchy;
@@ -826,9 +823,9 @@ namespace VRC.SDKBase.Editor
             }
 
             // Get all of the meshes used by skinned mesh renderers.
-            HashSet<Mesh> avatarSkinnedMeshes = GetAllMeshesInGameObjectHierarchy(avatar.gameObject);
+            HashSet<Mesh> avatarMeshes = GetAllMeshesInGameObjectHierarchy(avatar.gameObject);
             HashSet<Mesh> incorrectlyConfiguredMeshes =
-                ScanMeshesForIncorrectBlendShapeNormalsSetting(avatarSkinnedMeshes);
+                ScanMeshesForIncorrectBlendShapeNormalsSetting(avatarMeshes);
             if (incorrectlyConfiguredMeshes.Count > 0)
             {
                 _builder.OnGUIError(
@@ -880,6 +877,145 @@ namespace VRC.SDKBase.Editor
             }
 
             return incorrectlyConfiguredMeshes;
+        }
+
+        private static void EnableLegacyBlendShapeNormals(IEnumerable<Mesh> meshesToFix)
+        {
+            HashSet<string> meshAssetPaths = new HashSet<string>();
+            foreach (Mesh meshToFix in meshesToFix)
+            {
+                // Can't get ModelImporter if the model isn't an asset.
+                if (!AssetDatabase.Contains(meshToFix))
+                {
+                    continue;
+                }
+
+                string meshAssetPath = AssetDatabase.GetAssetPath(meshToFix);
+                if (string.IsNullOrEmpty(meshAssetPath))
+                {
+                    continue;
+                }
+
+                if (meshAssetPaths.Contains(meshAssetPath))
+                {
+                    continue;
+                }
+
+                meshAssetPaths.Add(meshAssetPath);
+            }
+
+            foreach (string meshAssetPath in meshAssetPaths)
+            {
+                ModelImporter avatarImporter = AssetImporter.GetAtPath(meshAssetPath) as ModelImporter;
+                if (avatarImporter == null)
+                {
+                    continue;
+                }
+
+                if (avatarImporter.importBlendShapeNormals != ModelImporterNormals.Calculate)
+                {
+                    continue;
+                }
+
+                LegacyBlendShapeNormalsPropertyInfo.SetValue(avatarImporter, true);
+                avatarImporter.SaveAndReimport();
+            }
+        }
+
+        protected void CheckAvatarMeshesForMeshReadWriteSetting(Component avatar)
+        {
+            // Get all of the meshes used by skinned mesh renderers.
+            HashSet<Mesh> avatarMeshes = GetAllMeshesInGameObjectHierarchy(avatar.gameObject);
+            HashSet<Mesh> incorrectlyConfiguredMeshes =
+                ScanMeshesForDisabledMeshReadWriteSetting(avatarMeshes);
+            if (incorrectlyConfiguredMeshes.Count > 0)
+            {
+                _builder.OnGUIError(
+                    avatar,
+                    "This avatar contains meshes that were imported with Read/Write disabled. This must be fixed in the mesh import settings before uploading.",
+                    null,
+                    () => { EnableMeshReadWrite(incorrectlyConfiguredMeshes); });
+            }
+        }
+
+        private static HashSet<Mesh> ScanMeshesForDisabledMeshReadWriteSetting(IEnumerable<Mesh> avatarMeshes)
+        {
+            HashSet<Mesh> incorrectlyConfiguredMeshes = new HashSet<Mesh>();
+            foreach (Mesh avatarMesh in avatarMeshes)
+            {
+                // Can't get ModelImporter if the model isn't an asset.
+                if (!AssetDatabase.Contains(avatarMesh))
+                {
+                    continue;
+                }
+
+                string meshAssetPath = AssetDatabase.GetAssetPath(avatarMesh);
+                if (string.IsNullOrEmpty(meshAssetPath))
+                {
+                    continue;
+                }
+
+                ModelImporter avatarImporter = AssetImporter.GetAtPath(meshAssetPath) as ModelImporter;
+                if (avatarImporter == null)
+                {
+                    continue;
+                }
+
+                if (avatarImporter.isReadable)
+                {
+                    continue;
+                }
+
+                if (!incorrectlyConfiguredMeshes.Contains(avatarMesh))
+                {
+                    incorrectlyConfiguredMeshes.Add(avatarMesh);
+                }
+            }
+
+            return incorrectlyConfiguredMeshes;
+        }
+
+        private static void EnableMeshReadWrite(IEnumerable<Mesh> meshesToFix)
+        {
+            HashSet<string> meshAssetPaths = new HashSet<string>();
+            foreach (Mesh meshToFix in meshesToFix)
+            {
+                // Can't get ModelImporter if the model isn't an asset.
+                if (!AssetDatabase.Contains(meshToFix))
+                {
+                    continue;
+                }
+
+                string meshAssetPath = AssetDatabase.GetAssetPath(meshToFix);
+                if (string.IsNullOrEmpty(meshAssetPath))
+                {
+                    continue;
+                }
+
+                if (meshAssetPaths.Contains(meshAssetPath))
+                {
+                    continue;
+                }
+
+                meshAssetPaths.Add(meshAssetPath);
+            }
+
+            foreach (string meshAssetPath in meshAssetPaths)
+            {
+                ModelImporter avatarImporter = AssetImporter.GetAtPath(meshAssetPath) as ModelImporter;
+                if (avatarImporter == null)
+                {
+                    continue;
+                }
+
+                if (avatarImporter.isReadable)
+                {
+                    continue;
+                }
+
+                avatarImporter.isReadable = true;
+                avatarImporter.SaveAndReimport();
+            }
         }
 
         private static HashSet<Mesh> GetAllMeshesInGameObjectHierarchy(GameObject avatar)
@@ -955,49 +1091,6 @@ namespace VRC.SDKBase.Editor
             }
 
             return avatarMeshes;
-        }
-
-        private static void EnableLegacyBlendShapeNormals(IEnumerable<Mesh> meshesToFix)
-        {
-            HashSet<string> meshAssetPaths = new HashSet<string>();
-            foreach (Mesh meshToFix in meshesToFix)
-            {
-                // Can't get ModelImporter if the model isn't an asset.
-                if (!AssetDatabase.Contains(meshToFix))
-                {
-                    continue;
-                }
-
-                string meshAssetPath = AssetDatabase.GetAssetPath(meshToFix);
-                if (string.IsNullOrEmpty(meshAssetPath))
-                {
-                    continue;
-                }
-
-                if (meshAssetPaths.Contains(meshAssetPath))
-                {
-                    continue;
-                }
-
-                meshAssetPaths.Add(meshAssetPath);
-            }
-
-            foreach (string meshAssetPath in meshAssetPaths)
-            {
-                ModelImporter avatarImporter = AssetImporter.GetAtPath(meshAssetPath) as ModelImporter;
-                if (avatarImporter == null)
-                {
-                    continue;
-                }
-
-                if (avatarImporter.importBlendShapeNormals != ModelImporterNormals.Calculate)
-                {
-                    continue;
-                }
-
-                LegacyBlendShapeNormalsPropertyInfo.SetValue(avatarImporter, true);
-                avatarImporter.SaveAndReimport();
-            }
         }
 
         protected void OpenAnimatorControllerWindow(object animatorController)

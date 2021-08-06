@@ -47,7 +47,6 @@ public partial class VRCSdkControlPanel : EditorWindow
         EditorGUILayout.LabelField("Developer", EditorStyles.boldLabel);
 
         VRCSettings.DisplayAdvancedSettings = EditorGUILayout.ToggleLeft("Show Extra Options on build page and account page", VRCSettings.DisplayAdvancedSettings);
-        /*
         bool prevDisplayHelpBoxes = VRCSettings.DisplayHelpBoxes;
         VRCSettings.DisplayHelpBoxes = EditorGUILayout.ToggleLeft("Show Help Boxes on SDK components", VRCSettings.DisplayHelpBoxes);
         if (VRCSettings.DisplayHelpBoxes != prevDisplayHelpBoxes)
@@ -58,7 +57,6 @@ public partial class VRCSdkControlPanel : EditorWindow
                 editors[i].Repaint();
             }
         }
-        */
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.Separator();
@@ -122,7 +120,6 @@ public partial class VRCSdkControlPanel : EditorWindow
             EditorGUILayout.BeginVertical(boxGuiStyle);
 
             EditorGUILayout.LabelField("Publish", EditorStyles.boldLabel);
-            /*
             bool futureProofPublish = UnityEditor.EditorPrefs.GetBool("futureProofPublish", DefaultFutureProofPublishEnabled);
 
             futureProofPublish = EditorGUILayout.ToggleLeft("Future Proof Publish", futureProofPublish);
@@ -131,9 +128,8 @@ public partial class VRCSdkControlPanel : EditorWindow
             {
                 UnityEditor.EditorPrefs.SetBool("futureProofPublish", futureProofPublish);
             }
-            */
             EditorGUILayout.LabelField("Client Version Date", clientVersionDate);
-            EditorGUILayout.LabelField("SDK Version ", "V".ToString() + sdkVersionDate);
+            EditorGUILayout.LabelField("SDK Version Date", sdkVersionDate);
 
             EditorGUILayout.EndVertical();
         }

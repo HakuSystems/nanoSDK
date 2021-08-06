@@ -147,10 +147,10 @@ public class VRCExpressionParametersEditor : Editor
 
 			//Cost
 			int cost = (target as ExpressionParameters).CalcTotalCost();
-            if (cost <= ExpressionParameters.MAX_PARAMETER_COST)
-                EditorGUILayout.HelpBox($"Total Memory: {cost}/{ExpressionParameters.MAX_PARAMETER_COST}", MessageType.Info);
+			if(cost <= ExpressionParameters.MAX_PARAMETER_COST)
+				EditorGUILayout.HelpBox($"Total Memory: {cost}/{ExpressionParameters.MAX_PARAMETER_COST}", MessageType.Info);
 			else
-                EditorGUILayout.HelpBox($"Total Memory: {cost}/{ExpressionParameters.MAX_PARAMETER_COST}\nParameters use too much memory. This might not work in game. Remove parameters or use bools which use less memory.", MessageType.Info);
+				EditorGUILayout.HelpBox($"Total Memory: {cost}/{ExpressionParameters.MAX_PARAMETER_COST}\nParameters use too much memory.  Remove parameters or use bools which use less memory.", MessageType.Error);
 
 			//Info
 			EditorGUILayout.HelpBox("Only parameters defined here can be used by expression menus, sync between all playable layers and sync across the network to remote clients.", MessageType.Info);

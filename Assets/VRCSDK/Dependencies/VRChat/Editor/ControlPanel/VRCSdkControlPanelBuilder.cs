@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -220,8 +220,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
-
-       /* 
+        
         if (VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
         {
             string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
@@ -233,7 +232,6 @@ public partial class VRCSdkControlPanel : EditorWindow
                 );
             }
         }
-       */
         
         if (VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK2) && VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK3))
         {
@@ -242,7 +240,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (sdk2Components.Count > 0 && sdk3Components.Count > 0)
             {
                 OnGUIError(null,
-                    "This scene contains components from the nanoSDK version 2 and version 3. Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
+                    "This scene contains components from the VRChat SDK version 2 and version 3. Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
                     () => { Selection.objects = sdk2Components.ToArray(); },
                     null
                 );
@@ -294,17 +292,19 @@ public partial class VRCSdkControlPanel : EditorWindow
                 }
                 else
                 {
-                    errorMessage =
-                        "A Unity scene cannot contain a VRChat Scene Descriptor and also contain VRChat Avatar Descriptors";
+                     errorMessage =
+                         "A Unity scene cannot contain a VRChat Scene Descriptor and also contain VRChat Avatar Descriptors";
                 }
             }
         }
         if (selectedBuilder == null)
         {
 #if VRC_SDK_VRCSDK2
-            EditorGUILayout.LabelField("A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build nanoSDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            EditorGUILayout.LabelField("A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat SDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
 #elif VRC_SDK_VRCSDK3
-            EditorGUILayout.LabelField("A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build nanoSDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            EditorGUILayout.LabelField("A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build VRChat SDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+#else
+            EditorGUILayout.LabelField("The SDK did not load properly. Try this - In the Project window, navigate to Assets/VRCSDK/Plugins. Select all the DLLs, then right click and choose 'Reimport'");
 #endif
         }
         else if (errorMessage != null)
@@ -434,11 +434,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         if (GUIWarnings.ContainsKey(subject))
             foreach (Issue error in GUIWarnings[subject].Where(s => !string.IsNullOrEmpty(s.issueText)))
                 DrawIssueBox(MessageType.Warning, null, error.issueText, error.showThisIssue, error.fixThisIssue);
-        //changed placment
-        if (GUIInfos.ContainsKey(subject))
-            foreach (Issue error in GUIInfos[subject].Where(s => !string.IsNullOrEmpty(s.issueText)))
-                EditorGUILayout.HelpBox(error.issueText, MessageType.Info);
-        //END
+
         if (GUIStats.ContainsKey(subject))
         {
             foreach (var kvp in GUIStats[subject].Where(k => k.performanceRating == PerformanceRating.VeryPoor))
@@ -453,7 +449,10 @@ public partial class VRCSdkControlPanel : EditorWindow
             foreach (var kvp in GUIStats[subject].Where(k => k.performanceRating == PerformanceRating.Good || k.performanceRating == PerformanceRating.Excellent))
                 DrawIssueBox(MessageType.Warning, GetPerformanceIconForRating(kvp.performanceRating), kvp.issueText, kvp.showThisIssue, kvp.fixThisIssue);
         }
-        //it was here
+
+        if (GUIInfos.ContainsKey(subject))
+            foreach (Issue error in GUIInfos[subject].Where(s => !string.IsNullOrEmpty(s.issueText)))
+                EditorGUILayout.HelpBox(error.issueText, MessageType.Info);
         if (GUILinks.ContainsKey(subject))
         {
             EditorGUILayout.BeginVertical(style);
@@ -639,14 +638,14 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
 
         string message = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkNotAllowedToPublishMessage");
-        /*
         int result = UnityEditor.EditorUtility.DisplayDialogComplex("VRChat SDK", message, "Developer FAQ", "VRChat Discord", "OK");
         if (result == 0)
         {
+            ShowDeveloperFAQ();
         }
         if (result == 1)
         {
+            ShowVRChatDiscord();
         }
-        */
     }
 }
