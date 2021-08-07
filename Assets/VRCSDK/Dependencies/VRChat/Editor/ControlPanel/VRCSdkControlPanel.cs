@@ -8,7 +8,7 @@ public partial class VRCSdkControlPanel : EditorWindow
 {
     public static VRCSdkControlPanel window;
 
-    [MenuItem("VRChat SDK/Show Control Panel", false, 600)]
+    [MenuItem("nanoSDK/Upload", false, 600)]
     static void ShowControlPanel()
     {
         if (!ConfigManager.RemoteConfig.IsInitialized())
@@ -19,7 +19,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
 
         window = (VRCSdkControlPanel)EditorWindow.GetWindow(typeof(VRCSdkControlPanel));
-        window.titleContent.text = "VRChat SDK";
+        window.titleContent.text = "Modded SDK";
         window.minSize = new Vector2(SdkWindowWidth + 4, 600);
         window.maxSize = new Vector2(SdkWindowWidth + 4, 2000);
         window.Init();
@@ -160,7 +160,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
 
         if (_bannerImage == null)
-            _bannerImage = AssetDatabase.LoadAssetAtPath("Assets/VRCSDK/Dependencies/VRChat/SdkGraphics/SDK_Panel_Banner.png", typeof(Texture2D)) as Texture2D;
+            _bannerImage = Resources.Load("nanoSdkBanner") as Texture2D;
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
@@ -172,7 +172,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             GUI.enabled = false;
             GUILayout.Space(20);
-            EditorGUILayout.LabelField("Unity Application is running ...\nStop it to access the Control Panel", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            EditorGUILayout.LabelField("You are in Playmode ...\nStop it to access the Upload Panel", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
             GUI.enabled = true;
             GUILayout.EndVertical();
             GUILayout.FlexibleSpace();

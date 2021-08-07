@@ -239,15 +239,6 @@ namespace VRC.SDKBase.Editor
                 _builder.OnGUIError(avatar, "This avatar uses Visemes but the Face Mesh is not specified.",
                     delegate { Selection.activeObject = avatar.gameObject; }, null);
 
-            if (ShaderKeywordsUtility.DetectCustomShaderKeywords(avatar))
-                _builder.OnGUIWarning(avatar,
-                    "A Material on this avatar has custom shader keywords. Please consider optimizing it using the Shader Keywords Utility.",
-                    () => { Selection.activeObject = avatar.gameObject; },
-                    () =>
-                    {
-                        EditorApplication.ExecuteMenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility");
-                    });
-
             VerifyAvatarMipMapStreaming(avatar);
 
             Animator anim = avatar.GetComponent<Animator>();
@@ -594,7 +585,7 @@ namespace VRC.SDKBase.Editor
             bool hasHead;
             bool hasFeet;
             bool hasHands;
-            bool hasThreeFingers;
+            //bool hasThreeFingers;
             bool correctSpineHierarchy;
             bool correctLeftArmHierarchy;
             bool correctRightArmHierarchy;
