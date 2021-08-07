@@ -81,7 +81,7 @@ namespace nanoSDK
             }
         }
 
-        public void OnGUI()
+        public async void OnGUI()
         {
             GUILayout.Box("", _nanoHeader);
             GUILayout.Space(4);
@@ -89,8 +89,11 @@ namespace nanoSDK
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Check for Updates"))
             {
-
                 nanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+            }
+            if (GUILayout.Button("Reinstall SDK"))
+            {
+                await nanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
