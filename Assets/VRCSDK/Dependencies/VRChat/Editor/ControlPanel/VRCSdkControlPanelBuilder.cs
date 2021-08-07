@@ -571,6 +571,11 @@ public partial class VRCSdkControlPanel : EditorWindow
                 EditorUserBuildSettings.SwitchActiveBuildTargetAsync(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
             }
         }
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Delete Missing Scripts"))
+        {
+            nanoSDK.nanoSDK_MissingScripts.GetAndDelScripts();
+        }
     }
 
     public static string GetBuildAndPublishButtonString()
