@@ -118,6 +118,33 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.4.9 ==
+[COMPLETE REWORK]
+VRCSDK3-AVATAR-2021.08.04.11.23 (Used as basis, Its the Unity 2019 Vers)
+    ┠ Added
+        ┠ Login Welcoming
+        ┠ New Unity Version 2019
+        ┠ nanoSDK
+        ┠ Reinstall SDK Button
+        ┠ Delete Missing Scripts to UploadPanel
+    ┠ Changed
+        ┠ allowUnsafeCode set to true
+        ┠ Security License (Requires Update)
+    ┠ Removed
+        ┠ Old Unity Version
+        ┠ VRCsdkControlPanelHelp.cs
+        ┠ vrchat sdkUpdater
+        ┠ shaderkeywordsutility 
+        ┠ HDRColorFixerUtility
+        ┠ Force Configure Player Settings
+        ┠ clear cache and playerprefs
+        ┠ vrc Splash Screen
+        ┠ 
+    ┠ Bypassed
+        ┠ quest upload limit
+        ┠ max parameter count
+        ┠ max expression count
+
 == V1.4.8 ==
 VRCSDK3-AVATAR-2021.04.21.11.58 (Used as basis)
     ┠ Fixed
