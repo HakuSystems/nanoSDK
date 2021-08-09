@@ -33,7 +33,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Info", false, 500)]
         public static void OpenSplashScreen()
         {
-            nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
+            //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
             GetWindow<nanoSDK_Info>(true);
         }
 
