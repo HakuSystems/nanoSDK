@@ -13,7 +13,7 @@ public class nanoSDK_updateCheck : MonoBehaviour
         public static string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
         static Startup()
         {
-            nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
+            //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
             Check();
         }
         public async static void Check()
