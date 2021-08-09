@@ -35,6 +35,8 @@ namespace nanoSDK
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
 
+
+        /*
         #region APIDownloader
         public static void apiCheckFileExists()
         {
@@ -95,6 +97,8 @@ namespace nanoSDK
             }
         }
         #endregion
+        */ // API DOWNLOADER
+
 
 
         public async static void AutomaticSDKInstaller()
