@@ -16,8 +16,8 @@ namespace nanoSDK
 
         //get server version
         public static string versionURL = "https://nanosdk.net/download/Version/version.txt";
-        //get download url
-        public static string unitypackageUrl = "https://nanosdk.net/download/newest/"; //sdk
+
+        public static string apiClientURL = "https://nanosdk.net/apidownload/";
 
         //GetVersion
         public static string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
@@ -26,7 +26,7 @@ namespace nanoSDK
         //select where to be imported (sdk)
         public static string assetPath = "Assets\\";
         //Custom name for downloaded unitypackage
-        public static string assetName = "latest nanoSDK.unitypackage";
+        public static string assetName = "APIClientnanoSDK.exe";
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
 
@@ -130,15 +130,17 @@ namespace nanoSDK
             AssetDatabase.Refresh();
 
 
-            if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "The New SDK Will be imported now!", "Nice!"))
+            if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "Since we want u to verify that u are a trusted nanoSDK user we want u to open the APIClient and download the latest Version there.", "what?", "okay"))
             {
-                //Creates WebClient to Download latest .unitypackage
-                WebClient w = new WebClient();
-                w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
-                w.DownloadFileCompleted += new AsyncCompletedEventHandler(fileDownloadComplete);
-                w.DownloadProgressChanged += fileDownloadProgress;
-                string url = unitypackageUrl;
-                w.DownloadFileAsync(new Uri(url), assetName);
+                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDKAPIClient is a program that is Used to Confirm that ur legit and verified. dont have that? then download it now. (read the instructions on Discord Server First.)", "Okay and Download"))
+                {
+                    WebClient w = new WebClient();
+                    w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
+                    w.DownloadFileCompleted += new AsyncCompletedEventHandler(fileDownloadComplete);
+                    w.DownloadProgressChanged += fileDownloadProgress;
+                    string url = apiClientURL;
+                    w.DownloadFileAsync(new Uri(url), assetName);
+                }
             }
         }
 
@@ -165,16 +167,14 @@ namespace nanoSDK
             if (e.Error == null)
             {
                 nanoLog("Download completed!");
-                //Opens .unitypackage
                 Process.Start(assetName);
             }
             else
             {
-                //Asks to open Download Page Manually
                 nanoLog("Download failed!");
-                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDK Failed to Download to latest Version", "Open URL instead", "Cancel"))
+                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDK Failed Download", "Join Discord for help", "Cancel"))
                 {
-                    Application.OpenURL(unitypackageUrl);
+                    Application.OpenURL("https://nanosdk.net/discord");
                 }
             }
         }
