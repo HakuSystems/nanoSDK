@@ -31,7 +31,7 @@ namespace nanoSDK
 
         public static void updateDRPC()
         {
-            nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
+            //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
             nanoSDK_Security.CheckForValidSecurity();
             nanoLog("Updating everything");
             SceneName = SceneManager.GetActiveScene().name;

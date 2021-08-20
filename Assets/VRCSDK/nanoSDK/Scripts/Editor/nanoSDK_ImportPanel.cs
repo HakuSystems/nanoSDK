@@ -20,7 +20,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Import panel", false, 501)]
         public static void OpenImportPanel()
         {
-            nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
+            //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
             GetWindow<nanoSDK_ImportPanel>(true);
         }
 
