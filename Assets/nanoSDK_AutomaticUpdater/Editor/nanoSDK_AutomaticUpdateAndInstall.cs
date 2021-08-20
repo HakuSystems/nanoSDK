@@ -14,11 +14,6 @@ namespace nanoSDK
     public class nanoSDK_AutomaticUpdateAndInstall : MonoBehaviour
     {
 
-        #region api
-        public static string apiAssetName = "nanoSDKAPI.unitypackage";
-        public static string apiUnitypackageUrl = "https://nanosdk.net/download/newest/api/";
-        #endregion
-
         //get server version
         public static string versionURL = "https://nanosdk.net/download/Version/version.txt";
         //get download url
@@ -34,72 +29,6 @@ namespace nanoSDK
         public static string assetName = "latest nanoSDK.unitypackage";
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
-
-
-        /*
-        #region APIDownloader
-        public static void apiCheckFileExists()
-        {
-            string apiStartFileLocation = "Assets\\VRCSDK\\nanoSDK\\Scripts\\Api\\Editor\\nanoSDK_StartApi.cs";
-            string apiFileLocation = "Assets\\VRCSDK\\nanoSDK\\Scripts\\Api\\Editor\\API.cs";
-            if (!File.Exists(apiStartFileLocation))
-            {
-                DownloadApiFiles();
-            }
-            else if (!File.Exists(apiFileLocation))
-            {
-                DownloadApiFiles();
-            }
-
-        }
-
-        private static void DownloadApiFiles()
-        {
-            //Creates WebClient to Download latest .unitypackage
-            WebClient w2 = new WebClient();
-            w2.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
-            w2.DownloadFileCompleted += new AsyncCompletedEventHandler(apiFileDownloadComplete);
-            w2.DownloadProgressChanged += apiFileDownloadProgress;
-            string url = apiUnitypackageUrl;
-            w2.DownloadFileAsync(new Uri(url), apiAssetName);
-        }
-
-        private static void apiFileDownloadProgress(object sender, DownloadProgressChangedEventArgs e)
-        {
-            var progress = e.ProgressPercentage;
-            if (progress < 0) return;
-            if (progress >= 100)
-            {
-                EditorUtility.ClearProgressBar();
-            }
-            else
-            {
-                EditorUtility.DisplayProgressBar("Download of " + apiAssetName,
-                    "Downloading " + apiAssetName + " " + progress + "%",
-                    (progress / 100F));
-            }
-        }
-
-        private static void apiFileDownloadComplete(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Error == null)
-            {
-                nanoLog("Download completed!");
-                Process.Start(apiAssetName);
-            }
-            else
-            {
-                nanoLog("Download failed!");
-                if (EditorUtility.DisplayDialog("nanoSDK Api", "nanoSDK Failed to Download to API", "Cancel"))
-                {
-                    Process.GetCurrentProcess().Kill();
-                }
-            }
-        }
-        #endregion
-        */ // API DOWNLOADER
-
-
 
         public async static void AutomaticSDKInstaller()
         {

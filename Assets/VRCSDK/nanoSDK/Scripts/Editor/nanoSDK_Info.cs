@@ -118,6 +118,12 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.5.0 ==
+VRCSDK3-AVATAR-2021.08.04.11.23 (Used as basis, Its the Unity 2019 Vers)
+    ┠ Removed
+        ┠ login System and API ( until lyze has fixed versions)
+
+
 == V1.4.9 ==
 [COMPLETE REWORK]
 VRCSDK3-AVATAR-2021.08.04.11.23 (Used as basis, Its the Unity 2019 Vers)
