@@ -118,6 +118,25 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+
+== V1.5.1 ==
+VRCSDK3-AVATAR-2021.08.04.11.23 (Used as basis, Its the Unity 2019 Vers)
+    ┠ Changed
+        ┖ Updater Method
+    ┠ Removed
+        ┖ SDK 2.0 Version of nanoSDK    
+    ┠ nanoSDKAPIClient
+        ┠ Added
+            ┠ Register and Login
+            ┠ Discord
+            ┠ MaterialDesign
+            ┠ Animations
+            ┠ Custom MessageBoxes
+            ┠ All in One Login
+            ┠ Auto Register Login
+            ┠ Updater (Automatic)
+            ┖ nanoSDK Installer
+
 == V1.5.0 ==
 VRCSDK3-AVATAR-2021.08.04.11.23 (Used as basis, Its the Unity 2019 Vers)
     ┠ Removed
