@@ -103,27 +103,6 @@ namespace VRC.SDK3.Editor
                     return true;
                 }
 
-                void FixTexture(Texture2D texture)
-                {
-                    string path = AssetDatabase.GetAssetPath(texture);
-                    TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
-                    if (importer == null)
-                        return;
-                    TextureImporterPlatformSettings settings = importer.GetDefaultPlatformTextureSettings();
-
-                    //Max texture size
-                    if (texture.width > MAX_ACTION_TEXTURE_SIZE || texture.height > MAX_ACTION_TEXTURE_SIZE)
-                        settings.maxTextureSize = Math.Min(settings.maxTextureSize, MAX_ACTION_TEXTURE_SIZE);
-
-                    //Compression
-                    if (settings.textureCompression == TextureImporterCompression.Uncompressed)
-                        settings.textureCompression = TextureImporterCompression.Compressed;
-
-                    //Set & Reimport
-                    importer.SetPlatformTextureSettings(settings);
-                    AssetDatabase.ImportAsset(path);
-                }
-
                 //Find all textures
                 List<Texture2D> textures = new List<Texture2D>();
                 List<VRCExpressionsMenu> menuStack = new List<VRCExpressionsMenu>();
@@ -165,15 +144,7 @@ namespace VRC.SDK3.Editor
                 }
 
                 if (!isValid)
-                    _builder.OnGUIError(avatar, "Images used for Actions & Moods are too large.",
-                        delegate { Selection.activeObject = avatar.gameObject; }, FixTextures);
-
-                //Fix
-                void FixTextures()
-                {
-                    foreach (Texture2D texture in textures)
-                        FixTexture(texture);
-                }
+                    _builder.OnGUIInformation(avatar, "Images used for Actions & Moods are too large. Max size: " + MAX_ACTION_TEXTURE_SIZE);
             }
 
             //Expression menu parameters
