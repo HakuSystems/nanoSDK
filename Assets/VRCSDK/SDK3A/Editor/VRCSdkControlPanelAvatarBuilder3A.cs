@@ -330,13 +330,6 @@ namespace VRC.SDK3.Editor
                     delegate { ShowRestrictedComponents(toRemove); },
                     delegate { FixRestrictedComponents(toRemove); });
 
-            List<AudioSource> audioSources =
-                avatar.gameObject.GetComponentsInChildren<AudioSource>(true).ToList();
-            if (audioSources.Count > 0)
-                _builder.OnGUIWarning(avatar,
-                    "Audio sources found on Avatar, they will be adjusted to safe limits, if necessary.",
-                    GetAvatarSubSelectAction(avatar, typeof(AudioSource)), null);
-
             List<VRCStation> stations =
                 avatar.gameObject.GetComponentsInChildren<VRCStation>(true).ToList();
             if (stations.Count > 0)
