@@ -358,8 +358,7 @@ namespace VRC.SDK3.Editor
         IEnumerable<Shader> illegalShaders = AvatarValidation.FindIllegalShaders(avatar.gameObject);
         foreach (Shader s in illegalShaders)
         {
-            _builder.OnGUIError(avatar, "Avatar uses unsupported shader '" + s.name + "'. You can only use the shaders provided in 'VRChat/Mobile' for Quest avatars.", delegate () { Selection.activeObject
- = avatar.gameObject; }, null);
+                _builder.OnGUIInformation(avatar, "Avatar uses unsupported shader '" + s.name + "'. his might impact game performance for quest users");
         }
 #endif
 
