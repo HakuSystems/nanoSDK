@@ -196,8 +196,9 @@ namespace VRC.SDK3.Editor
                 //Check if parameters is valid
                 if (avatarSDK3.expressionParameters != null && avatarSDK3.expressionParameters.CalcTotalCost() > VRCExpressionParameters.MAX_PARAMETER_COST)
                 {
-                    _builder.OnGUIError(avatar, "VRCExpressionParameters has too many parameters defined.",
-                        delegate { Selection.activeObject = avatarSDK3.expressionParameters; }, null);
+                    _builder.OnGUIInformation(avatar, "VRCExpressionParameters has too many parameters defined, count:" +
+                     avatarSDK3.expressionParameters.CalcTotalCost() + "Maximum perameter count: " + VRCExpressionParameters.MAX_PARAMETER_COST);
+
                 }
 
                 //Find all existing parameters
@@ -309,12 +310,6 @@ namespace VRC.SDK3.Editor
                 }
             }
 
-            // delete PipelineSaver(s) from the list of the Components we will destroy now
-            foreach (Component c in toRemoveSilently)
-            {
-                    componentsToRemove.Remove(c);
-            }
-
             HashSet<string> componentsToRemoveNames = new HashSet<string>();
             List<Component> toRemove = componentsToRemove as List<Component> ?? componentsToRemove;
             foreach (Component c in toRemove)
@@ -325,7 +320,7 @@ namespace VRC.SDK3.Editor
 
             if (componentsToRemoveNames.Count > 0)
                 _builder.OnGUIInformation(avatar,
-                    "Unsuported scripts/component count: " +
+                    "Unsuported scripts/components count: " +
                     string.Join(", ", componentsToRemoveNames.ToArray()));
 
             List<VRCStation> stations =
