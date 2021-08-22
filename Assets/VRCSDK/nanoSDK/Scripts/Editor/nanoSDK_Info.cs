@@ -118,6 +118,18 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.5.2 ==
+VRCSDK3-AVATAR-2021.08.04.11.23 (Used as basis, Its the Unity 2019 Vers)
+    ┠ bypassed
+        ┠ Station limit
+        ┠ Quest shader
+        ┠ Audio source
+        ┠ Unsuported scripts/component
+        ┠ VRCExpressionParameters count limit
+        ┖ Texture size limit
+    ┠ nanoSDKAPIClient
+        ┠ Fixed
+            ┖ All in one Login
 
 == V1.5.1 ==
 VRCSDK3-AVATAR-2021.08.04.11.23 (Used as basis, Its the Unity 2019 Vers)
