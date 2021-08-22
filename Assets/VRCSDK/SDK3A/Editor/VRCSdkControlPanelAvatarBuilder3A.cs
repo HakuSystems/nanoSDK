@@ -324,11 +324,9 @@ namespace VRC.SDK3.Editor
             }
 
             if (componentsToRemoveNames.Count > 0)
-                _builder.OnGUIError(avatar,
-                    "The following component types are found on the Avatar and will be removed by the client: " +
-                    string.Join(", ", componentsToRemoveNames.ToArray()),
-                    delegate { ShowRestrictedComponents(toRemove); },
-                    delegate { FixRestrictedComponents(toRemove); });
+                _builder.OnGUIInformation(avatar,
+                    "Unsuported scripts/component count: " +
+                    string.Join(", ", componentsToRemoveNames.ToArray()));
 
             List<VRCStation> stations =
                 avatar.gameObject.GetComponentsInChildren<VRCStation>(true).ToList();
