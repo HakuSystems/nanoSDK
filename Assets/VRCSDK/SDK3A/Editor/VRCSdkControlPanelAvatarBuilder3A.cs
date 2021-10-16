@@ -167,9 +167,8 @@ namespace VRC.SDK3.Editor
                 //Check if parameters is valid
                 if (avatarSDK3.expressionParameters != null && avatarSDK3.expressionParameters.CalcTotalCost() > VRCExpressionParameters.MAX_PARAMETER_COST)
                 {
-                    _builder.OnGUIInformation(avatar, "VRCExpressionParameters has too many parameters defined, count:" +
-                     avatarSDK3.expressionParameters.CalcTotalCost() + "Maximum perameter count: " + VRCExpressionParameters.MAX_PARAMETER_COST);
-
+                    _builder.OnGUIError(avatar, "VRCExpressionParameters has too many parameters defined.",
+                        delegate { Selection.activeObject = avatarSDK3.expressionParameters; }, null);
                 }
 
                 //Find all existing parameters
@@ -281,6 +280,12 @@ namespace VRC.SDK3.Editor
                 }
             }
 
+            // delete PipelineSaver(s) from the list of the Components we will destroy now
+            foreach (Component c in toRemoveSilently)
+            {
+                    componentsToRemove.Remove(c);
+            }
+
             HashSet<string> componentsToRemoveNames = new HashSet<string>();
             List<Component> toRemove = componentsToRemove as List<Component> ?? componentsToRemove;
             foreach (Component c in toRemove)
@@ -291,7 +296,7 @@ namespace VRC.SDK3.Editor
 
             if (componentsToRemoveNames.Count > 0)
                 _builder.OnGUIInformation(avatar,
-                    "Unsuported scripts/components count: " +
+                    "Unsuported scripts/component count: " +
                     string.Join(", ", componentsToRemoveNames.ToArray()));
 
             List<VRCStation> stations =
@@ -314,7 +319,8 @@ namespace VRC.SDK3.Editor
         IEnumerable<Shader> illegalShaders = AvatarValidation.FindIllegalShaders(avatar.gameObject);
         foreach (Shader s in illegalShaders)
         {
-                _builder.OnGUIInformation(avatar, "Avatar uses unsupported shader '" + s.name + "'. his might impact game performance for quest users");
+            _builder.OnGUIError(avatar, "Avatar uses unsupported shader '" + s.name + "'. You can only use the shaders provided in 'VRChat/Mobile' for Quest avatars.", delegate () { Selection.activeObject
+ = avatar.gameObject; }, null);
         }
 #endif
 
@@ -420,7 +426,7 @@ namespace VRC.SDK3.Editor
                 OnGUIPerformanceInfo(avatar, perfStats, perfCategory, show, null);
             }
 
-            //_builder.OnGUILink(avatar, "Avatar Optimization Tips", VRCSdkControlPanel.AVATAR_OPTIMIZATION_TIPS_URL);
+            _builder.OnGUILink(avatar, "Avatar Optimization Tips", VRCSdkControlPanel.AVATAR_OPTIMIZATION_TIPS_URL);
 
         }
 

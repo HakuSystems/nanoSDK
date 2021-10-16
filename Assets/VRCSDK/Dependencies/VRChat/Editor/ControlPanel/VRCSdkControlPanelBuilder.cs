@@ -226,7 +226,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
             if (Application.unityVersion != sdkUnityVersion)
             {
-                OnGUIWarning(null, "You are not using the recommended Unity version for nanoSDK. Content built with this version may not work correctly. Please use Unity " + sdkUnityVersion,
+                OnGUIWarning(null, "You are not using the recommended Unity version for the nanoSDK. Content built with this version may not work correctly. Please use Unity " + sdkUnityVersion,
                     null,
                     () => { Application.OpenURL("https://unity3d.com/get-unity/download/archive"); }
                 );
@@ -240,7 +240,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (sdk2Components.Count > 0 && sdk3Components.Count > 0)
             {
                 OnGUIError(null,
-                    "This scene contains components from the nanoSDK version 2 and version 3. Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
+                    "This scene contains components from the SDK version 2 and version 3. Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
                     () => { Selection.objects = sdk2Components.ToArray(); },
                     null
                 );
@@ -300,9 +300,9 @@ public partial class VRCSdkControlPanel : EditorWindow
         if (selectedBuilder == null)
         {
 #if VRC_SDK_VRCSDK2
-            EditorGUILayout.LabelField("A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build nanoSDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            EditorGUILayout.LabelField("A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build SDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
 #elif VRC_SDK_VRCSDK3
-            EditorGUILayout.LabelField("A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build nanoSDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            EditorGUILayout.LabelField("A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build SDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
 #else
             EditorGUILayout.LabelField("The SDK did not load properly. Try this - In the Project window, navigate to Assets/VRCSDK/Plugins. Select all the DLLs, then right click and choose 'Reimport'");
 #endif
@@ -570,11 +570,6 @@ public partial class VRCSdkControlPanel : EditorWindow
                 EditorUserBuildSettings.selectedBuildTargetGroup = BuildTargetGroup.Standalone;
                 EditorUserBuildSettings.SwitchActiveBuildTargetAsync(BuildTargetGroup.Standalone, BuildTarget.StandaloneWindows64);
             }
-        }
-        EditorGUILayout.Space();
-        if (GUILayout.Button("Delete Missing Scripts"))
-        {
-            nanoSDK.nanoSDK_MissingScripts.GetAndDelScripts();
         }
     }
 
