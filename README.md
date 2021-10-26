@@ -36,9 +36,11 @@ You can download nanoSDK from our website
 
 
 ## Requirements
-To use nanoSDK you need unity 2018.4.20f1
+To use nanoSDK you need unity 2019.4.29
 
-Download here: [Unity 2018.4.20f1](https://unity3d.com/unity/whats-new/2018.4.20)
+Download here: [Unity 2019.4.29](https://unity3d.com/unity/whats-new/2019.4.29)
+
+We no longer support unity 2018.4.20f1
 
 ## Videos
 - What Is nanoSDK Exactly?
