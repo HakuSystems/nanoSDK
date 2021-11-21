@@ -7,86 +7,86 @@ using UnityEditor;
 
 namespace nanoSDK
 {
-    public class nanoSDK_ImportManager
+    public class NanoSDK_ImportManager
     {
         public static string configName = "importConfig.json";
         public static string serverUrl = "https://cdn.nanoSDK.net/assets/";
         public static string internalServerUrl = "https://cdn.nanoSDK.net/assets/";
 
-        public static void downloadAndImportAssetFromServer(string assetName)
+        public static void DownloadAndImportAssetFromServer(string assetName)
         {
-            if (File.Exists(nanoSDK_Settings.getAssetPath() + assetName))
+            if (File.Exists(NanoSDK_Settings.GetAssetPath() + assetName))
             {
-                nanoLog(assetName + " exists. Importing it..");
-                importDownloadedAsset(assetName);
+                NanoLog(assetName + " exists. Importing it..");
+                ImportDownloadedAsset(assetName);
             }
             else
             {
-                nanoLog(assetName + " does not exist. Starting download..");
-                downloadFile(assetName);
+                NanoLog(assetName + " does not exist. Starting download..");
+                DownloadFile(assetName);
             }
         }
 
-        private static void downloadFile(string assetName)
+        private static void DownloadFile(string assetName)
         {
             WebClient w = new WebClient();
             w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
             w.QueryString.Add("assetName", assetName);
-            w.DownloadFileCompleted += fileDownloadCompleted;
-            w.DownloadProgressChanged += fileDownloadProgress;
+            w.DownloadFileCompleted += FileDownloadCompleted;
+            w.DownloadProgressChanged += FileDownloadProgress;
             string url = serverUrl + assetName;
-            w.DownloadFileAsync(new Uri(url), nanoSDK_Settings.getAssetPath() + assetName);
+            w.DownloadFileAsync(new Uri(url), NanoSDK_Settings.GetAssetPath() + assetName);
         }
 
-        public static void deleteAsset(string assetName)
+        public static void DeleteAsset(string assetName)
         {
-            File.Delete(nanoSDK_Settings.getAssetPath() + assetName);
+            File.Delete(NanoSDK_Settings.GetAssetPath() + assetName);
         }
 
-        public static void updateConfig()
+        public static void UpdateConfig()
         {
             WebClient w = new WebClient();
             w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
-            w.DownloadFileCompleted += configDownloadCompleted;
-            w.DownloadProgressChanged += fileDownloadProgress;
+            w.DownloadFileCompleted += ConfigDownloadCompleted;
+            w.DownloadProgressChanged += FileDownloadProgress;
             string url = internalServerUrl + configName;
-            w.DownloadFileAsync(new Uri(url), nanoSDK_Settings.projectConfigPath + "update_" + configName);
+            w.DownloadFileAsync(new Uri(url), NanoSDK_Settings.projectConfigPath + "update_" + configName);
         }
 
-        private static void configDownloadCompleted(object sender, AsyncCompletedEventArgs e)
+        private static void ConfigDownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             if (e.Error == null)
             {
                 //var updateFile = File.ReadAllText(nanoSDK_Settings.projectConfigPath + "update_" + configName);
-                File.Delete(nanoSDK_Settings.projectConfigPath + configName);
-                File.Move(nanoSDK_Settings.projectConfigPath + "update_" + configName,
-                    nanoSDK_Settings.projectConfigPath + configName);
-                nanoSDK_ImportPanel.LoadJson();
+                File.Delete(NanoSDK_Settings.projectConfigPath + configName);
+                File.Move(NanoSDK_Settings.projectConfigPath + "update_" + configName,
+                    NanoSDK_Settings.projectConfigPath + configName);
+                NanoSDK_ImportPanel.LoadJson();
 
                 EditorPrefs.SetInt("nanoSDK_configImportLastUpdated", (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-                nanoLog("Import Config has been updated!");
+                NanoLog("Import Config has been updated!");
             }
             else
             {
-                nanoLog("Import Config could not be updated!");
+                NanoLog("Import Config could not be updated!");
             }
         }
 
-        private static void fileDownloadCompleted(object sender, AsyncCompletedEventArgs e)
+        private static void FileDownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             string assetName = ((WebClient) sender).QueryString["assetName"];
             if (e.Error == null)
             {
-                nanoLog("Download of file " + assetName + " completed!");
+                NanoLog("Download of file " + assetName + " completed!");
             }
             else
             {
-                deleteAsset(assetName);
-                nanoLog("Download of file " + assetName + " failed!");
+                DeleteAsset(assetName);
+                NanoLog("Download of file " + assetName + " failed!");
             }
         }
 
-        private static void fileDownloadProgress(object sender, DownloadProgressChangedEventArgs e)
+        private static void FileDownloadProgress(object sender, DownloadProgressChangedEventArgs e)
         {
             var progress = e.ProgressPercentage;
             var assetName = ((WebClient) sender).QueryString["assetName"];
@@ -103,7 +103,7 @@ namespace nanoSDK
             }
         }
 
-        public static void checkForConfigUpdate()
+        public static void CheckForConfigUpdate()
         {
             if (EditorPrefs.HasKey("nanoSDK_configImportLastUpdated"))
             {
@@ -116,18 +116,18 @@ namespace nanoSDK
                     return;
                 }
             }
-            nanoLog("Updating import config");
-            updateConfig();
+            NanoLog("Updating import config");
+            UpdateConfig();
         }
 
-        private static void nanoLog(string message)
+        private static void NanoLog(string message)
         {
             Debug.Log("[nanoSDK] AssetDownloadManager: " + message);
         }
 
-        public static void importDownloadedAsset(string assetName)
+        public static void ImportDownloadedAsset(string assetName)
         {
-            AssetDatabase.ImportPackage(nanoSDK_Settings.getAssetPath() + assetName, true);
+            AssetDatabase.ImportPackage(NanoSDK_Settings.GetAssetPath() + assetName, true);
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace nanoSDK
 {
-    public class nanoSDK_Help
+    public class NanoSDK_Help
     {
 
         [MenuItem("nanoSDK/Help/Discord", false, 1049)]
@@ -41,13 +41,13 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Help/Utilities/Update configs", false, 1000)]
         public static void ForceUpdateConfigs()
         {
-            nanoSDK_ImportManager.updateConfig();
+            NanoSDK_ImportManager.UpdateConfig();
         }
         [MenuItem("nanoSDK/Help/Utilities/Check for Sdk Updates")]
         public static void UpdatesdkBtn()
         {
 
-            nanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+            NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
         }
 
     }

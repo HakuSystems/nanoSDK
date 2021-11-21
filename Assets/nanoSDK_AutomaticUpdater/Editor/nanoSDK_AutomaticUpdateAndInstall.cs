@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace nanoSDK
 {
-    public class nanoSDK_AutomaticUpdateAndInstall : MonoBehaviour
+    public class NanoSDK_AutomaticUpdateAndInstall : MonoBehaviour
     {
 
         //get server version
@@ -47,7 +47,7 @@ namespace nanoSDK
                 if (serverVersion == thisVersion)
                 {
                     //up to date
-                    nanoLog("you are using the newest version of nanoSDK!");
+                    NanoLog("you are using the newest version of nanoSDK!");
                     EditorUtility.DisplayDialog("You are up to date",
                         "Current nanoSDK version: V" + currentVersion,
                         "Okay"
@@ -56,7 +56,7 @@ namespace nanoSDK
                 else
                 {
                     //not up to date
-                    nanoLog("There is an Update Available");
+                    NanoLog("There is an Update Available");
                     //start download
                     await DownloadnanoSDK();
                 }
@@ -69,7 +69,7 @@ namespace nanoSDK
 
         public static async Task DownloadnanoSDK()
         {
-            nanoLog("Asking for Approval..");
+            NanoLog("Asking for Approval..");
             if (EditorUtility.DisplayDialog("nanoSDK Updater", "Your Version (V" + currentVersion.ToString() + ") is Outdated!" + " do you want to Download and Import the Newest Version?", "Yes", "No"))
             {
                 //starting deletion of old sdk
@@ -78,7 +78,7 @@ namespace nanoSDK
             else
             {
                 //canceling the whole process
-                nanoLog("You pressed no.");
+                NanoLog("You pressed no.");
             }
         }
 
@@ -100,7 +100,7 @@ namespace nanoSDK
                             {
                                 foreach (string f in vrcsdkDir)
                                 {
-                                    nanoLog($"{f} - Deleted");
+                                    NanoLog($"{f} - Deleted");
                                     File.Delete(f);
                                 }
                             });
@@ -122,7 +122,7 @@ namespace nanoSDK
             //Checks if Directory still exists
             if (Directory.Exists(vrcsdkPath))
             {
-                nanoLog($"{vrcsdkPath} - Deleted");
+                NanoLog($"{vrcsdkPath} - Deleted");
                 //Delete Folder
                 Directory.Delete(vrcsdkPath, true);
             }
@@ -130,21 +130,26 @@ namespace nanoSDK
             AssetDatabase.Refresh();
 
 
-            if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "Since we want u to verify that u are a trusted nanoSDK user we want u to open the APIClient and download the latest Version there.", "what?", "okay"))
+            WebClient w = new WebClient();
+            w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
+            w.DownloadFileCompleted += new AsyncCompletedEventHandler(FileDownloadComplete);
+            w.DownloadProgressChanged += FileDownloadProgress;
+            try
             {
-                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDKAPIClient is a program that is Used to Confirm that ur legit and verified. dont have that? then download it now. (read the instructions on Discord Server First.)", "Okay and Download"))
+                string url = apiClientURL;
+                w.DownloadFileAsync(new Uri(url), Path.GetTempPath() + "\\" + assetName);
+            }
+            catch (Exception ex)
+            {
+                NanoLog("Download failed!");
+                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDK Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
                 {
-                    WebClient w = new WebClient();
-                    w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
-                    w.DownloadFileCompleted += new AsyncCompletedEventHandler(fileDownloadComplete);
-                    w.DownloadProgressChanged += fileDownloadProgress;
-                    string url = apiClientURL;
-                    w.DownloadFileAsync(new Uri(url), assetName);
+                    Application.OpenURL("https://nanosdk.net/discord");
                 }
             }
         }
 
-        private static void fileDownloadProgress(object sender, DownloadProgressChangedEventArgs e)
+        private static void FileDownloadProgress(object sender, DownloadProgressChangedEventArgs e)
         {
             //Creates A ProgressBar
             var progress = e.ProgressPercentage;
@@ -161,25 +166,28 @@ namespace nanoSDK
             }
         }
 
-        private static void fileDownloadComplete(object sender, AsyncCompletedEventArgs e)
+        private static void FileDownloadComplete(object sender, AsyncCompletedEventArgs e)
         {
             //Checks if Download is complete
-            if (e.Error == null)
+            try
             {
-                nanoLog("Download completed!");
-                Process.Start(assetName);
+                if (e.Error == null)
+                {
+                    string temp = Path.GetTempPath();
+                    Process.Start(temp + "\\" + assetName);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                nanoLog("Download failed!");
-                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDK Failed Download", "Join Discord for help", "Cancel"))
+                NanoLog("Download failed!");
+                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDK Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
                 {
                     Application.OpenURL("https://nanosdk.net/discord");
                 }
             }
         }
 
-        private static void nanoLog(string message)
+        private static void NanoLog(string message)
         {
             //Our Logger
             Debug.Log("[nanoSDK] AssetDownloadManager: " + message);

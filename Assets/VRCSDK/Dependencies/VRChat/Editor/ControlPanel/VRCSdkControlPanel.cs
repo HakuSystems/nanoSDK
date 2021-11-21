@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using nanoSDK;
+using UnityEditor;
 using UnityEngine;
 using VRC.Core;
 using VRC.SDKBase.Editor;
@@ -17,7 +18,8 @@ public partial class VRCSdkControlPanel : EditorWindow
             ConfigManager.RemoteConfig.Init(() => ShowControlPanel());
             return;
         }
-
+        NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
+        function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
         window = (VRCSdkControlPanel)EditorWindow.GetWindow(typeof(VRCSdkControlPanel));
         window.titleContent.text = "Modded SDK";
         window.minSize = new Vector2(SdkWindowWidth + 4, 600);
@@ -37,11 +39,13 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     void InitializeStyles()
     {
-        titleGuiStyle = new GUIStyle();
-        titleGuiStyle.fontSize = 15;
-        titleGuiStyle.fontStyle = FontStyle.BoldAndItalic;
-        titleGuiStyle.alignment = TextAnchor.MiddleCenter;
-        titleGuiStyle.wordWrap = true;
+        titleGuiStyle = new GUIStyle
+        {
+            fontSize = 15,
+            fontStyle = FontStyle.BoldAndItalic,
+            alignment = TextAnchor.MiddleCenter,
+            wordWrap = true
+        };
         if (EditorGUIUtility.isProSkin)
             titleGuiStyle.normal.textColor = Color.white;
         else
@@ -59,17 +63,22 @@ public partial class VRCSdkControlPanel : EditorWindow
             boxGuiStyle.normal.textColor = Color.black;
         }
 
-        infoGuiStyle = new GUIStyle();
-        infoGuiStyle.wordWrap = true; ;
+        infoGuiStyle = new GUIStyle
+        {
+            wordWrap = true
+        };
+        ;
         if (EditorGUIUtility.isProSkin)
             infoGuiStyle.normal.textColor = Color.white;
         else
             infoGuiStyle.normal.textColor = Color.black;
         infoGuiStyle.margin = new RectOffset(10, 10, 10, 10);
 
-        listButtonStyleEven = new GUIStyle();
-        listButtonStyleEven.margin = new RectOffset(0, 0, 0, 0);
-        listButtonStyleEven.border = new RectOffset(0, 0, 0, 0);
+        listButtonStyleEven = new GUIStyle
+        {
+            margin = new RectOffset(0, 0, 0, 0),
+            border = new RectOffset(0, 0, 0, 0)
+        };
         if (EditorGUIUtility.isProSkin)
         {
             listButtonStyleEven.normal.textColor = new Color(0.8f, 0.8f, 0.8f);
@@ -81,9 +90,11 @@ public partial class VRCSdkControlPanel : EditorWindow
             listButtonStyleEven.normal.background = CreateBackgroundColorImage(new Color(0.85f, 0.85f, 0.85f));
         }
 
-        listButtonStyleOdd = new GUIStyle();
-        listButtonStyleOdd.margin = new RectOffset(0, 0, 0, 0);
-        listButtonStyleOdd.border = new RectOffset(0, 0, 0, 0);
+        listButtonStyleOdd = new GUIStyle
+        {
+            margin = new RectOffset(0, 0, 0, 0),
+            border = new RectOffset(0, 0, 0, 0)
+        };
         if (EditorGUIUtility.isProSkin)
         {
             listButtonStyleOdd.normal.textColor = new Color(0.8f, 0.8f, 0.8f);
@@ -109,14 +120,18 @@ public partial class VRCSdkControlPanel : EditorWindow
             listButtonStyleSelected.normal.background = CreateBackgroundColorImage(new Color(0.75f, 0.75f, 0.75f));
         }
 
-        scrollViewSeparatorStyle = new GUIStyle("Toolbar");
-        scrollViewSeparatorStyle.fixedWidth = SdkWindowWidth + 10;
-        scrollViewSeparatorStyle.fixedHeight = 4;
+        scrollViewSeparatorStyle = new GUIStyle("Toolbar")
+        {
+            fixedWidth = SdkWindowWidth + 10,
+            fixedHeight = 4
+        };
         scrollViewSeparatorStyle.margin.top = 1;
 
-        searchBarStyle = new GUIStyle("Toolbar");
-        searchBarStyle.fixedWidth = SdkWindowWidth;
-        searchBarStyle.fixedHeight = 23;
+        searchBarStyle = new GUIStyle("Toolbar")
+        {
+            fixedWidth = SdkWindowWidth,
+            fixedHeight = 23
+        };
         searchBarStyle.padding.top = 3;
 
     }
