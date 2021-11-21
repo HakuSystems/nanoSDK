@@ -71,7 +71,7 @@ namespace nanoSDK
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
         }
-        /*
+        /* After cookie thing is finished then this dont make like "ugh we cant use this bla" lol
         private void OnLostFocus()
         {
             EditorUtility.DisplayDialog("nanoSDK Api", "Window lost Focus", "Okay");
@@ -109,8 +109,9 @@ namespace nanoSDK
             }
             else
             {
-                //Open LICENSE WINDOW
                 NanoLog("INVALID LICENSE");
+                NanoSDK_License nanoSDK_License = (NanoSDK_License)ScriptableObject.CreateInstance(typeof(NanoSDK_License));
+                nanoSDK_License.Show();
             }
 
         }
@@ -332,7 +333,7 @@ namespace nanoSDK
         public static bool IsOpen => Instance != null;
 
         private static readonly int _sizeX = 500; //500
-        private static readonly int _sizeY = 250; //250
+        private static readonly int _sizeY = 80; //250
         //License
         public string LicenseinputText;
 
@@ -344,6 +345,7 @@ namespace nanoSDK
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
         }
+        /* ignore for development thing
         private void OnLostFocus()
         {
             EditorUtility.DisplayDialog("nanoSDK Api", "Window lost Focus", "Okay");
@@ -354,6 +356,7 @@ namespace nanoSDK
             EditorUtility.DisplayDialog("nanoSDK Api", "Window got Destroyed", "Okay");
             NanoLog("DESTROYED");
         }
+        */
         void OnGUI()
         {
             NanoLog("REQUESTING DATA");
@@ -377,14 +380,37 @@ namespace nanoSDK
             EditorGUILayout.EndVertical();
         }
 
-        private void CheckIfLicenseKeyValidAsync(string licenseinputText)
+        private async void CheckIfLicenseKeyValidAsync(string licenseinputText)
         {
+            var content = new StringContent(JsonConvert.SerializeObject(new APILicenseData
+            {
+                Key = licenseinputText
+            }));
+            string nanoLicenseURL = "https://api.nanosdk.net/user/redeemables/redeem";
+            var response = await NanoSDK_Login.nanoHttpclient.PostAsync(nanoLicenseURL, content);
+            string result = await response.Content.ReadAsStringAsync();
 
+            var properties = JsonConvert.DeserializeObject<APILicenseData>(result);
+
+            if (properties.Message.Contains("Redeem was successful"))
+            {
+                Close();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("nanoSDK Api", properties.Message, "Okay");
+            }
         }
 
         private void NanoLog(string msg)
         {
             Debug.Log("[nanoSDK API - License]: " + msg);
+        }
+
+        public class APILicenseData
+        {
+            public string Message { get; set; }
+            public string Key { get; set; }
         }
     }
 }
