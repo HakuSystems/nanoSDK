@@ -101,19 +101,28 @@ namespace nanoSDK
             EditorUtility.DisplayDialog("unity", PlayerPrefs.GetString("nanoUsername"), "Okay");
 
             //irgendwie irgendwas falsch
-            LoginnanoUser(PlayerPrefs.GetString("nanoUsername"), PlayerPrefs.GetString("nanoPassword"));
-            if (properties.IsVerified)
+            //LoginnanoUser(PlayerPrefs.GetString("nanoUsername"), PlayerPrefs.GetString("nanoPassword"));
+            if (string.IsNullOrEmpty(properties.Username))
             {
-                NanoLog("VALID LICENSE");
-                //do nothing
+                NanoLog("USER NOT LOGGED IN WITH SERVER");
+                NanoSDK_Login window = new NanoSDK_Login();
+                window.Show();
             }
             else
             {
-                NanoLog("INVALID LICENSE");
-                NanoSDK_License nanoSDK_License = (NanoSDK_License)ScriptableObject.CreateInstance(typeof(NanoSDK_License));
-                nanoSDK_License.Show();
+                NanoLog("USER LOGGED IN WITH SERVER CHECKING LICENSE NOW");
+                if (properties.IsVerified)
+                {
+                    NanoLog("VALID LICENSE");
+                    //do nothing
+                }
+                else
+                {
+                    NanoLog("INVALID LICENSE");
+                    NanoSDK_License nanoSDK_License = (NanoSDK_License)ScriptableObject.CreateInstance(typeof(NanoSDK_License));
+                    nanoSDK_License.Show();
+                }
             }
-
         }
 
         void OnGUI()
