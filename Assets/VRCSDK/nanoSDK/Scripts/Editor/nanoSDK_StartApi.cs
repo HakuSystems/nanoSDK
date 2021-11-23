@@ -387,6 +387,7 @@ namespace nanoSDK
                 Key = licenseinputText
             }));
             string nanoLicenseURL = "https://api.nanosdk.net/user/redeemables/redeem";
+            NanoSDK_Login.nanoHttpclient.DefaultRequestHeaders.Add("Auth-Key", PlayerPrefs.GetString("nanoAuthKey"));
             var response = await NanoSDK_Login.nanoHttpclient.PostAsync(nanoLicenseURL, content);
             string result = await response.Content.ReadAsStringAsync();
 
