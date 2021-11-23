@@ -111,6 +111,7 @@ namespace nanoSDK
             else
             {
                 NanoLog("USER LOGGED IN WITH SERVER CHECKING LICENSE NOW");
+                Close();
                 if (properties.IsVerified)
                 {
                     NanoLog("VALID LICENSE");
