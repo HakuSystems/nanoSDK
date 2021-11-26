@@ -71,23 +71,17 @@ namespace nanoSDK
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
         }
-        /* After cookie thing is finished then this dont make like "ugh we cant use this bla" lol
         private void OnLostFocus()
         {
             EditorUtility.DisplayDialog("nanoSDK Api", "Window lost Focus", "Okay");
             NanoLog("LOST FOCUS");
-            NanoLog("INVALID CONNECTION");
-            GetUserLoggedIn("https://api.nanosdk.net/user/self");
         }
 
         private void OnDestroy()
         {
             EditorUtility.DisplayDialog("nanoSDK Api", "Window got Destroyed", "Okay");
             NanoLog("DESTROYED");
-            NanoLog("INVALID CONNECTION");
-            GetUserLoggedIn("https://api.nanosdk.net/user/self");
         }
-        */
 
         public async void GetUserLoggedIn(string path)
         {
@@ -103,8 +97,6 @@ namespace nanoSDK
             var properties = JsonConvert.DeserializeObject<NanoUserData>(result);
             EditorUtility.DisplayDialog("server", properties.Username, "Okay");
             EditorUtility.DisplayDialog("unity", PlayerPrefs.GetString("nanoUsername"), "Okay");
-            //irgendwie irgendwas falsch
-            //LoginnanoUser(PlayerPrefs.GetString("nanoUsername"), PlayerPrefs.GetString("nanoPassword"));
             if (string.IsNullOrEmpty(properties.Username))
             {
                 NanoLog("USER NOT LOGGED IN WITH SERVER");
@@ -132,6 +124,7 @@ namespace nanoSDK
         {
             EditorGUILayout.BeginVertical();
             EditorGUILayout.LabelField("Login");
+
 
             UserinputText = EditorGUILayout.TextField("Username", UserinputText);
             PassinputText = EditorGUILayout.PasswordField("Password", PassinputText);
@@ -175,7 +168,6 @@ namespace nanoSDK
 
         private async void RegisternanoUser(string username, string password, string email)
         {
-
             NanoLog("WAITING FOR SERVER TO REPLY");
             var content = new StringContent(JsonConvert.SerializeObject(new APIRegisterData
             {
@@ -394,6 +386,8 @@ namespace nanoSDK
 
         private async void CheckIfLicenseKeyValidAsync(string licenseinputText)
         {
+            NanoSDK_Login window = new NanoSDK_Login();
+            window.GetUserLoggedIn("https://api.nanosdk.net/");
             var content = new StringContent(JsonConvert.SerializeObject(new APILicenseData
             {
                 Key = licenseinputText
