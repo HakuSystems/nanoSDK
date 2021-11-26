@@ -92,14 +92,17 @@ namespace nanoSDK
         public async void GetUserLoggedIn(string path)
         {
             string nanoCheckURL = path;
-            nanoHttpclient.DefaultRequestHeaders.Add("Auth-Key", PlayerPrefs.GetString("nanoAuthKey"));
-            var response = await nanoHttpclient.GetAsync(nanoCheckURL);
+            var request = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri(nanoCheckURL)
+            };
+            request.Headers.Add("Auth-Key", PlayerPrefs.GetString("nanoAuthKey"));
+            var response = await nanoHttpclient.SendAsync(request);
             string result = await response.Content.ReadAsStringAsync();
-
             var properties = JsonConvert.DeserializeObject<NanoUserData>(result);
             EditorUtility.DisplayDialog("server", properties.Username, "Okay");
             EditorUtility.DisplayDialog("unity", PlayerPrefs.GetString("nanoUsername"), "Okay");
-
             //irgendwie irgendwas falsch
             //LoginnanoUser(PlayerPrefs.GetString("nanoUsername"), PlayerPrefs.GetString("nanoPassword"));
             if (string.IsNullOrEmpty(properties.Username))
@@ -111,7 +114,6 @@ namespace nanoSDK
             else
             {
                 NanoLog("USER LOGGED IN WITH SERVER CHECKING LICENSE NOW");
-                Close();
                 if (properties.IsVerified)
                 {
                     NanoLog("VALID LICENSE");
