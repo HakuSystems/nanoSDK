@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace nanoSDK
 { 
-    public class nanoSDK_MissingScripts
+    public class NanoSDK_MissingScripts
     {
         public static async void GetAndDelScripts()
         {
@@ -33,19 +33,19 @@ namespace nanoSDK
                 }
                 await Task.Run(() =>
                 {
-                    nanoLog($"Found {compCount} missing Scripts from {goCount} Gameobjects - All of them got Deleted.");
+                    NanoLog($"Found {compCount} missing Scripts from {goCount} Gameobjects - All of them got Deleted.");
                 });
             }
             catch (Exception ex)
             {
                 await Task.Run(() =>
                 {
-                    nanoErrLog(ex.Message);
+                    NanoErrLog(ex.Message);
                 });
             }
         }
 
-        private static async void nanoErrLog(string message)
+        private static async void NanoErrLog(string message)
         {
             await Task.Run(() =>
             {
@@ -53,7 +53,7 @@ namespace nanoSDK
             });
         }
 
-        private static async void nanoLog(string message)
+        private static async void NanoLog(string message)
         {
             await Task.Run(() =>
             {

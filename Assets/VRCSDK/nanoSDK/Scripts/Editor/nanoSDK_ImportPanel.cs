@@ -8,10 +8,10 @@ using Newtonsoft.Json.Linq;
 namespace nanoSDK
 {
     [InitializeOnLoad]
-    public class nanoSDK_ImportPanel : EditorWindow
+    public class NanoSDK_ImportPanel : EditorWindow
     {
         private static GUIStyle _nanoHeader;
-        private static Dictionary<string, string> assets = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> assets = new Dictionary<string, string>();
         private static int _sizeX = 400;
         private static int _sizeY = 700;
         private static Vector2 _changeLogScroll;
@@ -21,14 +21,17 @@ namespace nanoSDK
         public static void OpenImportPanel()
         {
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
-            GetWindow<nanoSDK_ImportPanel>(true);
+            GetWindow<NanoSDK_ImportPanel>(true);
         }
 
         public void OnEnable()
         {
+
+            NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
+            function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
             titleContent = new GUIContent("nanoSDK Import panel");
             
-            nanoSDK_ImportManager.checkForConfigUpdate();
+            NanoSDK_ImportManager.CheckForConfigUpdate();
             LoadJson();
 
             maxSize = new Vector2(_sizeX, _sizeY);
@@ -50,10 +53,10 @@ namespace nanoSDK
             assets.Clear();
             
             dynamic configJson =
-                JObject.Parse(File.ReadAllText(nanoSDK_Settings.projectConfigPath + nanoSDK_ImportManager.configName));
+                JObject.Parse(File.ReadAllText(NanoSDK_Settings.projectConfigPath + NanoSDK_ImportManager.configName));
 
             Debug.Log("Server Asset Url is: " + configJson["config"]["serverUrl"]);
-            nanoSDK_ImportManager.serverUrl = configJson["config"]["serverUrl"].ToString();
+            NanoSDK_ImportManager.serverUrl = configJson["config"]["serverUrl"].ToString();
             _sizeX = (int)configJson["config"]["window"]["sizeX"];
             _sizeY = (int)configJson["config"]["window"]["sizeY"];
 
@@ -89,11 +92,11 @@ namespace nanoSDK
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Check for Updates"))
             {
-                nanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
             }
             if (GUILayout.Button("Reinstall SDK"))
             {
-                await nanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
+                await NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
@@ -115,7 +118,7 @@ namespace nanoSDK
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Update assets (config)"))
             {
-                nanoSDK_ImportManager.updateConfig();
+                NanoSDK_ImportManager.UpdateConfig();
             }
             GUILayout.EndHorizontal();
 
@@ -134,15 +137,15 @@ namespace nanoSDK
                 else
                 {
                     if (GUILayout.Button(
-                        (File.Exists(nanoSDK_Settings.getAssetPath() + asset.Value) ? "Import" : "Download") +
+                        (File.Exists(NanoSDK_Settings.GetAssetPath() + asset.Value) ? "Import" : "Download") +
                         " " + asset.Key))
                     {
-                        nanoSDK_ImportManager.downloadAndImportAssetFromServer(asset.Value);
+                        NanoSDK_ImportManager.DownloadAndImportAssetFromServer(asset.Value);
                     }
 
                     if (GUILayout.Button("Del", GUILayout.Width(40)))
                     {
-                        nanoSDK_ImportManager.deleteAsset(asset.Value);
+                        NanoSDK_ImportManager.DeleteAsset(asset.Value);
                     }
                 }
                 GUILayout.EndHorizontal();

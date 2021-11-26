@@ -187,6 +187,8 @@ public class EnvConfig
             return false;
         }
 
+        //ConfigurePlayerSettings();
+
         if(!VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
         {
             VRC.Core.API.SetOnlineMode(true, "vrchat");
@@ -270,7 +272,81 @@ public class EnvConfig
         }
     }
     #endif
+    /*
+    [MenuItem("VRChat SDK/Utilities/Force Configure Player Settings")]
+    public static void ConfigurePlayerSettings()
+    {
+        VRC.Core.Logger.Log("Setting required PlayerSettings...", VRC.Core.DebugLevel.All);
 
+        SetBuildTarget();
+
+        // Needed for Microsoft.CSharp namespace in DLLMaker
+        // Doesn't seem to work though
+        if(PlayerSettings.GetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup) != ApiCompatibilityLevel.NET_4_6)
+        {
+            PlayerSettings.SetApiCompatibilityLevel(EditorUserBuildSettings.selectedBuildTargetGroup, ApiCompatibilityLevel.NET_4_6);
+        }
+
+        if(!PlayerSettings.runInBackground)
+        {
+            PlayerSettings.runInBackground = true;
+        }
+
+        #if !VRC_CLIENT
+        SetDLLPlatforms("VRCCore-Standalone", false);
+        SetDLLPlatforms("VRCCore-Editor", true);
+        #endif
+
+        SetDefaultGraphicsAPIs();
+        SetGraphicsSettings();
+        SetQualitySettings();
+        SetAudioSettings();
+        SetPlayerSettings();
+
+        #if VRC_CLIENT
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        PlatformSwitcher.RefreshRequiredPackages(EditorUserBuildSettings.selectedBuildTargetGroup);
+        #else
+        // SDK
+
+        // default to steam runtime in sdk (shouldn't matter)
+        SetVRSDKs(EditorUserBuildSettings.selectedBuildTargetGroup, new string[] { "None", "OpenVR", "Oculus" });
+
+        VRC.Core.AnalyticsSDK.Initialize(VRC.Core.SDKClientUtilities.GetSDKVersionDate());
+        #endif
+
+        #if VRC_CLIENT
+        // VRCLog should handle disk writing
+        PlayerSettings.usePlayerLog = false;
+        foreach(LogType logType in Enum.GetValues(typeof(LogType)).Cast<LogType>())
+        {
+            switch(logType)
+            {
+                case LogType.Assert:
+                case LogType.Exception:
+                {
+                    PlayerSettings.SetStackTraceLogType(logType, StackTraceLogType.ScriptOnly);
+                    break;
+                }
+                case LogType.Error:
+                case LogType.Warning:
+                case LogType.Log:
+                {
+                    PlayerSettings.SetStackTraceLogType(logType, StackTraceLogType.None);
+                    break;
+                }
+                default:
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+            }
+        }
+        #endif
+    }
+
+    */
     private static void EnableBatching(bool enable)
     {
         PlayerSettings[] playerSettings = Resources.FindObjectsOfTypeAll<PlayerSettings>();

@@ -238,7 +238,16 @@ namespace VRC.SDKBase.Editor
                 avatar.VisemeSkinnedMesh == null)
                 _builder.OnGUIError(avatar, "This avatar uses Visemes but the Face Mesh is not specified.",
                     delegate { Selection.activeObject = avatar.gameObject; }, null);
-
+            /*
+            if (ShaderKeywordsUtility.DetectCustomShaderKeywords(avatar))
+                _builder.OnGUIWarning(avatar,
+                    "A Material on this avatar has custom shader keywords. Please consider optimizing it using the Shader Keywords Utility.",
+                    () => { Selection.activeObject = avatar.gameObject; },
+                    () =>
+                    {
+                        EditorApplication.ExecuteMenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility");
+                    });
+            */
             VerifyAvatarMipMapStreaming(avatar);
 
             Animator anim = avatar.GetComponent<Animator>();
@@ -309,36 +318,44 @@ namespace VRC.SDKBase.Editor
             ValidateFeatures(avatar, anim, perfStats);
 
             Core.PipelineManager pm = avatar.GetComponent<Core.PipelineManager>();
-#if UNITY_ANDROID
+
             PerformanceRating rating = perfStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.Overall);
             if (_builder.NoGuiErrors())
             {
                 if (!anim.isHuman)
                 {
                     if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidRig;
-                    _builder.OnGUIInformation(avatar, "This avatar does not have a humanoid rig so can not be used for a cross-platform fallback.");
+                    _builder.OnGUIInformation(avatar, "This avatar does not have a humanoid rig, so it can not be used as a custom fallback.");
                 }
                 else if (rating > PerformanceRating.Good)
                 {
                     if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPerformance;
-                    _builder.OnGUIInformation(avatar, "This avatar does not have an overall rating of Good or better so can not be used for a cross-platform fallback. See the link below for details on Avatar Optimization.");
+                    _builder.OnGUIInformation(avatar, "This avatar does not have an overall rating of Good or better, so it can not be used as a custom fallback. See the link below for details on Avatar Optimization.");
                 }
                 else
                 {
                     if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.Valid;
-                    _builder.OnGUIInformation(avatar, "This avatar can be used as a custom cross-platform fallback.");
+                    _builder.OnGUIInformation(avatar, "This avatar can be used as a custom fallback. This avatar must be uploaded for every supported platform to be valid for fallback selection.");
                     if (perfStats.animatorCount.HasValue && perfStats.animatorCount.Value > 1)
-                        _builder.OnGUIInformation(avatar, "This avatar uses additional animators, they will be disabled on the fallback.");
+                        _builder.OnGUIInformation(avatar, "This avatar uses additional animators, they will be disabled when used as a fallback.");
                 }
+
+                // additional messages for Poor and Very Poor Avatars
+#if UNITY_ANDROID
+                if (rating > PerformanceRating.Poor)
+                    _builder.OnGUIInformation(avatar, "This avatar will be blocked by default due to performance. Your fallback will be shown instead.");
+                else if (rating > PerformanceRating.Medium)
+                    _builder.OnGUIInformation(avatar, "Other users may choose to block this avatar due to performance. Your fallback will be shown instead.");
+#else
+                if (rating > PerformanceRating.Medium)
+                    _builder.OnGUIInformation(avatar, "Other users may choose to block this avatar due to performance. Your fallback will be shown instead.");
+#endif
             }
             else
             {
                 // shouldn't matter because we can't hit upload button
                 if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPlatform;
             }
-#else
-            if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPlatform;
-#endif
         }
 
         public virtual void ValidateFeatures(VRC_AvatarDescriptor avatar, Animator anim, AvatarPerformanceStats perfStats)
@@ -585,7 +602,7 @@ namespace VRC.SDKBase.Editor
             bool hasHead;
             bool hasFeet;
             bool hasHands;
-            //bool hasThreeFingers;
+            bool hasThreeFingers;
             bool correctSpineHierarchy;
             bool correctLeftArmHierarchy;
             bool correctRightArmHierarchy;

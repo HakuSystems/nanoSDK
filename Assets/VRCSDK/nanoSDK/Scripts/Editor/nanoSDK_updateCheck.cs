@@ -4,7 +4,7 @@ using System.Net.Http;
 using UnityEditor;
 using UnityEngine;
 
-public class nanoSDK_updateCheck : MonoBehaviour
+public class NanoSDK_updateCheck : MonoBehaviour
 {
     [InitializeOnLoad]
     public class Startup
@@ -26,7 +26,7 @@ public class nanoSDK_updateCheck : MonoBehaviour
             
             if (serverVersion != thisVersion)
             {
-                nanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
             }
         }
     }

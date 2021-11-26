@@ -7,21 +7,23 @@ using UnityEngine.Serialization;
 namespace nanoSDK
 {
     [InitializeOnLoad]
-    public class nanoSDK_Settings : EditorWindow
+    public class NanoSDK_Settings : EditorWindow
     {
+
         public static string projectConfigPath = "Assets/VRCSDK/nanoSDK/Configs/";
-        private string backgroundConfig = "BackgroundVideo.txt";
-        private static string projectDownloadPath = "Assets/VRCSDK/nanoSDK/Assets/";
+        private readonly string backgroundConfig = "BackgroundVideo.txt";
+        private static readonly string projectDownloadPath = "Assets/VRCSDK/nanoSDK/Assets/";
         private static GUIStyle vrcSdkHeader;
         public static bool UITextRainbow  { get; set; }
 
         [MenuItem("nanoSDK/nanoSDK Settings", false, 501)]
         public static void OpenSplashScreen()
         {
-            GetWindow<nanoSDK_Settings>(true);
+            
+            GetWindow<NanoSDK_Settings>(true);
         }
 
-        public static string getAssetPath()
+        public static string GetAssetPath()
         {
             if (EditorPrefs.GetBool("nanoSDK_onlyProject", false))
             {
@@ -83,6 +85,8 @@ namespace nanoSDK
 
         public void OnEnable()
         {
+            NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
+            function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
             titleContent = new GUIContent("nanoSDK Settings");
 
             maxSize = new Vector2(400, 520);
@@ -118,11 +122,11 @@ namespace nanoSDK
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Check for Updates"))
             {
-                nanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
             }
             if (GUILayout.Button("Reinstall SDK"))
             {
-                await nanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
+                await NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();

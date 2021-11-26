@@ -4,10 +4,10 @@ using UnityEditor;
 namespace nanoSDK
 {
     [InitializeOnLoad]
-    public class nanoSDK_Info : EditorWindow
+    public class NanoSDK_Info : EditorWindow
     {
 
-        static nanoSDK_Info()
+        static NanoSDK_Info()
         {
             EditorApplication.update -= DoSplashScreen;
             EditorApplication.update += DoSplashScreen;
@@ -25,16 +25,17 @@ namespace nanoSDK
 
         private static Vector2 changeLogScroll;
         private static GUIStyle nanoSdkHeader;
-        private static int _sizeX = 400;
-        private static int _sizeY = 700;
+        private static readonly int _sizeX = 400;
+        private static readonly int _sizeY = 700;
         private static GUIStyle nanoSdkBottomHeader;
         private static GUIStyle nanoHeaderLearnMoreButton;
         private static GUIStyle nanoBottomHeaderLearnMoreButton;
         [MenuItem("nanoSDK/Info", false, 500)]
         public static void OpenSplashScreen()
         {
+            
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
-            GetWindow<nanoSDK_Info>(true);
+            GetWindow<NanoSDK_Info>(true);
         }
 
         public static void Open()
@@ -43,6 +44,8 @@ namespace nanoSDK
         }
         public void OnEnable()
         {
+            NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
+            function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
             titleContent = new GUIContent("nanoSDK Info");
 
             maxSize = new Vector2(_sizeX, _sizeY);
@@ -103,11 +106,11 @@ namespace nanoSDK
             GUI.backgroundColor = Color.gray;
             if (GUILayout.Button("Check for Updates"))
             {
-                nanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
             }
             if (GUILayout.Button("Reinstall SDK"))
             {
-                await nanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
+                await NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
             }
             GUI.backgroundColor = Color.white;
             GUILayout.EndHorizontal();
