@@ -48,7 +48,6 @@ namespace nanoSDK
 
         public static void Save()
         {
-            Debug.Log("SAVE WAS CALLLEDD AMK");
             try
             {
                 File.WriteAllText(Path, JsonConvert.SerializeObject(_internalConfig));
