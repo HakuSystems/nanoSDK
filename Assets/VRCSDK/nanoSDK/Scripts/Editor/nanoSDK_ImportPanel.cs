@@ -2,12 +2,10 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using nanoSDK;
 using Newtonsoft.Json.Linq;
 
 namespace nanoSDK
 {
-    [InitializeOnLoad]
     public class NanoSDK_ImportPanel : EditorWindow
     {
         private static GUIStyle _nanoHeader;
@@ -21,14 +19,12 @@ namespace nanoSDK
         public static void OpenImportPanel()
         {
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
-            GetWindow<NanoSDK_ImportPanel>(true);
+            GetWindow<NanoSDK_ImportPanel>(false);
         }
 
         public void OnEnable()
         {
-
-            NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
-            function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
+            NanoApiManager.IsLoggedInAndVerified();
             titleContent = new GUIContent("nanoSDK Import panel");
             
             NanoSDK_ImportManager.CheckForConfigUpdate();

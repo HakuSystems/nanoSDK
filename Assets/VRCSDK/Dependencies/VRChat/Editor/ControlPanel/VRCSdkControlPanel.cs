@@ -18,8 +18,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             ConfigManager.RemoteConfig.Init(() => ShowControlPanel());
             return;
         }
-        NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
-        function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
+        
         window = (VRCSdkControlPanel)EditorWindow.GetWindow(typeof(VRCSdkControlPanel));
         window.titleContent.text = "Modded SDK";
         window.minSize = new Vector2(SdkWindowWidth + 4, 600);

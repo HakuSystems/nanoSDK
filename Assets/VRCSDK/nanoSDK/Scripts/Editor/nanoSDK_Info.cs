@@ -44,8 +44,6 @@ namespace nanoSDK
         }
         public void OnEnable()
         {
-            NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
-            function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
             titleContent = new GUIContent("nanoSDK Info");
 
             maxSize = new Vector2(_sizeX, _sizeY);
@@ -83,7 +81,7 @@ namespace nanoSDK
             nanoHeaderLearnMoreButton.normal.textColor = Color.black;
             nanoHeaderLearnMoreButton.fontSize = 12;
             nanoHeaderLearnMoreButton.border = new RectOffset(10, 10, 10, 10);
-            Texture2D texture = UnityEditor.AssetDatabase.GetBuiltinExtraResource<Texture2D>("UI/Skin/UISprite.psd");
+            Texture2D texture = AssetDatabase.GetBuiltinExtraResource<Texture2D>("UI/Skin/UISprite.psd");
             nanoHeaderLearnMoreButton.normal.background = texture;
             nanoHeaderLearnMoreButton.active.background = texture;
 

@@ -45,7 +45,7 @@ namespace nanoSDK
 
         public static void EnableCloseMessage()
         {
-            if (EditorPrefs.GetBool("nanoSDK_discordRPC")) // if bool is true
+            if (EditorPrefs.GetBool("nanoSDK_discordRPC"))
             {
                 //Debug.Log("ON");
                 if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
@@ -60,7 +60,7 @@ namespace nanoSDK
                     EditorPrefs.SetBool("nanoSDK_discordRPC", false);
                 }
             }
-            else // if bool is false
+            else
             {
                 //Debug.Log("OFF");
                 if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
@@ -85,8 +85,6 @@ namespace nanoSDK
 
         public void OnEnable()
         {
-            NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
-            function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
             titleContent = new GUIContent("nanoSDK Settings");
 
             maxSize = new Vector2(400, 520);
