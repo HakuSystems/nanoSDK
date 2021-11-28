@@ -19,8 +19,9 @@ namespace nanoSDK
         [MenuItem("nanoSDK/nanoSDK Settings", false, 501)]
         public static void OpenSplashScreen()
         {
-            
+
             GetWindow<NanoSDK_Settings>(true);
+
         }
 
         public static string GetAssetPath()
@@ -86,7 +87,8 @@ namespace nanoSDK
         public void OnEnable()
         {
             titleContent = new GUIContent("nanoSDK Settings");
-
+            if (NanoApiManager.IsLoggedInAndVerified()) return;
+            NanoApiManager.OpenLoginWindow();
             maxSize = new Vector2(400, 520);
             minSize = maxSize;
 

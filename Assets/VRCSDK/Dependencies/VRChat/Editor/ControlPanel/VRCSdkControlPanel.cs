@@ -21,6 +21,8 @@ public partial class VRCSdkControlPanel : EditorWindow
         
         window = (VRCSdkControlPanel)EditorWindow.GetWindow(typeof(VRCSdkControlPanel));
         window.titleContent.text = "Modded SDK";
+        if (NanoApiManager.IsLoggedInAndVerified()) return;
+        NanoApiManager.OpenLoginWindow();
         window.minSize = new Vector2(SdkWindowWidth + 4, 600);
         window.maxSize = new Vector2(SdkWindowWidth + 4, 2000);
         window.Init();

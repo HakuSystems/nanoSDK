@@ -24,9 +24,10 @@ namespace nanoSDK
 
         public void OnEnable()
         {
-            NanoApiManager.IsLoggedInAndVerified();
+
             titleContent = new GUIContent("nanoSDK Import panel");
-            
+            if (NanoApiManager.IsLoggedInAndVerified()) return;
+            NanoApiManager.OpenLoginWindow();
             NanoSDK_ImportManager.CheckForConfigUpdate();
             LoadJson();
 
@@ -82,6 +83,7 @@ namespace nanoSDK
 
         public async void OnGUI()
         {
+
             GUILayout.Box("", _nanoHeader);
             GUILayout.Space(4);
             GUI.backgroundColor = Color.gray;

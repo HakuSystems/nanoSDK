@@ -51,7 +51,6 @@ namespace nanoSDK
         {
             maxSize = new Vector2(500, 250);
         }
-        
         private void OnLostFocus()
         {
             if (NanoApiManager.IsLoggedInAndVerified()) return;
@@ -62,7 +61,7 @@ namespace nanoSDK
         private void OnDestroy()
         {
             if (NanoApiManager.IsLoggedInAndVerified()) return;
-            NanoApiManager.OpenLoginWindow();
+            EditorApplication.delayCall += NanoApiManager.OpenLoginWindow;
         }
 
         private void OnGUI()
