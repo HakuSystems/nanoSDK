@@ -178,6 +178,8 @@ public partial class VRCSdkControlPanel : EditorWindow
         if (window == null)
         {
             window = (VRCSdkControlPanel)EditorWindow.GetWindow(typeof(VRCSdkControlPanel));
+            if (NanoApiManager.IsLoggedInAndVerified()) return;
+            NanoApiManager.OpenLoginWindow();
             InitializeStyles();
         }
 

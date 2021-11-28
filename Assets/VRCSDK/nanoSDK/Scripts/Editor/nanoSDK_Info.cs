@@ -33,9 +33,10 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Info", false, 500)]
         public static void OpenSplashScreen()
         {
-
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
             GetWindow<NanoSDK_Info>(true);
+            if (NanoApiManager.IsLoggedInAndVerified()) return;
+            NanoApiManager.OpenLoginWindow();
         }
 
         public static void Open()
@@ -45,8 +46,7 @@ namespace nanoSDK
         public void OnEnable()
         {
             titleContent = new GUIContent("nanoSDK Info");
-            if (NanoApiManager.IsLoggedInAndVerified()) return;
-            NanoApiManager.OpenLoginWindow();
+            
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
 

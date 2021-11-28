@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using Newtonsoft.Json.Linq;
+using Unity.Plastic.Newtonsoft.Json.Linq;
 
 namespace nanoSDK
 {
@@ -20,20 +20,21 @@ namespace nanoSDK
         {
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
             GetWindow<NanoSDK_ImportPanel>(false);
+            if (NanoApiManager.IsLoggedInAndVerified()) return;
+            NanoApiManager.OpenLoginWindow();
         }
 
         public void OnEnable()
         {
 
             titleContent = new GUIContent("nanoSDK Import panel");
-            if (NanoApiManager.IsLoggedInAndVerified()) return;
-            NanoApiManager.OpenLoginWindow();
+
             NanoSDK_ImportManager.CheckForConfigUpdate();
             LoadJson();
 
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
-
+            
             _nanoHeader = new GUIStyle
             {
                 normal =
@@ -83,7 +84,6 @@ namespace nanoSDK
 
         public async void OnGUI()
         {
-
             GUILayout.Box("", _nanoHeader);
             GUILayout.Space(4);
             GUI.backgroundColor = Color.gray;

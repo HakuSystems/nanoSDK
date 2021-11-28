@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using JetBrains.Annotations;
-using Newtonsoft.Json;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace nanoSDK
