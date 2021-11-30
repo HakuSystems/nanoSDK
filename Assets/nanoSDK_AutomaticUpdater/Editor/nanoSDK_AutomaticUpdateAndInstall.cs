@@ -26,7 +26,7 @@ namespace nanoSDK
         //select where to be imported (sdk)
         public static string assetPath = "Assets\\";
         //Custom name for downloaded unitypackage
-        public static string assetName = "APIClientnanoSDK.exe";
+        public static string assetName = "latest.unitypackage";
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
 
