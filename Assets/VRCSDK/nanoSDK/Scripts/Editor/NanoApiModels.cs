@@ -12,6 +12,14 @@ namespace nanoSDK
         public bool IsPremium { get; set; }
     }
 
+    public class SdkVersionOutput
+    {
+        public string Url { get; set; }
+        public string Version { get; set; }
+
+        public string Type { get; set; }
+    }
+
     public class APIRegisterData
     {
         public string Username { get; set; }

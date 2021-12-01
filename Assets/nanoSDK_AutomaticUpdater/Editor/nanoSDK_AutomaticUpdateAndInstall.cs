@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace nanoSDK
 {

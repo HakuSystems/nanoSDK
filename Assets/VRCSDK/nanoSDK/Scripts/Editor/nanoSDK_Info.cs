@@ -106,7 +106,7 @@ namespace nanoSDK
             GUI.backgroundColor = Color.gray;
             if (GUILayout.Button("Check for Updates"))
             {
-                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+                NanoApiManager.CheckServerVersion();
             }
             if (GUILayout.Button("Reinstall SDK"))
             {

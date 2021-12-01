@@ -90,7 +90,7 @@ namespace nanoSDK
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Check for Updates"))
             {
-                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+                NanoApiManager.CheckServerVersion();
             }
             if (GUILayout.Button("Reinstall SDK"))
             {

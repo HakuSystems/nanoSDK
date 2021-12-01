@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -13,9 +14,11 @@ namespace nanoSDK
     {
         private static readonly HttpClient HttpClient = new HttpClient();
         public static NanoUserData User;
-        
+        public static SdkVersionOutput CurrentVersion;
+
         private const string BASE_URL = "https://api.nanosdk.net";
         private static readonly Uri UserSelfUri = new Uri(BASE_URL + "/user/self");
+        private static readonly Uri SdkVersionUri = new Uri(BASE_URL + "/public/sdk/version");
         private static readonly Uri RedeemUri = new Uri(BASE_URL + "/user/redeemables/redeem");
         private static readonly Uri LoginUri = new Uri(BASE_URL + "/user/login");
         private static readonly Uri SignupUri = new Uri(BASE_URL + "/user/signup");
@@ -76,6 +79,29 @@ namespace nanoSDK
             var properties = JsonConvert.DeserializeObject<BaseResponse<NanoUserData>>(result);
             User = properties.Data;
             Log("Successfully checked user");
+        }
+        public static async void CheckServerVersion()
+        {
+            string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
+            
+            var request = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = SdkVersionUri
+            };
+
+            var response = await MakeApiCall(request);
+
+            string result = await response.Content.ReadAsStringAsync();
+            var properties = JsonConvert.DeserializeObject<SdkVersionOutput>(result);
+            if (currentVersion != properties.Version)
+            {
+                NanoApiManager.CheckServerVersion();
+            }
+            else
+            {
+                Log("UpToDate");
+            }
         }
 
         public static async void RedeemLicense(string code)
