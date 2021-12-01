@@ -122,13 +122,16 @@ namespace nanoSDK
                 RequestUri = RedeemUri,
                 Content = content
             };
-
             var response = await MakeApiCall(request);
             var props = JsonConvert.DeserializeObject<BaseResponse<object>>(await response.Content.ReadAsStringAsync());
             if (response.IsSuccessStatusCode)
             {
                 EditorUtility.DisplayDialog("nanoAPI", "Redeem was successful!", "Okay");
                 CheckUserSelf();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("nanoAPI", props.Message, "Okay");
             }
         }
 
