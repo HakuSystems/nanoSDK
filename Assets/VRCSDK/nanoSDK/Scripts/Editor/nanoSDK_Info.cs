@@ -124,21 +124,7 @@ namespace nanoSDK
 == V1.5.3 ==
 UNITY VERSION 2019.4.31f1 (Used as basis)
     ┠ Added
-        ┖ NANOAPI
-            ┠ LICENSE SYSTEM
-            ┠ REGISTER
-            ┠ LOGIN
-            ┠ DATABASE CONNECTION
-            ┠ ENCRYPTION
-            ┠ SIGNUP CHECKS
-            ┠ DOCKER
-            ┠ AUTO DEPLOY
-            ┠ SELFCHECK
-            ┠ SERVERHEALTH
-            ┠ PERMISSIONS
-            ┠ SESSIONS
-            ┠ ADMINMANAGEMENT
-            ┖ VERSIONCHECK
+        ┖ NANOAPI (not Auth.gg)
     ┠ Removed
         ┖ QuestLimits since its ServerSided.
 
