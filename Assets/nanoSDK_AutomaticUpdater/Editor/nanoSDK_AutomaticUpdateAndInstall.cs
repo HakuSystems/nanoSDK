@@ -16,9 +16,9 @@ namespace nanoSDK
     {
 
         //get server version
-        public static string versionURL = "https://nanosdk.net/download/Version/version.txt";
+        public static string versionURL = NanoApiManager.SERVERVERSION;
 
-        public static string apiClientURL = "https://nanosdk.net/apidownload/";
+        public static string apiClientURL = NanoApiManager.SERVERURL;
 
         //GetVersion
         public static string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
@@ -33,19 +33,13 @@ namespace nanoSDK
 
         public async static void AutomaticSDKInstaller()
         {
-            //Starting Browser
-            HttpClient httpClient = new HttpClient();
-            //Reading Version data
-            var result = await httpClient.GetAsync(versionURL);
-            var strServerVersion = await result.Content.ReadAsStringAsync();
-            var serverVersion = strServerVersion;
 
             var thisVersion = currentVersion;
 
             try
             {
                 //Checking if Uptodate or not
-                if (serverVersion == thisVersion)
+                if (versionURL == thisVersion)
                 {
                     //up to date
                     NanoLog("you are using the newest version of nanoSDK!");

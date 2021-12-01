@@ -12,11 +12,15 @@ namespace nanoSDK
         public bool IsPremium { get; set; }
     }
 
-    public class SdkVersionOutput
+    public class SdkVersionOutput<T>
+    {
+        public string Message { get; set; }
+        public T Data { get; set; }
+    }
+    public class SdkVersionData
     {
         public string Url { get; set; }
         public string Version { get; set; }
-
         public string Type { get; set; }
     }
 
