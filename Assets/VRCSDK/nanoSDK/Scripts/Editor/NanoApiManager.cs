@@ -96,7 +96,7 @@ namespace nanoSDK
             var properties = JsonConvert.DeserializeObject<SdkVersionOutput>(result);
             if (currentVersion != properties.Version)
             {
-                NanoApiManager.CheckServerVersion();
+                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
             }
             else
             {
