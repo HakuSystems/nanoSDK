@@ -121,6 +121,27 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.5.3 ==
+UNITY VERSION 2019.4.31f1 (Used as basis)
+    ┠ Added
+        ┖ NANOAPI
+            ┠ LICENSE SYSTEM
+            ┠ REGISTER
+            ┠ LOGIN
+            ┠ DATABASE CONNECTION
+            ┠ ENCRYPTION
+            ┠ SIGNUP CHECKS
+            ┠ DOCKER
+            ┠ AUTO DEPLOY
+            ┠ SELFCHECK
+            ┠ SERVERHEALTH
+            ┠ PERMISSIONS
+            ┠ SESSIONS
+            ┠ ADMINMANAGEMENT
+            ┖ VERSIONCHECK
+    ┠ Removed
+        ┖ QuestLimits since its ServerSided.
+
 == V1.5.2 ==
 VRCSDK3-AVATAR-2021.08.04.11.23 (Used as basis, Its the Unity 2019 Vers)
     ┠ bypassed
