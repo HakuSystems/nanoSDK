@@ -220,19 +220,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
-        
-        if (VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
-        {
-            string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
-            if (Application.unityVersion != sdkUnityVersion)
-            {
-                OnGUIWarning(null, "You are not using the recommended Unity version for the VRChat SDK. Content built with this version may not work correctly. Please use Unity " + sdkUnityVersion,
-                    null,
-                    () => { Application.OpenURL("https://unity3d.com/get-unity/download/archive"); }
-                );
-            }
-        }
-        
+
         if (VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK2) && VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK3))
         {
             List<Component> sdk2Components = VRCSdk3Analysis.GetSDKInScene(VRCSdk3Analysis.SdkVersion.VRCSDK2);
@@ -240,7 +228,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (sdk2Components.Count > 0 && sdk3Components.Count > 0)
             {
                 OnGUIError(null,
-                    "This scene contains components from the VRChat SDK version 2 and version 3. Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
+                    "This scene contains components from the SDK version 2.0 and version 3.0 Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
                     () => { Selection.objects = sdk2Components.ToArray(); },
                     null
                 );
@@ -301,7 +289,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             string message = "";
 #if VRC_SDK_VRCSDK2
-            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat SDK Content";
+            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat Content";
 #elif UDON
             message = "A VRCSceneDescriptor is required to build a World";
 #elif VRC_SDK_VRCSDK3

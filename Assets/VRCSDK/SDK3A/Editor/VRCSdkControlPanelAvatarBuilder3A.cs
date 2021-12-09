@@ -507,7 +507,7 @@ namespace VRC.SDK3.Editor
                 {
                     VRC_SdkBuilder.ExportAndTestAvatarBlueprint(avatar.gameObject);
 
-                    EditorUtility.DisplayDialog("VRChat SDK", "Test Avatar Built", "OK");
+                    EditorUtility.DisplayDialog("Modded SDK", "Test Avatar Built", "OK");
                 }
                 else
                 {
