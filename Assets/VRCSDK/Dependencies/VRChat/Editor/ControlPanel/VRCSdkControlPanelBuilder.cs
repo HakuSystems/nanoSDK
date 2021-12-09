@@ -226,7 +226,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
             if (Application.unityVersion != sdkUnityVersion)
             {
-                OnGUIWarning(null, "You are not using the recommended Unity version for the nanoSDK. Content built with this version may not work correctly. Please use Unity " + sdkUnityVersion,
+                OnGUIWarning(null, "You are not using the recommended Unity version for the VRChat SDK. Content built with this version may not work correctly. Please use Unity " + sdkUnityVersion,
                     null,
                     () => { Application.OpenURL("https://unity3d.com/get-unity/download/archive"); }
                 );
@@ -240,7 +240,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (sdk2Components.Count > 0 && sdk3Components.Count > 0)
             {
                 OnGUIError(null,
-                    "This scene contains components from the SDK version 2 and version 3. Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
+                    "This scene contains components from the VRChat SDK version 2 and version 3. Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
                     () => { Selection.objects = sdk2Components.ToArray(); },
                     null
                 );
@@ -299,13 +299,17 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
         if (selectedBuilder == null)
         {
+            string message = "";
 #if VRC_SDK_VRCSDK2
-            EditorGUILayout.LabelField("A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build SDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat SDK Content";
+#elif UDON
+            message = "A VRCSceneDescriptor is required to build a World";
 #elif VRC_SDK_VRCSDK3
-            EditorGUILayout.LabelField("A VRCSceneDescriptor or VRCAvatarDescriptor\nis required to build SDK Content", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            message = "A VRCAvatarDescriptor is required to build an Avatar";
 #else
-            EditorGUILayout.LabelField("The SDK did not load properly. Try this - In the Project window, navigate to Assets/VRCSDK/Plugins. Select all the DLLs, then right click and choose 'Reimport'");
+            message = "The SDK did not load properly. Try this - In the Project window, navigate to Assets/VRCSDK/Plugins. Select all the DLLs, then right click and choose 'Reimport'";
 #endif
+            EditorGUILayout.LabelField(message, titleGuiStyle, GUILayout.Width(SdkWindowWidth));
         }
         else if (errorMessage != null)
         {
@@ -638,5 +642,14 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
 
         string message = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkNotAllowedToPublishMessage");
+        int result = UnityEditor.EditorUtility.DisplayDialogComplex("VRChat SDK", message, "Developer FAQ", "VRChat Discord", "OK");
+        if (result == 0)
+        {
+            ShowDeveloperFAQ();
+        }
+        if (result == 1)
+        {
+            ShowVRChatDiscord();
+        }
     }
 }

@@ -132,18 +132,7 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         if (signingIn)
         {
-            if (username == null || password == null)
-            {
-                EditorGUILayout.LabelField("Credentials cant be Empty.");
-                if (GUILayout.Button("Back"))
-                {
-                    Logout();
-                }
-            }
-            else
-            {
-                EditorGUILayout.LabelField("Signing in as " + username + ".");
-            }
+            EditorGUILayout.LabelField("Signing in as " + username + ".");
         }
         else if (APIUser.IsLoggedIn)
         {
@@ -176,7 +165,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (serverEnvironment != newEnv)
                 serverEnvironment = newEnv;
 
-            username = EditorGUILayout.TextField("Username", username);
+            username = EditorGUILayout.TextField("Username/Email", username);
             password = EditorGUILayout.PasswordField("Password", password);
 
             if (GUILayout.Button("Sign In"))
