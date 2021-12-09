@@ -19,7 +19,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
 
         window = (VRCSdkControlPanel)EditorWindow.GetWindow(typeof(VRCSdkControlPanel));
-        window.titleContent.text = "ModdedSDK";
+        window.titleContent.text = "Modded SDK";
         window.minSize = new Vector2(SdkWindowWidth + 4, 600);
         window.maxSize = new Vector2(SdkWindowWidth + 4, 2000);
         window.Init();
