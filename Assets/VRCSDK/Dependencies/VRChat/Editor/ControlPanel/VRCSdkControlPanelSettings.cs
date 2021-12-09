@@ -48,15 +48,6 @@ public partial class VRCSdkControlPanel : EditorWindow
 
         VRCSettings.DisplayAdvancedSettings = EditorGUILayout.ToggleLeft("Show Extra Options on build page and account page", VRCSettings.DisplayAdvancedSettings);
         bool prevDisplayHelpBoxes = VRCSettings.DisplayHelpBoxes;
-        VRCSettings.DisplayHelpBoxes = EditorGUILayout.ToggleLeft("Show Help Boxes on SDK components", VRCSettings.DisplayHelpBoxes);
-        if (VRCSettings.DisplayHelpBoxes != prevDisplayHelpBoxes)
-        {
-            Editor[] editors = (Editor[])Resources.FindObjectsOfTypeAll<Editor>();
-            for (int i = 0; i < editors.Length; i++)
-            {
-                editors[i].Repaint();
-            }
-        }
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.Separator();
