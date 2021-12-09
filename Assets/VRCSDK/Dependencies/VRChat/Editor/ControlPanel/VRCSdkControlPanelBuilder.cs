@@ -13,7 +13,6 @@ public partial class VRCSdkControlPanel : EditorWindow
 {
     public static System.Action _EnableSpatialization = null;   // assigned in AutoAddONSPAudioSourceComponents
 
-    public const string AVATAR_OPTIMIZATION_TIPS_URL = "https://docs.vrchat.com/docs/avatar-optimizing-tips";
     public const string AVATAR_RIG_REQUIREMENTS_URL = "https://docs.vrchat.com/docs/rig-requirements";
 
     const string kCantPublishContent = "Before you can upload avatars or worlds, you will need to spend some time in VRChat.";

@@ -465,8 +465,6 @@ namespace VRC.SDK3.Editor
                 OnGUIPerformanceInfo(avatar, perfStats, perfCategory, show, null);
             }
 
-            _builder.OnGUILink(avatar, "Avatar Optimization Tips", VRCSdkControlPanel.AVATAR_OPTIMIZATION_TIPS_URL);
-
         }
 
         public override void OnGUIAvatar(VRC_AvatarDescriptor avatar)
