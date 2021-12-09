@@ -1,5 +1,4 @@
-﻿using nanoSDK;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using VRC.Core;
 using VRC.SDKBase.Editor;
@@ -9,7 +8,7 @@ public partial class VRCSdkControlPanel : EditorWindow
 {
     public static VRCSdkControlPanel window;
 
-    [MenuItem("nanoSDK/Upload", false, 600)]
+    [MenuItem("VRChat SDK/Show Control Panel", false, 600)]
     static void ShowControlPanel()
     {
         if (!ConfigManager.RemoteConfig.IsInitialized())
@@ -18,10 +17,9 @@ public partial class VRCSdkControlPanel : EditorWindow
             ConfigManager.RemoteConfig.Init(() => ShowControlPanel());
             return;
         }
-        NanoSDK_Login function = (NanoSDK_Login)ScriptableObject.CreateInstance(typeof(NanoSDK_Login));
-        function.GetUserLoggedIn("https://api.nanosdk.net/user/self");
+
         window = (VRCSdkControlPanel)EditorWindow.GetWindow(typeof(VRCSdkControlPanel));
-        window.titleContent.text = "Modded SDK";
+        window.titleContent.text = "VRChat SDK";
         window.minSize = new Vector2(SdkWindowWidth + 4, 600);
         window.maxSize = new Vector2(SdkWindowWidth + 4, 2000);
         window.Init();
@@ -39,13 +37,11 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     void InitializeStyles()
     {
-        titleGuiStyle = new GUIStyle
-        {
-            fontSize = 15,
-            fontStyle = FontStyle.BoldAndItalic,
-            alignment = TextAnchor.MiddleCenter,
-            wordWrap = true
-        };
+        titleGuiStyle = new GUIStyle();
+        titleGuiStyle.fontSize = 15;
+        titleGuiStyle.fontStyle = FontStyle.BoldAndItalic;
+        titleGuiStyle.alignment = TextAnchor.MiddleCenter;
+        titleGuiStyle.wordWrap = true;
         if (EditorGUIUtility.isProSkin)
             titleGuiStyle.normal.textColor = Color.white;
         else
@@ -63,22 +59,17 @@ public partial class VRCSdkControlPanel : EditorWindow
             boxGuiStyle.normal.textColor = Color.black;
         }
 
-        infoGuiStyle = new GUIStyle
-        {
-            wordWrap = true
-        };
-        ;
+        infoGuiStyle = new GUIStyle();
+        infoGuiStyle.wordWrap = true; ;
         if (EditorGUIUtility.isProSkin)
             infoGuiStyle.normal.textColor = Color.white;
         else
             infoGuiStyle.normal.textColor = Color.black;
         infoGuiStyle.margin = new RectOffset(10, 10, 10, 10);
 
-        listButtonStyleEven = new GUIStyle
-        {
-            margin = new RectOffset(0, 0, 0, 0),
-            border = new RectOffset(0, 0, 0, 0)
-        };
+        listButtonStyleEven = new GUIStyle();
+        listButtonStyleEven.margin = new RectOffset(0, 0, 0, 0);
+        listButtonStyleEven.border = new RectOffset(0, 0, 0, 0);
         if (EditorGUIUtility.isProSkin)
         {
             listButtonStyleEven.normal.textColor = new Color(0.8f, 0.8f, 0.8f);
@@ -90,11 +81,9 @@ public partial class VRCSdkControlPanel : EditorWindow
             listButtonStyleEven.normal.background = CreateBackgroundColorImage(new Color(0.85f, 0.85f, 0.85f));
         }
 
-        listButtonStyleOdd = new GUIStyle
-        {
-            margin = new RectOffset(0, 0, 0, 0),
-            border = new RectOffset(0, 0, 0, 0)
-        };
+        listButtonStyleOdd = new GUIStyle();
+        listButtonStyleOdd.margin = new RectOffset(0, 0, 0, 0);
+        listButtonStyleOdd.border = new RectOffset(0, 0, 0, 0);
         if (EditorGUIUtility.isProSkin)
         {
             listButtonStyleOdd.normal.textColor = new Color(0.8f, 0.8f, 0.8f);
@@ -120,18 +109,14 @@ public partial class VRCSdkControlPanel : EditorWindow
             listButtonStyleSelected.normal.background = CreateBackgroundColorImage(new Color(0.75f, 0.75f, 0.75f));
         }
 
-        scrollViewSeparatorStyle = new GUIStyle("Toolbar")
-        {
-            fixedWidth = SdkWindowWidth + 10,
-            fixedHeight = 4
-        };
+        scrollViewSeparatorStyle = new GUIStyle("Toolbar");
+        scrollViewSeparatorStyle.fixedWidth = SdkWindowWidth + 10;
+        scrollViewSeparatorStyle.fixedHeight = 4;
         scrollViewSeparatorStyle.margin.top = 1;
 
-        searchBarStyle = new GUIStyle("Toolbar")
-        {
-            fixedWidth = SdkWindowWidth,
-            fixedHeight = 23
-        };
+        searchBarStyle = new GUIStyle("Toolbar");
+        searchBarStyle.fixedWidth = SdkWindowWidth;
+        searchBarStyle.fixedHeight = 23;
         searchBarStyle.padding.top = 3;
 
     }
@@ -181,7 +166,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
 
         if (_bannerImage == null)
-            _bannerImage = Resources.Load("nanoSdkBanner") as Texture2D;
+            _bannerImage = Resources.Load<Texture2D>("SDK_Panel_Banner");
 
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
@@ -193,7 +178,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             GUI.enabled = false;
             GUILayout.Space(20);
-            EditorGUILayout.LabelField("You are in Playmode ...\nStop it to access the Upload Panel", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
+            EditorGUILayout.LabelField("Unity Application is running ...\nStop it to access the Control Panel", titleGuiStyle, GUILayout.Width(SdkWindowWidth));
             GUI.enabled = true;
             GUILayout.EndVertical();
             GUILayout.FlexibleSpace();

@@ -103,6 +103,27 @@ namespace VRC.SDK3.Editor
                     return true;
                 }
 
+                void FixTexture(Texture2D texture)
+                {
+                    string path = AssetDatabase.GetAssetPath(texture);
+                    TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                    if (importer == null)
+                        return;
+                    TextureImporterPlatformSettings settings = importer.GetDefaultPlatformTextureSettings();
+
+                    //Max texture size
+                    if (texture.width > MAX_ACTION_TEXTURE_SIZE || texture.height > MAX_ACTION_TEXTURE_SIZE)
+                        settings.maxTextureSize = Math.Min(settings.maxTextureSize, MAX_ACTION_TEXTURE_SIZE);
+
+                    //Compression
+                    if (settings.textureCompression == TextureImporterCompression.Uncompressed)
+                        settings.textureCompression = TextureImporterCompression.Compressed;
+
+                    //Set & Reimport
+                    importer.SetPlatformTextureSettings(settings);
+                    AssetDatabase.ImportAsset(path);
+                }
+
                 //Find all textures
                 List<Texture2D> textures = new List<Texture2D>();
                 List<VRCExpressionsMenu> menuStack = new List<VRCExpressionsMenu>();
@@ -144,7 +165,15 @@ namespace VRC.SDK3.Editor
                 }
 
                 if (!isValid)
-                    _builder.OnGUIInformation(avatar, "Images used for Actions & Moods are too large. Max size: " + MAX_ACTION_TEXTURE_SIZE);
+                    _builder.OnGUIError(avatar, "Images used for Actions & Moods are too large.",
+                        delegate { Selection.activeObject = avatar.gameObject; }, FixTextures);
+
+                //Fix
+                void FixTextures()
+                {
+                    foreach (Texture2D texture in textures)
+                        FixTexture(texture);
+                }
             }
 
             //Expression menu parameters
@@ -295,14 +324,24 @@ namespace VRC.SDK3.Editor
             }
 
             if (componentsToRemoveNames.Count > 0)
-                _builder.OnGUIInformation(avatar,
-                    "Unsuported scripts/component count: " +
-                    string.Join(", ", componentsToRemoveNames.ToArray()));
+                _builder.OnGUIError(avatar,
+                    "The following component types are found on the Avatar and will be removed by the client: " +
+                    string.Join(", ", componentsToRemoveNames.ToArray()),
+                    delegate { ShowRestrictedComponents(toRemove); },
+                    delegate { FixRestrictedComponents(toRemove); });
+
+            List<AudioSource> audioSources =
+                avatar.gameObject.GetComponentsInChildren<AudioSource>(true).ToList();
+            if (audioSources.Count > 0)
+                _builder.OnGUIWarning(avatar,
+                    "Audio sources found on Avatar, they will be adjusted to safe limits, if necessary.",
+                    GetAvatarSubSelectAction(avatar, typeof(AudioSource)), null);
 
             List<VRCStation> stations =
                 avatar.gameObject.GetComponentsInChildren<VRCStation>(true).ToList();
             if (stations.Count > 0)
-                _builder.OnGUIInformation(avatar, "Stations found on Avatar. Station count: " + stations.Count);
+                _builder.OnGUIWarning(avatar, "Stations found on Avatar, they will be adjusted to safe limits, if necessary.",
+                    GetAvatarSubSelectAction(avatar, typeof(VRCStation)), null);
 
             if (VRCSdkControlPanel.HasSubstances(avatar.gameObject))
             {
@@ -468,7 +507,7 @@ namespace VRC.SDK3.Editor
                 {
                     VRC_SdkBuilder.ExportAndTestAvatarBlueprint(avatar.gameObject);
 
-                    EditorUtility.DisplayDialog("nanoSDK", "Test Avatar Built", "OK");
+                    EditorUtility.DisplayDialog("VRChat SDK", "Test Avatar Built", "OK");
                 }
                 else
                 {
