@@ -84,10 +84,30 @@ namespace nanoSDK
         }
         public static async void CheckServerVersion()
         {
-            await Task.Run(() =>
+            string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
+            var request = new HttpRequestMessage()
             {
-                NanoSDK_AutomaticUpdateAndInstall.CheckServerVersion();
-            });
+                Method = HttpMethod.Get,
+                RequestUri = SdkVersionUri
+            };
+
+            var response = await NanoApiManager.MakeApiCall(request);
+
+            string result = await response.Content.ReadAsStringAsync();
+            var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionOutput<SdkVersionData>>(result);
+            SERVERVERSION = SERVERCHECKproperties.Data.Version;
+            SERVERURL = SERVERCHECKproperties.Data.Url;
+            if (currentVersion != SERVERCHECKproperties.Data.Version)
+            {
+                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("You are up to date",
+                    "Current nanoSDK version: V" + currentVersion,
+                    "Okay"
+                    );
+            }
         }
 
         public static async void RedeemLicense(string code)

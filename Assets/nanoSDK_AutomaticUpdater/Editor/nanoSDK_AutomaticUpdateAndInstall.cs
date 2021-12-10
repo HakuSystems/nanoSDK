@@ -14,13 +14,7 @@ namespace nanoSDK
 {
     public class NanoSDK_AutomaticUpdateAndInstall : MonoBehaviour
     {
-
-        private const string BASE_URL = "https://api.nanosdk.net";
-        private static readonly Uri SdkVersionUri = new Uri(BASE_URL + "/public/sdk/version");
-        
-        public static string versionURL;
-
-        public static string apiClientURL;
+        public static string apiDownloadUrl = NanoApiManager.SERVERURL;
 
         //GetVersion
         public static string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
@@ -32,39 +26,9 @@ namespace nanoSDK
         public static string assetName = "latest.unitypackage";
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
-        public static async void CheckServerVersion()
-        {
-            var request = new HttpRequestMessage()
-            {
-                Method = HttpMethod.Get,
-                RequestUri = SdkVersionUri
-            };
-
-            var response = await NanoApiManager.MakeApiCall(request);
-
-            string result = await response.Content.ReadAsStringAsync();
-            var properties = JsonConvert.DeserializeObject<SdkVersionOutput<SdkVersionData>>(result);
-            versionURL = properties.Data.Version;
-            apiClientURL = properties.Data.Url;
-            if (currentVersion != properties.Data.Version)
-            {
-                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
-            }
-            else
-            {
-                NanoLog("you are using the newest version of nanoSDK!");
-                EditorUtility.DisplayDialog("You are up to date",
-                    "Current nanoSDK version: V" + currentVersion,
-                    "Okay"
-                    );
-            }
-        }
-
 
         public async static void AutomaticSDKInstaller()
         {
-            await DownloadnanoSDK();
-            /*
             try
             {
                 await DownloadnanoSDK();
@@ -73,7 +37,7 @@ namespace nanoSDK
             {
                 Debug.LogError("[nanoSDK] AssetDownloadManager:" + ex.Message);
             }
-            */
+            
         }
 
         public static async Task DownloadnanoSDK()
@@ -145,7 +109,7 @@ namespace nanoSDK
             w.DownloadProgressChanged += FileDownloadProgress;
             try
             {
-                string url = apiClientURL;
+                string url = apiDownloadUrl;
                 w.DownloadFileAsync(new Uri(url), Path.GetTempPath() + "\\" + assetName);
             }
             catch (Exception ex)
