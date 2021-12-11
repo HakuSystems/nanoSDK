@@ -36,7 +36,7 @@ public class nanoSDK_FastUploader
 
                 if (APIUser.CurrentUser.canPublishAvatars)
                 {
-                    if (EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now.", "Nice!", "not the Right one"))
+                    if (EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now. (NOTE: THIS METHOD ONLY CHECKS IF --U CAN UPLOAD AVATARS-- WHEN YES THEN IT WILL FORCE UPLOAD WITHOUT CHECKING ANYTHING BEFORE UPLOAD -- We call this --Bypass Uploader-- but Fast Uploader for better understanding.)", "Nice!", "not the Right one"))
                     {
                         VRC_SdkBuilder.shouldBuildUnityPackage = false;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);

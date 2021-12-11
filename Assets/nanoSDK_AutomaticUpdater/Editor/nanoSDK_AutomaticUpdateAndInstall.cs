@@ -13,8 +13,13 @@ using Newtonsoft.Json;
 namespace nanoSDK
 {
     public class NanoSDK_AutomaticUpdateAndInstall : MonoBehaviour
-    {
-        public static string apiDownloadUrl = NanoApiManager.SERVERURL;
+    { //api features in here bc files will be delted when process is being made
+        private const string BASE_URL = "https://api.nanosdk.net";
+        private static readonly Uri SdkVersionUri = new Uri(BASE_URL + "/public/sdk/version");
+        public static string SERVERVERSION = null;
+        public static string SERVERURL = null;
+
+        private static readonly HttpClient HttpClient = new HttpClient();
 
         //GetVersion
         public static string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
@@ -26,6 +31,33 @@ namespace nanoSDK
         public static string assetName = "latest.unitypackage";
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
+
+        public static async void CheckServerVersionINTERN()
+        {
+            var request = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = SdkVersionUri
+            };
+
+            var response = await HttpClient.SendAsync(request); //without AuthKey Sending
+
+            string result = await response.Content.ReadAsStringAsync();
+            var SERVERCHECKproperties = JsonConvert.DeserializeObject<sdkVersionBaseINTERN<sdkVersionBaseINTERNDATA>>(result);
+            SERVERVERSION = SERVERCHECKproperties.Data.Version;
+            SERVERURL = SERVERCHECKproperties.Data.Url;
+            if (currentVersion != SERVERCHECKproperties.Data.Version)
+            {
+                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("You are up to date",
+                    "Current nanoSDK version: V" + currentVersion,
+                    "Okay"
+                    );
+            }
+        }
 
         public async static void AutomaticSDKInstaller()
         {
@@ -109,7 +141,7 @@ namespace nanoSDK
             w.DownloadProgressChanged += FileDownloadProgress;
             try
             {
-                string url = apiDownloadUrl;
+                string url = SERVERURL;
                 w.DownloadFileAsync(new Uri(url), Path.GetTempPath() + "\\" + assetName);
             }
             catch (Exception ex)
@@ -165,5 +197,18 @@ namespace nanoSDK
             //Our Logger
             Debug.Log("[nanoSDK] AssetDownloadManager: " + message);
         }
+    }
+
+    public class sdkVersionBaseINTERNDATA
+    {
+        public string Url { get; set; }
+        public string Version { get; set; }
+        public string Type { get; set; }
+    }
+
+    public class sdkVersionBaseINTERN<T>
+    {
+        public string Message { get; set; }
+        public T Data { get; set; }
     }
 }

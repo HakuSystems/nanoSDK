@@ -99,7 +99,7 @@ namespace nanoSDK
             SERVERURL = SERVERCHECKproperties.Data.Url;
             if (currentVersion != SERVERCHECKproperties.Data.Version)
             {
-                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+                NanoSDK_AutomaticUpdateAndInstall.CheckServerVersionINTERN();
             }
             else
             {

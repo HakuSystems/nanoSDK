@@ -124,7 +124,7 @@ namespace nanoSDK
 == V1.5.4 ==
 UNITY VERSION 2019.4.31f1 (Used as basis)
     ┠ Added
-        ┖ FAST UPLOADER (One click uploader)
+        ┖ FAST UPLOADER (One click uploader also known as Bypass Uploader)
     ┠ Reworked Whole SDK to Fix Some Bugs.
     ┠ Fixed Reinstall Button / AutoUpdater
 == V1.5.3 ==
