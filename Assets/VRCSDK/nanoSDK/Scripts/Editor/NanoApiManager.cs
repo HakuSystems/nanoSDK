@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.Plastic.Newtonsoft.Json;
@@ -25,6 +26,7 @@ namespace nanoSDK
         private static readonly Uri LoginUri = new Uri(BASE_URL + "/user/login");
         private static readonly Uri SignupUri = new Uri(BASE_URL + "/user/signup");
         private static bool running = false;
+        private const string AppJson = "application/json";
 
         public static bool IsLoggedInAndVerified() => IsUserLoggedIn() && User.IsVerified;
         
@@ -52,6 +54,7 @@ namespace nanoSDK
             {
                 request.Headers.Add("Auth-Key", NanoApiConfig.Config.AuthKey);
             }
+            
 
             var response = await HttpClient.SendAsync(request);
             if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -91,7 +94,7 @@ namespace nanoSDK
                 RequestUri = SdkVersionUri
             };
 
-            var response = await NanoApiManager.MakeApiCall(request);
+            var response = await MakeApiCall(request);
 
             string result = await response.Content.ReadAsStringAsync();
             var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionOutput<SdkVersionData>>(result);
@@ -115,7 +118,7 @@ namespace nanoSDK
             var content = new StringContent(JsonConvert.SerializeObject(new LicenseData
             {
                 Key = code
-            }));
+            }), Encoding.UTF8, AppJson);
 
             var request = new HttpRequestMessage
             {
@@ -143,7 +146,7 @@ namespace nanoSDK
             {
                 Username = username,
                 Password = password
-            }));
+            }), Encoding.UTF8, AppJson);
             var request = new HttpRequestMessage
             {
                 RequestUri = LoginUri,
@@ -177,7 +180,7 @@ namespace nanoSDK
                 Username = username,
                 Password = password,
                 Email = email
-            }));
+            }), Encoding.UTF8, AppJson);
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
