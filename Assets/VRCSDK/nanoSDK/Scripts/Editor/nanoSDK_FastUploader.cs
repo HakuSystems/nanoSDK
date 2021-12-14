@@ -1,4 +1,5 @@
-﻿using System;
+﻿using nanoSDK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -9,7 +10,7 @@ using VRC.SDKBase.Editor;
 [ExecuteInEditMode]
 public class nanoSDK_FastUploader
 {
-    [MenuItem("nanoSDK/FAST UPLOADER", false, 100)]
+    [MenuItem("nanoSDK/FAST UPLOADER beta", false, 100)]
     static void Init() => RunFastUpload();
 
     public static void RunFastUpload()
@@ -38,6 +39,7 @@ public class nanoSDK_FastUploader
                 {
                     if (EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now. (NOTE: THIS METHOD ONLY CHECKS IF --U CAN UPLOAD AVATARS-- WHEN YES THEN IT WILL FORCE UPLOAD WITHOUT CHECKING ANYTHING BEFORE UPLOAD -- We call this --Bypass Uploader-- but Fast Uploader for better understanding.)", "Nice!", "not the Right one"))
                     {
+                        NanoSDK_MissingScripts.GetAndDelScripts();
                         VRC_SdkBuilder.shouldBuildUnityPackage = false;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);
                     }

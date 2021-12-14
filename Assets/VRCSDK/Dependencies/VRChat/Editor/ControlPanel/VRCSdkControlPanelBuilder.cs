@@ -13,6 +13,7 @@ public partial class VRCSdkControlPanel : EditorWindow
 {
     public static System.Action _EnableSpatialization = null;   // assigned in AutoAddONSPAudioSourceComponents
 
+    public const string AVATAR_OPTIMIZATION_TIPS_URL = "https://docs.vrchat.com/docs/avatar-optimizing-tips";
     public const string AVATAR_RIG_REQUIREMENTS_URL = "https://docs.vrchat.com/docs/rig-requirements";
 
     const string kCantPublishContent = "Before you can upload avatars or worlds, you will need to spend some time in VRChat.";
@@ -219,7 +220,19 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
-
+        
+        if (VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
+        {
+            string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
+            if (Application.unityVersion != sdkUnityVersion)
+            {
+                OnGUIWarning(null, "You are not using the recommended Unity version for the SDK. Content built with this version may not work correctly. Please use Unity " + sdkUnityVersion,
+                    null,
+                    () => { Application.OpenURL("https://unity3d.com/get-unity/download/archive"); }
+                );
+            }
+        }
+        
         if (VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK2) && VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK3))
         {
             List<Component> sdk2Components = VRCSdk3Analysis.GetSDKInScene(VRCSdk3Analysis.SdkVersion.VRCSDK2);
@@ -288,7 +301,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             string message = "";
 #if VRC_SDK_VRCSDK2
-            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat Content";
+            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build SDK Content";
 #elif UDON
             message = "A VRCSceneDescriptor is required to build a World";
 #elif VRC_SDK_VRCSDK3
@@ -628,6 +641,5 @@ public partial class VRCSdkControlPanel : EditorWindow
             return;
         }
 
-        string message = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkNotAllowedToPublishMessage");
     }
 }
