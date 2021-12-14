@@ -223,16 +223,16 @@ namespace VRC.SDKBase.Validation.Performance.Stats
                     return _performanceStatsLevelSet.excellent;
 
                 case PerformanceRating.Good:
-                    return _performanceStatsLevelSet.good;
+                    return _performanceStatsLevelSet.excellent;
 
                 case PerformanceRating.Medium:
-                    return _performanceStatsLevelSet.medium;
+                    return _performanceStatsLevelSet.excellent;
 
                 case PerformanceRating.Poor:
-                    return _performanceStatsLevelSet.poor;
+                    return _performanceStatsLevelSet.excellent;
 
                 case PerformanceRating.VeryPoor:
-                    return _performanceStatsLevelSet.poor;
+                    return _performanceStatsLevelSet.excellent;
 
                 default:
                     return _performanceStatsLevelSet.excellent;
@@ -537,20 +537,20 @@ namespace VRC.SDKBase.Validation.Performance.Stats
 
             if(compareFn(this, _performanceStatsLevelSet.good) <= 0)
             {
-                return PerformanceRating.Good;
+                return PerformanceRating.Excellent;
             }
 
             if(compareFn(this, _performanceStatsLevelSet.medium) <= 0)
             {
-                return PerformanceRating.Medium;
+                return PerformanceRating.Excellent;
             }
 
             if(compareFn(this, _performanceStatsLevelSet.poor) <= 0)
             {
-                return PerformanceRating.Poor;
+                return PerformanceRating.Excellent;
             }
 
-            return PerformanceRating.VeryPoor;
+            return PerformanceRating.Excellent;
         }
 
         private static bool ApproxLessOrEqual(float x1, float x2)

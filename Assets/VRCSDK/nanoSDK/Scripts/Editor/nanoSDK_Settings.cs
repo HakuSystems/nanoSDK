@@ -97,7 +97,7 @@ namespace nanoSDK
             {
                 normal =
                 {
-                    background = Resources.Load("nanosdkSettings") as Texture2D,
+                    background = Resources.Load("nanoSDKSexyPanel") as Texture2D,
                     textColor = Color.white
                 },
                 fixedHeight = 250

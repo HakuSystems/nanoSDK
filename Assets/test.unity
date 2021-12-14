@@ -135,10 +135,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   launchedFromSDKPipeline: 0
   completedSDKPipeline: 0
-  blueprintId: avtr_4e74b900-0f77-4829-b864-bb917fae546f
+  blueprintId: avtr_e4ef6032-97e6-4603-80ff-9299fbf58868
   contentType: 0
   assetBundleUnityVersion: 
-  fallbackStatus: 1
+  fallbackStatus: 3
 --- !u!114 &227362145
 MonoBehaviour:
   m_ObjectHideFlags: 0

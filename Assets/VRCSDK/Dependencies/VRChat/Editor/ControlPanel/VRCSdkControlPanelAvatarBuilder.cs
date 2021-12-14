@@ -324,7 +324,7 @@ namespace VRC.SDKBase.Editor
                 else if (rating > PerformanceRating.Good)
                 {
                     if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPerformance;
-                    _builder.OnGUIInformation(avatar, "This avatar does not have an overall rating of Good or better, so it can not be used as a custom fallback. See the link below for details on Avatar Optimization.");
+                    _builder.OnGUIInformation(avatar, "This avatar does not have an overall rating of Good or better, so it can not be used as a custom fallback.");
                 }
                 else
                 {

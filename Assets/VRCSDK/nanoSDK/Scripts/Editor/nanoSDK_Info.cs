@@ -55,7 +55,7 @@ namespace nanoSDK
                 normal =
                     {
                     //Top
-                       background = Resources.Load("nanosdkInfo") as Texture2D,
+                       background = Resources.Load("nanoSDKSexyPanel") as Texture2D,
                        textColor = Color.white
                     },
                 fixedHeight = 250
@@ -121,6 +121,11 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.5.5 ==
+UNITY VERSION 2019.4.31f1 (Used as basis)
+    ┠ Added
+        ┖ New Logo
+    ┠ Fixed Hands Rendering 4 times when in VR
 == V1.5.4 ==
 UNITY VERSION 2019.4.31f1 (Used as basis)
     ┠ Added
