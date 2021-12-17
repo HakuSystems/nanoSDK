@@ -15,7 +15,7 @@ namespace nanoSDK
         private static Vector2 _changeLogScroll;
         
 
-        [MenuItem("nanoSDK/Import panel", false, 501)]
+        //[MenuItem("nanoSDK/Import panel", false, 501)]
         public static void OpenImportPanel()
         {
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
@@ -27,7 +27,7 @@ namespace nanoSDK
         public void OnEnable()
         {
 
-            titleContent = new GUIContent("nanoSDK Import panel");
+            titleContent = new GUIContent("ImportPanel");
 
             NanoSDK_ImportManager.CheckForConfigUpdate();
             LoadJson();
