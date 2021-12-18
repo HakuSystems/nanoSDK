@@ -74,7 +74,7 @@ namespace nanoSDK
                 EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
                 EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
                 EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
-                EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}, ({(Permission)NanoApiManager.User.Permission})");
+                EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
 
                 if (!NanoApiManager.IsLoggedInAndVerified())
                 {

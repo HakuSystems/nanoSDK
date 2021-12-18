@@ -7,13 +7,7 @@ namespace nanoSDK
         public string ID { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
-        public enum Permission
-        {
-            User = 0,
-            Moderator = 5,
-            Admin = 10,
-            System = 127
-        }
+        public Permissions Permission { get; set; }
         public bool IsVerified { get; set; }
         public bool IsPremium { get; set; }
     }
@@ -28,6 +22,14 @@ namespace nanoSDK
         public string Url { get; set; }
         public string Version { get; set; }
         public string Type { get; set; }
+    }
+    
+    public enum Permissions
+    {
+        User = 0,
+        Moderator = 5,
+        Admin = 10,
+        System = 127
     }
     
     public class APIRegisterData
