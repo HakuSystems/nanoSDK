@@ -7,16 +7,15 @@ namespace nanoSDK
         public string ID { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
-        public int Permission { get; set; }
+        public enum Permission
+        {
+            User = 0,
+            Moderator = 5,
+            Admin = 10,
+            System = 127
+        }
         public bool IsVerified { get; set; }
         public bool IsPremium { get; set; }
-    }
-    public enum Permission
-    {
-        User = 0,
-        Moderator = 5,
-        Admin = 10,
-        System = 127
     }
 
     public class SdkVersionOutput<T>
@@ -24,7 +23,6 @@ namespace nanoSDK
         public string Message { get; set; }
         public T Data { get; set; }
     }
-
     public class SdkVersionData
     {
         public string Url { get; set; }
