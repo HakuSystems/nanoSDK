@@ -24,19 +24,18 @@ namespace nanoSDK
         private static readonly Uri RedeemUri = new Uri(BASE_URL + "/user/redeemables/redeem");
         private static readonly Uri LoginUri = new Uri(BASE_URL + "/user/login");
         private static readonly Uri SignupUri = new Uri(BASE_URL + "/user/signup");
-        
+        private static bool running = false;
+        private const string AppJson = "application/json";
+
         public static bool IsLoggedInAndVerified() => IsUserLoggedIn() && User.IsVerified;
         
         public static bool IsUserLoggedIn()
         {
-            if (User == null && !string.IsNullOrEmpty(NanoApiConfig.Config.AuthKey))
-            {
-                 CheckUserSelf();
-            }
+            if (User == null && !string.IsNullOrWhiteSpace(NanoApiConfig.Config.AuthKey) && !running) CheckUserSelf();
             return User != null;
         }
 
-        public static void OpenLoginWindow() => EditorWindow.GetWindow<NanoSDK_Login>(false, "nanoAPI Login");
+        public static void OpenLoginWindow() => EditorWindow.GetWindow<NanoSDK_Login>(false, "Account");
         
 
         private static void ClearLogin()
@@ -48,12 +47,13 @@ namespace nanoSDK
             OpenLoginWindow();
         }
 
-        public static async Task<HttpResponseMessage> MakeApiCall(HttpRequestMessage request)
+        private static async Task<HttpResponseMessage> MakeApiCall(HttpRequestMessage request)
         {
-            if (!string.IsNullOrEmpty(NanoApiConfig.Config.AuthKey))
+            if (!string.IsNullOrWhiteSpace(NanoApiConfig.Config.AuthKey))
             {
                 request.Headers.Add("Auth-Key", NanoApiConfig.Config.AuthKey);
             }
+            
 
             var response = await HttpClient.SendAsync(request);
             if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -68,6 +68,7 @@ namespace nanoSDK
 
         private static async void CheckUserSelf()
         {
+            running = true;
             Log("Checking user");
             var request = new HttpRequestMessage()
             {
@@ -81,6 +82,7 @@ namespace nanoSDK
             var properties = JsonConvert.DeserializeObject<BaseResponse<NanoUserData>>(result);
             User = properties.Data;
             Log("Successfully checked user");
+            running = false;
         }
         public static async void CheckServerVersion()
         {
@@ -91,7 +93,7 @@ namespace nanoSDK
                 RequestUri = SdkVersionUri
             };
 
-            var response = await NanoApiManager.MakeApiCall(request);
+            var response = await MakeApiCall(request);
 
             string result = await response.Content.ReadAsStringAsync();
             var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionOutput<SdkVersionData>>(result);
@@ -115,7 +117,7 @@ namespace nanoSDK
             var content = new StringContent(JsonConvert.SerializeObject(new LicenseData
             {
                 Key = code
-            }));
+            }), Encoding.UTF8, AppJson);
 
             var request = new HttpRequestMessage
             {
@@ -143,7 +145,7 @@ namespace nanoSDK
             {
                 Username = username,
                 Password = password
-            }));
+            }), Encoding.UTF8, AppJson);
             var request = new HttpRequestMessage
             {
                 RequestUri = LoginUri,
@@ -177,7 +179,7 @@ namespace nanoSDK
                 Username = username,
                 Password = password,
                 Email = email
-            }));
+            }), Encoding.UTF8, AppJson);
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,

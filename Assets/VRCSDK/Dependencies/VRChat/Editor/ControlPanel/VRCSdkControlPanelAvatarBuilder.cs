@@ -238,16 +238,10 @@ namespace VRC.SDKBase.Editor
                 avatar.VisemeSkinnedMesh == null)
                 _builder.OnGUIError(avatar, "This avatar uses Visemes but the Face Mesh is not specified.",
                     delegate { Selection.activeObject = avatar.gameObject; }, null);
-            /*
-            if (ShaderKeywordsUtility.DetectCustomShaderKeywords(avatar))
-                _builder.OnGUIWarning(avatar,
-                    "A Material on this avatar has custom shader keywords. Please consider optimizing it using the Shader Keywords Utility.",
-                    () => { Selection.activeObject = avatar.gameObject; },
-                    () =>
-                    {
-                        EditorApplication.ExecuteMenuItem("gae/Utilities/Avatar Shader Keywords Utility");
-                    });
-            */
+
+
+
+
             VerifyAvatarMipMapStreaming(avatar);
 
             Animator anim = avatar.GetComponent<Animator>();
@@ -330,7 +324,7 @@ namespace VRC.SDKBase.Editor
                 else if (rating > PerformanceRating.Good)
                 {
                     if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPerformance;
-                    _builder.OnGUIInformation(avatar, "This avatar does not have an overall rating of Good or better, so it can not be used as a custom fallback. See the link below for details on Avatar Optimization.");
+                    _builder.OnGUIInformation(avatar, "This avatar does not have an overall rating of Good or better, so it can not be used as a custom fallback.");
                 }
                 else
                 {

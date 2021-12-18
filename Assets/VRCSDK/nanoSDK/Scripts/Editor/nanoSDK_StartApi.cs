@@ -41,7 +41,7 @@ namespace nanoSDK
         // License
         private string redeemCode;
 
-        [MenuItem("nanoSDK/Login", false, 501)]
+        //[MenuItem("nanoSDK/Login", false, 501)]
         public static void OpenImportPanel()
         {
             NanoApiManager.OpenLoginWindow();
@@ -70,7 +70,12 @@ namespace nanoSDK
             if (NanoApiManager.IsUserLoggedIn())
             {
                 EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
-                
+                EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
+                EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
+                EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
+                EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
+                EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
+
                 if (!NanoApiManager.IsLoggedInAndVerified())
                 {
                     EditorGUILayout.LabelField("License Key");

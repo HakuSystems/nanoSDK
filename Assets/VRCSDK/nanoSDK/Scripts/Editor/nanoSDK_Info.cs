@@ -30,11 +30,12 @@ namespace nanoSDK
         private static GUIStyle nanoSdkBottomHeader;
         private static GUIStyle nanoHeaderLearnMoreButton;
         private static GUIStyle nanoBottomHeaderLearnMoreButton;
-        [MenuItem("nanoSDK/Info", false, 500)]
+        //[MenuItem("nanoSDK/Info", false, 500)]
         public static void OpenSplashScreen()
         {
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
-            GetWindow<NanoSDK_Info>(true);
+            nanoSDKTabView.ShowWindow();
+            //GetWindow<nanoSDKTabView>(true);
             if (NanoApiManager.IsLoggedInAndVerified()) return;
             NanoApiManager.OpenLoginWindow();
         }
@@ -45,7 +46,7 @@ namespace nanoSDK
         }
         public void OnEnable()
         {
-            titleContent = new GUIContent("nanoSDK Info");
+            titleContent = new GUIContent("Changelog");
             
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
@@ -55,7 +56,7 @@ namespace nanoSDK
                 normal =
                     {
                     //Top
-                       background = Resources.Load("nanosdkInfo") as Texture2D,
+                       background = Resources.Load("nanoSDKSexyPanel") as Texture2D,
                        textColor = Color.white
                     },
                 fixedHeight = 250
@@ -90,20 +91,6 @@ namespace nanoSDK
             GUILayout.Space(4);
             GUILayout.BeginHorizontal();
             GUI.backgroundColor = Color.gray;
-            if (GUILayout.Button("nanoSDK Discord"))
-            {
-                Application.OpenURL("https://nanosdk.net/discord");
-            }
-            if (GUILayout.Button("nanoSDK Website"))
-            {
-                Application.OpenURL("https://nanoSDK.net/");
-            }
-
-            GUI.backgroundColor = Color.white;
-            GUILayout.EndHorizontal();
-            GUILayout.Space(4);
-            GUILayout.BeginHorizontal();
-            GUI.backgroundColor = Color.gray;
             if (GUILayout.Button("Check for Updates"))
             {
                 NanoApiManager.CheckServerVersion();
@@ -111,6 +98,17 @@ namespace nanoSDK
             if (GUILayout.Button("Reinstall SDK"))
             {
                 await NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("nanoSDK Discord"))
+            {
+                Application.OpenURL("https://nanosdk.net/discord");
+            }
+
+            if (GUILayout.Button("nanoSDK Website"))
+            {
+                Application.OpenURL("https://nanoSDK.net/");
             }
             GUI.backgroundColor = Color.white;
             GUILayout.EndHorizontal();
@@ -121,6 +119,11 @@ namespace nanoSDK
             GUILayout.Label(
 
     @"Changelog:
+== V1.5.5 ==
+UNITY VERSION 2019.4.31f1 (Used as basis)
+    ┠ Added
+        ┖ New Logo
+    ┠ Fixed Hands Rendering 4 times when in VR
 == V1.5.4 ==
 UNITY VERSION 2019.4.31f1 (Used as basis)
     ┠ Added

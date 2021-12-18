@@ -10,8 +10,8 @@ namespace nanoSDK
     public class NanoSDK_ImportManager
     {
         public static string configName = "importConfig.json";
-        public static string serverUrl = "https://cdn.nanoSDK.net/assets/";
-        public static string internalServerUrl = "https://cdn.nanoSDK.net/assets/";
+        public static string serverUrl = "https://nanoSDK.net/assets/";
+        public static string internalServerUrl = "https://nanoSDK.net/assets/";
 
         public static void DownloadAndImportAssetFromServer(string assetName)
         {

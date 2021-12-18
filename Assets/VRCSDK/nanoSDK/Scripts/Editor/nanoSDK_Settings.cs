@@ -16,7 +16,7 @@ namespace nanoSDK
         private static GUIStyle vrcSdkHeader;
         public static bool UITextRainbow  { get; set; }
 
-        [MenuItem("nanoSDK/nanoSDK Settings", false, 501)]
+        //[MenuItem("nanoSDK/nanoSDK Settings", false, 501)]
         public static void OpenSplashScreen()
         {
             GetWindow<NanoSDK_Settings>(true);
@@ -88,7 +88,7 @@ namespace nanoSDK
         public void OnEnable()
         {
 
-            titleContent = new GUIContent("nanoSDK Settings");
+            titleContent = new GUIContent("Settings");
             
             maxSize = new Vector2(400, 520);
             minSize = maxSize;
@@ -97,7 +97,7 @@ namespace nanoSDK
             {
                 normal =
                 {
-                    background = Resources.Load("nanosdkSettings") as Texture2D,
+                    background = Resources.Load("nanoSDKSexyPanel") as Texture2D,
                     textColor = Color.white
                 },
                 fixedHeight = 250
