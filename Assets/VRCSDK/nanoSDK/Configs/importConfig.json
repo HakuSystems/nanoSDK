@@ -49,11 +49,11 @@
 			"name": "Shader"
 		},
 		"poiyomiToon": {
-			"name": "Poiyomi Toon Shader V7.1.60",
+			"name": "PoiyomiToon7.3.050",
 			"file": "PoiyomiToon.unitypackage"
 		},
 		"doppelsMetallicFX": {
-			"name": "Doppelganger MetallicFX V5.11",
+			"name": "Doppelganger MetallicFX V6.01",
 			"file": "DoppelgangerMetallicFX.unitypackage"
 		},
 		"uberShader": {

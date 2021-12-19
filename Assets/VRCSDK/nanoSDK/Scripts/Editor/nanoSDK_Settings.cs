@@ -223,8 +223,8 @@ namespace nanoSDK
             {
                 EditorPrefs.SetString("nanoSDK_customAssetPath", customAssetPath);
             }
-
             GUILayout.EndHorizontal();
+            
         }
     }
 }

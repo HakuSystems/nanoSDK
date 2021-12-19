@@ -35,8 +35,9 @@ namespace nanoSDK
             return User != null;
         }
 
-        public static void OpenLoginWindow() => EditorWindow.GetWindow<NanoSDK_Login>(false, "Account");
-        
+        public static void OpenLoginWindow() => EditorWindow.GetWindow<NanoSDK_Login>(false,"Account");
+                                                            
+                                                
 
         private static void ClearLogin()
         {
