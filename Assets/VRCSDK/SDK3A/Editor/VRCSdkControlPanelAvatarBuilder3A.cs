@@ -103,26 +103,6 @@ namespace VRC.SDK3.Editor
                     return true;
                 }
 
-                void FixTexture(Texture2D texture)
-                {
-                    string path = AssetDatabase.GetAssetPath(texture);
-                    TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
-                    if (importer == null)
-                        return;
-                    TextureImporterPlatformSettings settings = importer.GetDefaultPlatformTextureSettings();
-
-                    //Max texture size
-                    if (texture.width > MAX_ACTION_TEXTURE_SIZE || texture.height > MAX_ACTION_TEXTURE_SIZE)
-                        settings.maxTextureSize = Math.Min(settings.maxTextureSize, MAX_ACTION_TEXTURE_SIZE);
-
-                    //Compression
-                    if (settings.textureCompression == TextureImporterCompression.Uncompressed)
-                        settings.textureCompression = TextureImporterCompression.Compressed;
-
-                    //Set & Reimport
-                    importer.SetPlatformTextureSettings(settings);
-                    AssetDatabase.ImportAsset(path);
-                }
 
                 //Find all textures
                 List<Texture2D> textures = new List<Texture2D>();
@@ -165,15 +145,7 @@ namespace VRC.SDK3.Editor
                 }
 
                 if (!isValid)
-                    _builder.OnGUIError(avatar, "Images used for Actions & Moods are too large.",
-                        delegate { Selection.activeObject = avatar.gameObject; }, FixTextures);
-
-                //Fix
-                void FixTextures()
-                {
-                    foreach (Texture2D texture in textures)
-                        FixTexture(texture);
-                }
+                    _builder.OnGUIInformation(avatar, "Images used for Actions & Moods are too large. Max size: " + MAX_ACTION_TEXTURE_SIZE);
             }
 
             //Expression menu parameters
@@ -196,8 +168,8 @@ namespace VRC.SDK3.Editor
                 //Check if parameters is valid
                 if (avatarSDK3.expressionParameters != null && avatarSDK3.expressionParameters.CalcTotalCost() > VRCExpressionParameters.MAX_PARAMETER_COST)
                 {
-                    _builder.OnGUIError(avatar, "VRCExpressionParameters has too many parameters defined.",
-                        delegate { Selection.activeObject = avatarSDK3.expressionParameters; }, null);
+                    _builder.OnGUIInformation(avatar, "VRCExpressionParameters has too many parameters defined, count:" +
+                     avatarSDK3.expressionParameters.CalcTotalCost() + "Maximum perameter count: " + VRCExpressionParameters.MAX_PARAMETER_COST);
                 }
 
                 //Find all existing parameters
@@ -324,24 +296,15 @@ namespace VRC.SDK3.Editor
             }
 
             if (componentsToRemoveNames.Count > 0)
-                _builder.OnGUIError(avatar,
-                    "The following component types are found on the Avatar and will be removed by the client: " +
-                    string.Join(", ", componentsToRemoveNames.ToArray()),
-                    delegate { ShowRestrictedComponents(toRemove); },
-                    delegate { FixRestrictedComponents(toRemove); });
+                _builder.OnGUIInformation(avatar,
+                    "Unsuported scripts/components count: " +
+                    string.Join(", ", componentsToRemoveNames.ToArray()));
 
-            List<AudioSource> audioSources =
-                avatar.gameObject.GetComponentsInChildren<AudioSource>(true).ToList();
-            if (audioSources.Count > 0)
-                _builder.OnGUIWarning(avatar,
-                    "Audio sources found on Avatar, they will be adjusted to safe limits, if necessary.",
-                    GetAvatarSubSelectAction(avatar, typeof(AudioSource)), null);
 
             List<VRCStation> stations =
                 avatar.gameObject.GetComponentsInChildren<VRCStation>(true).ToList();
             if (stations.Count > 0)
-                _builder.OnGUIWarning(avatar, "Stations found on Avatar, they will be adjusted to safe limits, if necessary.",
-                    GetAvatarSubSelectAction(avatar, typeof(VRCStation)), null);
+                _builder.OnGUIInformation(avatar, "Stations found on Avatar. Station count: " + stations.Count);
 
             if (VRCSdkControlPanel.HasSubstances(avatar.gameObject))
             {
@@ -358,8 +321,7 @@ namespace VRC.SDK3.Editor
         IEnumerable<Shader> illegalShaders = AvatarValidation.FindIllegalShaders(avatar.gameObject);
         foreach (Shader s in illegalShaders)
         {
-            _builder.OnGUIError(avatar, "Avatar uses unsupported shader '" + s.name + "'. You can only use the shaders provided in 'VRChat/Mobile' for Quest avatars.", delegate () { Selection.activeObject
- = avatar.gameObject; }, null);
+            _builder.OnGUIInformation(avatar, "Avatar uses unsupported shader '" + s.name + "'. his might impact game performance for quest users");
         }
 #endif
 
