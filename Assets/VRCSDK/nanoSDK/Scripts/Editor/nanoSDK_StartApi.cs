@@ -92,7 +92,8 @@ namespace nanoSDK
                 if (GUILayout.Button("Logout")) NanoApiManager.Logout();
 
                 GUILayout.Space(4);
-                if (!NanoApiManager.User.IsPremium)
+                //Todoo
+                if (NanoApiManager.User.IsPremium)
                 {
                     GUIStyle fieldColor = new GUIStyle(EditorStyles.label);
                     fieldColor.normal.textColor = Color.red;
@@ -106,7 +107,7 @@ namespace nanoSDK
                     if (GUILayout.Button("?", GUILayout.Width(50)))
                     {
                         fieldColor.normal.textColor = Color.magenta;
-                        EditorUtility.DisplayDialog("Premium", "Premium User Get More Features", "Okay");
+                        EditorUtility.DisplayDialog("Premium", "Premium User Get More Features todoo: list features", "Okay");
                         
                     }
                     GUILayout.EndHorizontal();
