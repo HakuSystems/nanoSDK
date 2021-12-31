@@ -10,18 +10,26 @@ using VRC.SDKBase.Editor;
 [ExecuteInEditMode]
 public class nanoSDK_FastUploader
 {
-    [MenuItem("nanoSDK/FAST UPLOADER beta", false, 100)]
-    static void Init() => RunFastUpload();
+    [MenuItem("nanoSDK/EasyUpload", false, 100)]
 
     public static void RunFastUpload()
     {
+        bool checkedForIssues = false;
+        if (!VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
+        {
+            VRC.Core.API.SetOnlineMode(true, "vrchat");
+            VRC.Core.ConfigManager.RemoteConfig.Init();
+        }
         if (Application.isPlaying)
         {
-            EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "Cant Run While in Playmode", "Okay");
+            EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Cant Run While in Playmode", "Okay");
             return;
         }
         try
         {
+            if (!checkedForIssues)
+                EnvConfig.ConfigurePlayerSettings();
+
             List<VRC.SDKBase.VRC_AvatarDescriptor> allavatars = VRC.Tools.FindSceneObjectsOfTypeAll<VRC.SDKBase.VRC_AvatarDescriptor>().ToList();
 
             var avatars = allavatars.Where(av => av.gameObject.activeInHierarchy).ToArray();
@@ -31,13 +39,13 @@ public class nanoSDK_FastUploader
             {
                 if (APIUser.CurrentUser == null)
                 {
-                    EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "Login first (vrchat not nanosdk account)!", "Okay");
+                    EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Login first (vrchat not nanosdk account)!", "Okay");
                     return;
                 }
 
                 if (APIUser.CurrentUser.canPublishAvatars)
                 {
-                    if (EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now. (NOTE: THIS METHOD ONLY CHECKS IF --U CAN UPLOAD AVATARS-- WHEN YES THEN IT WILL FORCE UPLOAD WITHOUT CHECKING ANYTHING BEFORE UPLOAD -- We call this --Bypass Uploader-- but Fast Uploader for better understanding.)", "Nice!", "not the Right one"))
+                    if (EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now. (NOTE: THIS IS ONLY FOR WINDOWS NOT FOR QUEST)", "Nice!", "not the Right one"))
                     {
                         NanoSDK_MissingScripts.GetAndDelScripts();
                         VRC_SdkBuilder.shouldBuildUnityPackage = false;
@@ -45,24 +53,24 @@ public class nanoSDK_FastUploader
                     }
                     else
                     {
-                        EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "This Method gets Index 0 Of all Gameobjects in Hierarchy To fix your issue Please Delete All --not needed-- AvatarDescriptor Scripts. OR Use normal VRChat Uploader", "Okay");
+                        EditorUtility.DisplayDialog("nanoSDK EasyUpload", "This Method gets Index 0 Of all Gameobjects in Hierarchy To fix your issue Please Delete All --not needed-- AvatarDescriptor Scripts. OR Use normal VRChat Uploader", "Okay");
                     }
                 }
                 else
                 {
-                    EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "Cant Upload Avatar Please Check Normal Upload Method (VRChat One) for Errors", "Okay");
+                    EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Cant Upload Avatar Please Check Normal Upload Method (VRChat One) for Errors", "Okay");
                 }
 
             }
             else
             {
-                EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "add a avatar descriptor", "Okay");
+                EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Please First Add A Avatar Descriptor To Your Avatar.", "Okay");
             }
 
         }
         catch (ArgumentOutOfRangeException)
         {
-            EditorUtility.DisplayDialog("nanoSDK FAST UPLOADER", "Please First Add A Avatar Descriptor To Your Avatar.", "Okay");
+            EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Please First Add A Avatar Descriptor To Your Avatar.", "Okay");
 
         }
         
