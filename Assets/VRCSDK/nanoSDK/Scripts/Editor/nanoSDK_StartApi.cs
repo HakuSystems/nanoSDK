@@ -90,6 +90,10 @@ namespace nanoSDK
                 }
 
                 if (GUILayout.Button("Logout")) NanoApiManager.Logout();
+                if (GUILayout.Button("Copy"))
+                {
+                    EditorUtility.DisplayDialog("nanoSDK","In development", "Okay");
+                }
 
                 GUILayout.Space(4);
                 //Todoo
