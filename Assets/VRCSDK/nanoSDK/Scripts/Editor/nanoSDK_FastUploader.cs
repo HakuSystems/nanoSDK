@@ -73,6 +73,6 @@ public class nanoSDK_FastUploader
             EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Please First Add A Avatar Descriptor To Your Avatar.", "Okay");
 
         }
-        
+
     }
 }
