@@ -15,7 +15,7 @@ namespace nanoSDK
     public class NanoSDK_AutomaticUpdateAndInstall : MonoBehaviour
     { //api features in here bc files will be delted when process is being made
         private const string BASE_URL = "https://api.nanosdk.net";
-        private const string SdkVersionUri = BASE_URL + "/public/sdk/version";
+        private static readonly Uri SdkVersionUri = new Uri(BASE_URL + "/public/sdk/version");
         public static string SERVERVERSION = null;
         public static string SERVERURL = null;
 
@@ -37,7 +37,7 @@ namespace nanoSDK
             var request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
-                RequestUri = new Uri(SdkVersionUri)
+                RequestUri = SdkVersionUri
             };
 
             var response = await HttpClient.SendAsync(request); //without AuthKey Sending
@@ -137,25 +137,12 @@ namespace nanoSDK
 
             WebClient w = new WebClient();
             w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
-            
+            w.DownloadFileCompleted += new AsyncCompletedEventHandler(FileDownloadComplete);
+            w.DownloadProgressChanged += FileDownloadProgress;
             try
             {
-                var request = new HttpRequestMessage()
-                {
-                    Method = HttpMethod.Get,
-                    RequestUri = new Uri(SdkVersionUri)
-                };
-
-                var response = await HttpClient.SendAsync(request); //without AuthKey Sending
-
-                string result = await response.Content.ReadAsStringAsync();
-                var SERVERCHECKproperties = JsonConvert.DeserializeObject<sdkVersionBaseINTERN<sdkVersionBaseINTERNDATA>>(result);
-
-
-                string url = SERVERCHECKproperties.Data.Url;
+                string url = SERVERURL;
                 w.DownloadFileAsync(new Uri(url), Path.GetTempPath() + "\\" + assetName);
-                w.DownloadFileCompleted += new AsyncCompletedEventHandler(FileDownloadComplete);
-                w.DownloadProgressChanged += FileDownloadProgress;
             }
             catch (Exception ex)
             {

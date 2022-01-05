@@ -69,13 +69,7 @@ namespace nanoSDK
             EditorGUILayout.BeginVertical();
             if (NanoApiManager.IsUserLoggedIn())
             {
-                EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
-                EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
-                EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
-                EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
-                EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
-                EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
-
+                InitializeData();
 
                 if (!NanoApiManager.IsLoggedInAndVerified())
                 {
@@ -90,9 +84,15 @@ namespace nanoSDK
                 }
 
                 if (GUILayout.Button("Logout")) NanoApiManager.Logout();
-                if (GUILayout.Button("Copy"))
+                if (GUILayout.Button("Copy Data for support"))
                 {
-                    EditorUtility.DisplayDialog("nanoSDK","In development", "Okay");
+
+                    string copyContent = $@"
+Username: {NanoApiManager.User.Username}
+Email: {NanoApiManager.User.Email}
+ID: {NanoApiManager.User.ID}
+                    ";
+                    EditorGUIUtility.systemCopyBuffer = copyContent;
                 }
 
                 GUILayout.Space(4);
@@ -106,13 +106,13 @@ namespace nanoSDK
                     GUILayout.BeginHorizontal();
                     if (GUILayout.Button("Buy Premium"))
                     {
-                        EditorUtility.DisplayDialog("Premium","This is still Indev","Okay");
+                        EditorUtility.DisplayDialog("Premium", "This is still Indev", "Okay");
                     }
                     if (GUILayout.Button("?", GUILayout.Width(50)))
                     {
                         fieldColor.normal.textColor = Color.magenta;
                         EditorUtility.DisplayDialog("Premium", "Premium User Get More Features todoo: list features", "Okay");
-                        
+
                     }
                     GUILayout.EndHorizontal();
                 }
@@ -145,6 +145,21 @@ namespace nanoSDK
             }
 
             EditorGUILayout.EndVertical();
+        }
+
+        private void InitializeData()
+        {
+            EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
+            EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
+            EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
+            EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
+            EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
+            EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
+        }
+
+        private void nanoLog(string message)
+        {
+            Debug.Log("[nanoSDK Auth]: " + message);
         }
     }
 }
