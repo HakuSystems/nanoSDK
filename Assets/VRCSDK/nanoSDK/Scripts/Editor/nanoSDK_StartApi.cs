@@ -69,8 +69,14 @@ namespace nanoSDK
             EditorGUILayout.BeginVertical();
             if (NanoApiManager.IsUserLoggedIn())
             {
-                InitializeData();
-                
+                EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
+                EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
+                EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
+                EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
+                EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
+                EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
+
+
                 if (!NanoApiManager.IsLoggedInAndVerified())
                 {
                     EditorGUILayout.LabelField("License Key");
@@ -84,15 +90,9 @@ namespace nanoSDK
                 }
 
                 if (GUILayout.Button("Logout")) NanoApiManager.Logout();
-                if (GUILayout.Button("Copy Data for support"))
+                if (GUILayout.Button("Copy"))
                 {
-                    
-                    string copyContent = $@"
-Username: {NanoApiManager.User.Username}
-Email: {NanoApiManager.User.Email}
-ID: {NanoApiManager.User.ID}
-                    ";
-                    EditorGUIUtility.systemCopyBuffer = copyContent;
+                    EditorUtility.DisplayDialog("nanoSDK","In development", "Okay");
                 }
 
                 GUILayout.Space(4);
@@ -145,21 +145,6 @@ ID: {NanoApiManager.User.ID}
             }
 
             EditorGUILayout.EndVertical();
-        }
-
-        private void InitializeData()
-        {
-            EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
-            EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
-            EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
-            EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
-            EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
-            EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
-        }
-
-        private void nanoLog(string message)
-        {
-            Debug.Log("[nanoSDK Auth]: " + message);
         }
     }
 }
