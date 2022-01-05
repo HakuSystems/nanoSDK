@@ -76,6 +76,7 @@ namespace nanoSDK
                 EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
                 EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
 
+
                 if (!NanoApiManager.IsLoggedInAndVerified())
                 {
                     EditorGUILayout.LabelField("License Key");
@@ -89,6 +90,32 @@ namespace nanoSDK
                 }
 
                 if (GUILayout.Button("Logout")) NanoApiManager.Logout();
+                if (GUILayout.Button("Copy"))
+                {
+                    EditorUtility.DisplayDialog("nanoSDK","In development", "Okay");
+                }
+
+                GUILayout.Space(4);
+                //Todoo
+                if (NanoApiManager.User.IsPremium)
+                {
+                    GUIStyle fieldColor = new GUIStyle(EditorStyles.label);
+                    fieldColor.normal.textColor = Color.red;
+
+                    EditorGUILayout.LabelField($"Your Premium status is: {NanoApiManager.User.IsPremium}", fieldColor);
+                    GUILayout.BeginHorizontal();
+                    if (GUILayout.Button("Buy Premium"))
+                    {
+                        EditorUtility.DisplayDialog("Premium","This is still Indev","Okay");
+                    }
+                    if (GUILayout.Button("?", GUILayout.Width(50)))
+                    {
+                        fieldColor.normal.textColor = Color.magenta;
+                        EditorUtility.DisplayDialog("Premium", "Premium User Get More Features todoo: list features", "Okay");
+                        
+                    }
+                    GUILayout.EndHorizontal();
+                }
                 EditorGUILayout.EndVertical();
                 return;
             }

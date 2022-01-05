@@ -17,16 +17,34 @@ namespace nanoSDK
         public static void ShowWindow()
         {
             window = (nanoSDKTabView)GetWindow(typeof(nanoSDKTabView));
-            window.titleContent.text = "Account";
-            window.Show();
+            InitializeWindow();
         }
+        private void OnEnable()
+        {
+            PutIconOnWindow();
+            
+        }
+
+        private void PutIconOnWindow()
+        {
+            Texture2D icon = Resources.Load("icon") as Texture2D;
+            titleContent.text = " nanoSDK";
+            titleContent.image = icon;
+
+        }
+
+        private static void InitializeWindow()
+        {
+            if (window == null)
+            {
+                window = (nanoSDKTabView)GetWindow(typeof(nanoSDKTabView));
+            }
+            
+        }
+
         private void OnGUI()
         {
-
-            if (window==null)
-            {
-                window= (nanoSDKTabView)GetWindow(typeof(nanoSDKTabView));
-            }
+            autoRepaintOnSceneChange = true;
             Repaint();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
@@ -34,13 +52,14 @@ namespace nanoSDK
             //tab things
                 EditorWindow loginWindow = GetWindow<NanoSDK_Login>("Account");
                 EditorWindow changelogWindow = GetWindow<NanoSDK_Info>("Changelog", typeof(nanoSDKTabView));
-                EditorWindow importPanelWindow = GetWindow<NanoSDK_ImportPanel>("ImportPanel", typeof(nanoSDKTabView));
+                EditorWindow importPanelWindow = GetWindow<NanoSDK_ImportPanel>("Importables", typeof(nanoSDKTabView));
                 EditorWindow settingsWindow = GetWindow<NanoSDK_Settings>("Settings", typeof(nanoSDKTabView));
                 loginWindow.Show();
-
+            
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
+            
         }
 
     }
