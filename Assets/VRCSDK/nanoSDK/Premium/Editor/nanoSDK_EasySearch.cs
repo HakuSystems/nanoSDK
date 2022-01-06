@@ -62,7 +62,6 @@ public class nanoSDK_EasySearch : EditorWindow
 
     private void SearchUnitypackage()
     {
-        //commit command
         List<string> list = new List<string>();
         int MAX_RESULTS = 20;
         var results = Everything.Search(".unitypackage");
