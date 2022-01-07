@@ -189,8 +189,8 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
 
                 yield return new Result()
                 {
+                    Filename = Marshal.PtrToStringUni(Everything_GetResultFileName(i)),
                     Size = size,
-                    Filename = Marshal.PtrToStringUni(Everything_GetResultFileName(i))
                 };
             }
         }

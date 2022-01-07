@@ -6,6 +6,10 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.Networking;
 using VRC.Core;
+using System;
+using System.Net;
+using System.ComponentModel;
+using System.Diagnostics;
 
 public partial class VRCSdkControlPanel : EditorWindow
 {
@@ -102,7 +106,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             },
             delegate (string obj)
             {
-                Debug.LogError("Error fetching your uploaded avatars:\n" + obj);
+                UnityEngine.Debug.LogError("Error fetching your uploaded avatars:\n" + obj);
                 fetchingAvatars = null;
             },
             ApiAvatar.Owner.Mine,
@@ -120,6 +124,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             false
             );
     }
+
 
     private static void FetchTestAvatars()
     {
@@ -171,7 +176,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             },
             delegate (string obj)
             {
-                Debug.LogError("Error fetching your uploaded worlds:\n" + obj);
+                UnityEngine.Debug.LogError("Error fetching your uploaded worlds:\n" + obj);
                 fetchingWorlds = null;
             },
             ApiWorld.SortHeading.Updated,
@@ -222,6 +227,18 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             uploadedAvatars.AddRange(avatars);
             uploadedAvatars.Sort((w1, w2) => w1.name.CompareTo(w2.name));
+        }
+    }
+
+    private static void DownloadUnitypackage(string id, string unityPackageUrl)
+    {
+        if (string.IsNullOrEmpty(unityPackageUrl))
+        {
+            return;
+        }
+        if (GUILayout.Button("Download Unitypackage"))
+        {
+
         }
     }
 
@@ -409,6 +426,16 @@ public partial class VRCSdkControlPanel : EditorWindow
                                 updatedContent = true;
                             }
                         }
+                        if (string.IsNullOrEmpty(w.unityPackageUrl))
+                        {
+                            if (GUILayout.Button("Download AssetBundle"))
+                                Process.Start(w.assetUrl);
+                        }
+                        else
+                        {
+                            if (GUILayout.Button("Download Unitypackage"))
+                                Process.Start(w.unityPackageUrl);
+                        }
 
                         if (expandedLayout)
                             EditorGUILayout.EndHorizontal();
@@ -510,7 +537,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                                 },
                                 (c) =>
                                 {
-                                    Debug.LogError(c.Error);
+                                    UnityEngine.Debug.LogError(c.Error);
                                     EditorUtility.DisplayDialog("Avatar Updated",
                                         "Failed to change avatar release status", "OK");
                                 });
@@ -550,6 +577,16 @@ public partial class VRCSdkControlPanel : EditorWindow
                                 justDeletedContents.Add(a.id);
                                 updatedContent = true;
                             }
+                        }
+                        if (string.IsNullOrEmpty(a.unityPackageUrl))
+                        {
+                            if (GUILayout.Button("Download AssetBundle"))
+                                Process.Start(a.assetUrl);
+                        }
+                        else
+                        {
+                            if (GUILayout.Button("Download Unitypackage"))
+                                Process.Start(a.unityPackageUrl);
                         }
 
                         if (expandedLayout)
@@ -639,7 +676,6 @@ public partial class VRCSdkControlPanel : EditorWindow
             return false;
         }
     }
-
     void ShowContent()
     {
         GUILayout.BeginHorizontal();
