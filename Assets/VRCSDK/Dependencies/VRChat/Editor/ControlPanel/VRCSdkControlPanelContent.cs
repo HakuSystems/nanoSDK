@@ -10,6 +10,8 @@ using System;
 using System.Net;
 using System.ComponentModel;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using System.Net.Http;
 
 public partial class VRCSdkControlPanel : EditorWindow
 {
@@ -650,6 +652,10 @@ public partial class VRCSdkControlPanel : EditorWindow
     private void GetUnitypackageAvatar(ApiAvatar avatar)
     {
         //unitypackage url is always null even when uploaded with future proof
+        
+        var properties = JsonConvert.DeserializeObject(avatar.unityPackageUrl);
+        UnityEngine.Debug.Log(properties); // null
+
 
         if (string.IsNullOrEmpty(avatar.unityPackageUrl))
         {
@@ -665,8 +671,6 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     private static void GetUnitypackageWorld(ApiWorld world)
     {
-        //unitypackage url is always null even when uploaded with future proof
-
         if (string.IsNullOrEmpty(world.unityPackageUrl))
         {
             if (GUILayout.Button("Download AssetBundle"))
