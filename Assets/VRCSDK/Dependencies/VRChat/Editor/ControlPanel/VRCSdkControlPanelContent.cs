@@ -230,18 +230,6 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
     }
 
-    private static void DownloadUnitypackage(string id, string unityPackageUrl)
-    {
-        if (string.IsNullOrEmpty(unityPackageUrl))
-        {
-            return;
-        }
-        if (GUILayout.Button("Download Unitypackage"))
-        {
-
-        }
-    }
-
     private static void DownloadImage(string id, string url)
     {
         if (string.IsNullOrEmpty(url))

@@ -177,7 +177,7 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
         {
             // set the search
             Everything_SetSearchW(qry);
-            Everything_SetRequestFlags(EVERYTHING_REQUEST_FILE_NAME | EVERYTHING_REQUEST_SIZE);
+            Everything_SetRequestFlags(EVERYTHING_REQUEST_FILE_NAME | EVERYTHING_REQUEST_SIZE | EVERYTHING_REQUEST_PATH);
 
             // execute the query
             Everything_QueryW(true);
@@ -185,24 +185,29 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
 
             for (uint i = 0; i < resultCount; i++)
             {
+                var sb = new StringBuilder(999);
+                Everything_GetResultFullPathName(i, sb, 999);
                 Everything_GetResultSize(i, out long size);
 
                 yield return new Result()
                 {
                     Filename = Marshal.PtrToStringUni(Everything_GetResultFileName(i)),
                     Size = size,
+                    Path = sb.ToString()
                 };
             }
         }
 
         public struct Result
         {
-            public long Size; //bytes
+            public long Size;
             public string Filename;
+            public string Path;
 
-            //public bool Folder => Size < 0; //not used yet
+            public bool Folder => Size < 0;
 
-            public string ResultString() => $"Name: {Filename}";
+            public string ResultString() => Filename;
         }
+        
     }
 }
