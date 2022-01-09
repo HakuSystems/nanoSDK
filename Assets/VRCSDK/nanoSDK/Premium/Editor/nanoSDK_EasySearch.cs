@@ -20,7 +20,6 @@ public class nanoSDK_EasySearch : EditorWindow
     private static Vector2 changeLogScroll;
     private static string searchString = "";
 
-    private static int MAX_RESULTS = 999;
     private static int sliderLeftValue = 1;
 
     [MenuItem("nanoSDK/EasySearch", false, 501)]
@@ -79,10 +78,10 @@ public class nanoSDK_EasySearch : EditorWindow
         GUILayout.Space(4);
 
         GUILayout.BeginHorizontal();
-        EditorGUILayout.LabelField($"Asset Count: {sliderLeftValue}", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField($"Asset Count: {Everything.Everything_GetNumResults()}", EditorStyles.boldLabel);
 
         
-        sliderLeftValue = EditorGUILayout.IntSlider(sliderLeftValue, 1, MAX_RESULTS);
+        //sliderLeftValue = EditorGUILayout.IntSlider(sliderLeftValue, 1, 10);
 
 
         EditorGUILayout.EndHorizontal();
@@ -157,24 +156,27 @@ this will drop down a list of all found .unitypackages matching your search.
         RunActuallProcess(topic);
         GUILayout.EndScrollView();
     }
-
     private void RunActuallProcess(string topic)
     {
         List<string> list = new List<string>();
-        var results = Everything.Search(topic);
+        var results = Everything.Search(searchString+topic);
 
 
-        var resultCount = 0;
+        //var resultCount = 0;
         foreach (var result in results)
         {
-            resultCount++;
+            //resultCount++;
+            /*
             if (resultCount > sliderLeftValue)
                 break;
-
+            */
+            
             list.Add(result.ResultString());
+            
+            /*
             if (!result.Filename.Contains(searchString))
                 continue;
-
+            */
             EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
             if (!result.Folder)
             {
@@ -199,8 +201,6 @@ this will drop down a list of all found .unitypackages matching your search.
             GUILayout.Space(3);
 
         }
-        
-
     }
     private bool SearchEverythingProgramOpen()
     {
