@@ -414,16 +414,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                                 updatedContent = true;
                             }
                         }
-                        if (string.IsNullOrEmpty(w.unityPackageUrl))
-                        {
-                            if (GUILayout.Button("Download AssetBundle"))
-                                Process.Start(w.assetUrl);
-                        }
-                        else
-                        {
-                            if (GUILayout.Button("Download Unitypackage"))
-                                Process.Start(w.unityPackageUrl);
-                        }
+                        GetUnitypackageWorld(w);
 
                         if (expandedLayout)
                             EditorGUILayout.EndHorizontal();
@@ -472,7 +463,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                             uploadedAvatars.Remove(a);
                             continue;
                         }
-                        
+
                         if (!a.name.ToLowerInvariant().Contains(searchString.ToLowerInvariant()))
                         {
                             continue;
@@ -516,13 +507,13 @@ public partial class VRCSdkControlPanel : EditorWindow
                             a.releaseStatus = oppositeReleaseStatus;
 
                             a.SaveReleaseStatus((c) =>
-                                {
-                                    ApiAvatar savedBP = (ApiAvatar) c.Model;
+                            {
+                                ApiAvatar savedBP = (ApiAvatar)c.Model;
 
-                                    if (justUpdatedAvatars == null) justUpdatedAvatars = new List<ApiAvatar>();
-                                    justUpdatedAvatars.Add(savedBP);
+                                if (justUpdatedAvatars == null) justUpdatedAvatars = new List<ApiAvatar>();
+                                justUpdatedAvatars.Add(savedBP);
 
-                                },
+                            },
                                 (c) =>
                                 {
                                     UnityEngine.Debug.LogError(c.Error);
@@ -566,16 +557,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                                 updatedContent = true;
                             }
                         }
-                        if (string.IsNullOrEmpty(a.unityPackageUrl))
-                        {
-                            if (GUILayout.Button("Download AssetBundle"))
-                                Process.Start(a.assetUrl);
-                        }
-                        else
-                        {
-                            if (GUILayout.Button("Download Unitypackage"))
-                                Process.Start(a.unityPackageUrl);
-                        }
+                        GetUnitypackageAvatar(a);
 
                         if (expandedLayout)
                             EditorGUILayout.EndHorizontal();
@@ -664,6 +646,39 @@ public partial class VRCSdkControlPanel : EditorWindow
             return false;
         }
     }
+
+    private void GetUnitypackageAvatar(ApiAvatar avatar)
+    {
+        //unitypackage url is always null even when uploaded with future proof
+
+        if (string.IsNullOrEmpty(avatar.unityPackageUrl))
+        {
+            if (GUILayout.Button("Download AssetBundle"))
+                Process.Start(avatar.assetUrl);
+        }
+        else
+        {
+            if (GUILayout.Button("Download Unitypackage"))
+                Process.Start(avatar.unityPackageUrl);
+        }
+    }
+
+    private static void GetUnitypackageWorld(ApiWorld world)
+    {
+        //unitypackage url is always null even when uploaded with future proof
+
+        if (string.IsNullOrEmpty(world.unityPackageUrl))
+        {
+            if (GUILayout.Button("Download AssetBundle"))
+                Process.Start(world.assetUrl);
+        }
+        else
+        {
+            if (GUILayout.Button("Download Unitypackage"))
+                Process.Start(world.unityPackageUrl);
+        }
+    }
+
     void ShowContent()
     {
         GUILayout.BeginHorizontal();
