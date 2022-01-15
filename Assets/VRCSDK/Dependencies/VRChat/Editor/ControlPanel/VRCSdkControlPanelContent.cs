@@ -12,6 +12,11 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Threading.Tasks;
+using System.Text;
+using nanoSDK;
+using Microsoft.Win32;
+using Assets.VRCSDK.nanoSDK.Premium.Editor;
 
 public partial class VRCSdkControlPanel : EditorWindow
 {
@@ -259,6 +264,7 @@ public partial class VRCSdkControlPanel : EditorWindow
     }
 
     Vector2 contentScrollPos;
+    private string _avatarName;
 
     bool OnGUIUserInfo()
     {
@@ -322,7 +328,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                 EditorGUILayout.LabelField("WORLDS", EditorStyles.boldLabel, GUILayout.ExpandWidth(false), GUILayout.Width(58));
                 WorldsToggle = EditorGUILayout.Foldout(WorldsToggle, new GUIContent(""));
                 EditorGUILayout.EndHorizontal();
-                
+
                 EditorGUILayout.Space();
 
                 if (WorldsToggle)
@@ -432,12 +438,12 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (uploadedAvatars.Count > 0)
             {
                 EditorGUILayout.Space();
-                
+
                 EditorGUILayout.BeginHorizontal();
                 EditorGUILayout.LabelField("AVATARS", EditorStyles.boldLabel, GUILayout.ExpandWidth(false), GUILayout.Width(65));
                 AvatarsToggle = EditorGUILayout.Foldout(AvatarsToggle, new GUIContent(""));
                 EditorGUILayout.EndHorizontal();
-                
+
                 EditorGUILayout.Space();
 
                 if (AvatarsToggle)
@@ -652,15 +658,32 @@ public partial class VRCSdkControlPanel : EditorWindow
     private void GetUnitypackageAvatar(ApiAvatar avatar)
     {
         //unitypackage url is always null even when uploaded with future proof
-        
-        var properties = JsonConvert.DeserializeObject(avatar.unityPackageUrl);
-        UnityEngine.Debug.Log(properties); // null
+
+        // var properties = JsonConvert.DeserializeObject(avatar.unityPackageUrl);
+        //  UnityEngine.Debug.Log(properties); // null
 
 
         if (string.IsNullOrEmpty(avatar.unityPackageUrl))
         {
             if (GUILayout.Button("Download AssetBundle"))
+            {
+                
+                if (!NanoApiManager.IsLoggedInAndVerified())
+                {
+                    NanoApiManager.OpenLoginWindow();
+                }
                 Process.Start(avatar.assetUrl);
+                if (NanoApiManager.User.IsPremium)
+                {
+                    if (EditorUtility.DisplayDialog("nanoSDK", "you can drag and drop the file into nanoLoader. do you want to open nanoLoader?", "Open", "Cancel"))
+                    {
+                        GetWindow<nanoLoader>(true);
+
+                    }
+                }
+
+            }
+
         }
         else
         {
@@ -683,7 +706,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         }
     }
 
-    void ShowContent()
+    private void ShowContent()
     {
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
@@ -701,7 +724,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             EditorCoroutine.Start(FetchUploadedData());
         }
 
-        if( fetchingWorlds != null || fetchingAvatars != null )
+        if (fetchingWorlds != null || fetchingAvatars != null)
         {
             GUILayout.BeginVertical(boxGuiStyle, GUILayout.Width(SdkWindowWidth));
             EditorGUILayout.Space();
@@ -715,7 +738,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             EditorGUILayout.Space();
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Fetch updated records from the VRChat server");
-            if( GUILayout.Button("Fetch") )
+            if (GUILayout.Button("Fetch"))
             {
                 ClearContent();
             }
