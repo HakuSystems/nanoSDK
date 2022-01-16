@@ -1,6 +1,7 @@
 ﻿using nanoSDK;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,14 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
             GUILayout.Space(4);
             GUI.backgroundColor = Color.gray;
             GUILayout.BeginHorizontal();
+            if (!NanoApiManager.User.IsPremium)
+            {
+                Close();
+                if (EditorUtility.DisplayDialog("nanoSDK Premium", "This Feature is only for Premium user", "Buy Premium"))
+                {
+                    Process.Start("https://www.patreon.com/nanoSDK");
+                }
+            }
             if (GUILayout.Button("Check for Updates"))
             {
                 NanoApiManager.CheckServerVersion();
@@ -74,7 +83,7 @@ made some things", EditorStyles.boldLabel);
                 {
                     foreach (string path in DragAndDrop.paths)
                     {
-                        Debug.Log("- " + path);
+                        UnityEngine.Debug.Log("- " + path);
                         if (path.EndsWith(".vrca"))
                         {
                             try
@@ -122,6 +131,7 @@ made some things", EditorStyles.boldLabel);
                 },
                 fixedHeight = 1
             };
+            
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEditor;
 using UnityEngine;
 
@@ -96,7 +97,7 @@ ID: {NanoApiManager.User.ID}
                 }
 
                 GUILayout.Space(4);
-                //Todoo
+                //Todoo list features
                 if (NanoApiManager.User.IsPremium)
                 {
                     GUIStyle fieldColor = new GUIStyle(EditorStyles.label);
@@ -106,7 +107,7 @@ ID: {NanoApiManager.User.ID}
                     GUILayout.BeginHorizontal();
                     if (GUILayout.Button("Buy Premium"))
                     {
-                        EditorUtility.DisplayDialog("Premium", "This is still Indev", "Okay");
+                        Process.Start("https://www.patreon.com/nanoSDK");
                     }
                     if (GUILayout.Button("?", GUILayout.Width(50)))
                     {
@@ -159,7 +160,7 @@ ID: {NanoApiManager.User.ID}
 
         private void nanoLog(string message)
         {
-            Debug.Log("[nanoSDK Auth]: " + message);
+            UnityEngine.Debug.Log("[nanoSDK Auth]: " + message);
         }
     }
 }

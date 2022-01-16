@@ -26,12 +26,8 @@ public class nanoSDK_EasySearch : EditorWindow
     public static void OpenSplashScreen()
     {
         GetWindow<nanoSDK_EasySearch>(true);
-        
-        /*
         if (NanoApiManager.IsLoggedInAndVerified()) return;
         NanoApiManager.OpenLoginWindow();
-        */
-
     }
 
     public async void OnGUI()
@@ -40,6 +36,14 @@ public class nanoSDK_EasySearch : EditorWindow
         GUILayout.Space(4);
         GUI.backgroundColor = Color.gray;
         GUILayout.BeginHorizontal();
+        if (!NanoApiManager.User.IsPremium)
+        {
+            Close();
+            if (EditorUtility.DisplayDialog("nanoSDK Premium", "This Feature is only for Premium user", "Buy Premium"))
+            {
+                Process.Start("https://www.patreon.com/nanoSDK");
+            }
+        }
         if (GUILayout.Button("Check for Updates"))
         {
             NanoApiManager.CheckServerVersion();
