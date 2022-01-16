@@ -442,7 +442,7 @@ namespace VRC.SDKBase.Editor
 #endif
 
 #if VRC_SDK_VRCSDK2
-                        VRC_SdkBuilder.shouldBuildUnityPackage = VRCSdkControlPanel.FutureProofPublishEnabled;
+                        VRC_SdkBuilder.shouldBuildUnityPackage = false;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);
 #endif
 

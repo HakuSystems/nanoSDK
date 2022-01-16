@@ -520,7 +520,7 @@ namespace VRC.SDK3.Editor
                         EditorPrefs.SetBool("VRC.SDKBase_StripAllShaders", false);
 #endif
 
-                        VRC_SdkBuilder.shouldBuildUnityPackage = VRCSdkControlPanel.FutureProofPublishEnabled;
+                        VRC_SdkBuilder.shouldBuildUnityPackage = false;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);
 
                         EnvConfig.SetFogSettings(originalFogSettings);
