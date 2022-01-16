@@ -10,7 +10,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Assets.VRCSDK.nanoSDK.Premium.Editor
-{ //TODOO PREMIUM CHECK
+{
     public class nanoLoader : EditorWindow
     {
         private static GUIStyle vrcSdkHeader;
@@ -62,11 +62,22 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
 
 
             GUILayout.Label(
-
-    @"This feature lets you see any avatar in unity with shaders and everything.
-But you cannot get the assets. this tool is made for looking inside avatars
-how they are made or maybe look at your own avatars to remember how you
-made some things", EditorStyles.boldLabel);
+@"nanoLoader is a new feature that gives you control over
+your asset bundles(.vrca files). 
+Drag and drop your assetbundle into nanoLoader and it will load your avatar in
+Unity with all of the shaders and everything else that your avatar has. 
+This avatar can be seen in edit and play mode. 
+The assets (specific files like soundfiles, meshes, or shaders) cannot be restored! 
+This feature only gives you the ability to see
+the avatar and how it was previously built in Unity. 
+For example, you can use it to copy your lost avatar
+settings and then paste the same settings onto your new avatar. 
+For example, if you have forgotten what shader you
+used on the old avatar, you can simply drag and drop your assetbundle
+into nanoLoader and you will be able to see
+all of the shaders and all of the animations. 
+You can also play every single animation that the avatar has.
+Like I mentioned before, assets will not be exported.", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             GUILayout.Label("Drag and drop your avatar.vrca file here.");
             GUILayout.Space(60);
@@ -119,7 +130,7 @@ made some things", EditorStyles.boldLabel);
         {
             titleContent = new GUIContent("nanoLoader");
 
-            maxSize = new Vector2(500, 220);
+            maxSize = new Vector2(500, 400);
             minSize = maxSize;
 
             vrcSdkHeader = new GUIStyle
