@@ -150,12 +150,12 @@ ID: {NanoApiManager.User.ID}
 
         private void InitializeData()
         {
-            EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
-            EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
-            EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
             EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
-            EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
+            EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
+            EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
             EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
+            EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
+            EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
         }
 
         private void nanoLog(string message)

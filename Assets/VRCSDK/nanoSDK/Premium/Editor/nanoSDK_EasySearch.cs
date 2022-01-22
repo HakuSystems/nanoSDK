@@ -234,7 +234,7 @@ this will drop down a list of all found .unitypackages matching your search.
                     background = Resources.Load("") as Texture2D,
                     textColor = Color.white
                 },
-            fixedHeight = 100
+            fixedHeight = 1
         };
     }
 }
