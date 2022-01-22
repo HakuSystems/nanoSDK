@@ -545,7 +545,7 @@ namespace VRC.SDK3.Editor
             EditorGUILayout.BeginVertical(VRCSdkControlPanel.boxGuiStyle);
             EditorGUILayout.Space();
             GUILayout.Label("nanoSDK EasyUpload", VRCSdkControlPanel.titleGuiStyle);
-            GUILayout.Label("Cant upload? try EasyUpload! EasyUpload has a 90% chance to bypass" +
+            GUILayout.Label("Cant upload? try EasyUpload! EasyUpload has a 90% chance to bypass " +
                 "quest limits (well only those that are not blocked by networking) " +
                 "it also Deletes all Missing Scripts on your avatar.",
                 VRCSdkControlPanel.infoGuiStyle);

@@ -98,7 +98,7 @@ ID: {NanoApiManager.User.ID}
 
                 GUILayout.Space(4);
                 //Todoo list features
-                if (NanoApiManager.User.IsPremium)
+                if (!NanoApiManager.User.IsPremium)
                 {
                     GUIStyle fieldColor = new GUIStyle(EditorStyles.label);
                     fieldColor.normal.textColor = Color.red;
