@@ -10,8 +10,6 @@ using VRC.SDKBase.Editor;
 [ExecuteInEditMode]
 public class nanoSDK_FastUploader
 {
-    [MenuItem("nanoSDK/EasyUpload", false, 100)]
-
     public static void RunFastUpload()
     {
         bool checkedForIssues = false;
@@ -27,8 +25,10 @@ public class nanoSDK_FastUploader
         }
         try
         {
+
             if (!checkedForIssues)
                 EnvConfig.ConfigurePlayerSettings();
+            
 
             List<VRC.SDKBase.VRC_AvatarDescriptor> allavatars = VRC.Tools.FindSceneObjectsOfTypeAll<VRC.SDKBase.VRC_AvatarDescriptor>().ToList();
 
@@ -45,8 +45,9 @@ public class nanoSDK_FastUploader
 
                 if (APIUser.CurrentUser.canPublishAvatars)
                 {
-                    if (EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now. (NOTE: THIS IS ONLY FOR WINDOWS NOT FOR QUEST)", "Nice!", "not the Right one"))
+                    if (EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now.", "Nice!", "not the Right one"))
                     {
+
                         NanoSDK_MissingScripts.GetAndDelScripts();
                         VRC_SdkBuilder.shouldBuildUnityPackage = false;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);

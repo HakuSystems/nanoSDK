@@ -497,7 +497,6 @@ namespace VRC.SDK3.Editor
                 VRCSdkControlPanel.infoGuiStyle);
 
             EditorGUILayout.EndVertical();
-
             EditorGUILayout.BeginVertical(GUILayout.Width(200));
             EditorGUILayout.Space();
 
@@ -535,11 +534,26 @@ namespace VRC.SDK3.Editor
                     }
                 }
             }
+            
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.Space();
-
+            
             EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.BeginVertical(VRCSdkControlPanel.boxGuiStyle);
+            EditorGUILayout.Space();
+            GUILayout.Label("nanoSDK EasyUpload", VRCSdkControlPanel.titleGuiStyle);
+            GUILayout.Label("Cant upload? try EasyUpload! EasyUpload has a 90% chance to bypass" +
+                "quest limits (well only those that are not blocked by networking) " +
+                "it also Deletes all Missing Scripts on your avatar.",
+                VRCSdkControlPanel.infoGuiStyle);
+            if (GUILayout.Button("Upload with EasyUpload"))
+            {
+                nanoSDK_FastUploader.RunFastUpload();
+            }
+            EditorGUILayout.Space();
             EditorGUILayout.EndVertical();
 
             GUI.enabled = true;

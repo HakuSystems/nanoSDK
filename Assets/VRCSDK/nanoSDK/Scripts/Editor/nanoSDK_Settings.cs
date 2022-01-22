@@ -140,7 +140,6 @@ namespace nanoSDK
             {
                 Application.OpenURL("https://nanoSDK.net/");
             }
-
             GUILayout.EndHorizontal();
 
             GUILayout.Space(4);
