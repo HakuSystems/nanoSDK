@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using nanoSDK.Premium;
 
 public class nanoSDK_EasySearch : EditorWindow
 {
@@ -160,23 +161,24 @@ this will drop down a list of all found .unitypackages matching your search.
         RunActuallProcess(topic);
         GUILayout.EndScrollView();
     }
-    private void RunActuallProcess(string topic)
+    private IEnumerator RunActuallProcess(string topic)
     {
         List<string> list = new List<string>();
-        var results = Everything.Search(searchString+topic);
 
-
-        //var resultCount = 0;
+        var results = Everything.Search(searchString + topic);
+        EditorCoroutine.Start((IEnumerator)results);
+        int resultCount = 0;
         foreach (var result in results)
         {
-            //resultCount++;
+            resultCount++;
+            yield return Wait(5);
+            
             /*
             if (resultCount > sliderLeftValue)
                 break;
             */
-            
+
             list.Add(result.ResultString());
-            
             /*
             if (!result.Filename.Contains(searchString))
                 continue;
@@ -203,9 +205,18 @@ this will drop down a list of all found .unitypackages matching your search.
 
 
             GUILayout.Space(3);
-
         }
     }
+
+    private IEnumerator Wait(int v)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(v);
+        }
+        
+    }
+
     private bool SearchEverythingProgramOpen()
     {
         Process[] proc = Process.GetProcessesByName("Everything");

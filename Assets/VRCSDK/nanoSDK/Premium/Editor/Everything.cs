@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
-namespace Assets.VRCSDK.nanoSDK.Premium.Editor
+namespace nanoSDK.Premium
 {
-    public class Everything
+    public class Everything : MonoBehaviour
     {
         #region API publicants and references
 
@@ -182,7 +184,6 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
             // execute the query
             Everything_QueryW(true);
             var resultCount = Everything_GetNumResults();
-
             for (uint i = 0; i < resultCount; i++)
             {
                 var sb = new StringBuilder(999);
