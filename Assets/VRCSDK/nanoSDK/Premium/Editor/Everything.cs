@@ -175,7 +175,7 @@ namespace nanoSDK.Premium
 
         #endregion
 
-        public static IEnumerable<Result> Search(string qry)
+        public static IEnumerable<Result> Search(string qry, int maxResults = 200)
         {
             // set the search
             Everything_SetSearchW(qry);
@@ -184,13 +184,17 @@ namespace nanoSDK.Premium
             // execute the query
             Everything_QueryW(true);
             var resultCount = Everything_GetNumResults();
-            for (uint i = 0; i < resultCount; i++)
+            var low = Math.Min(resultCount, maxResults);
+            Debug.Log(low);
+            for (uint i = 0; i < low; i++)
             {
                 var sb = new StringBuilder(999);
                 Everything_GetResultFullPathName(i, sb, 999);
                 Everything_GetResultSize(i, out long size);
 
-                yield return new Result()
+                Debug.Log(sb.ToString());
+                
+                yield return new Result
                 {
                     Filename = Marshal.PtrToStringUni(Everything_GetResultFileName(i)),
                     Size = size,
