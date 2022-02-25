@@ -116,6 +116,10 @@ public class nanoSDK_EasySearch : EditorWindow
             {
                 GUILayout.Label(resultCount.ToString(), GUILayout.Width(50));
                 GUILayout.Label(result.Filename + " (Folder)");
+                if (GUILayout.Button("Goto", GUILayout.Width(50)))
+                {
+                    Process.Start(result.Path);
+                }
             }
 
             GUILayout.EndHorizontal();
