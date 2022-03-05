@@ -281,29 +281,6 @@ namespace VRC.SDKBase.Editor
                                 Selection.objects = gos.ToArray();
                             }, null);
                 }
-
-                Transform lShoulder = anim.GetBoneTransform(HumanBodyBones.LeftUpperArm);
-                Transform rShoulder = anim.GetBoneTransform(HumanBodyBones.RightUpperArm);
-                if (lShoulder == null || rShoulder == null)
-                    _builder.OnGUIError(avatar, "Your avatar is humanoid, but its upper arms aren't specified!",
-                        delegate { Selection.activeObject = avatar.gameObject; }, null);
-                if (lShoulder != null && rShoulder != null)
-                {
-                    Vector3 shoulderPosition = lShoulder.position - avatar.transform.position;
-                    if (shoulderPosition.y < 0.2f)
-                        _builder.OnGUIError(avatar, "This avatar is too short. The minimum is 20cm shoulder height.",
-                            delegate { Selection.activeObject = avatar.gameObject; }, null);
-                    else if (shoulderPosition.y < 1.0f)
-                        _builder.OnGUIWarning(avatar, "This avatar is shorter than average.",
-                            delegate { Selection.activeObject = avatar.gameObject; }, null);
-                    else if (shoulderPosition.y > 5.0f)
-                        _builder.OnGUIWarning(avatar, "This avatar is too tall. The maximum is 5m shoulder height.",
-                            delegate { Selection.activeObject = avatar.gameObject; }, null);
-                    else if (shoulderPosition.y > 2.5f)
-                        _builder.OnGUIWarning(avatar, "This avatar is taller than average.",
-                            delegate { Selection.activeObject = avatar.gameObject; }, null);
-                }
-
                 if (AnalyzeIK(avatar, anim) == false)
                     _builder.OnGUILink(avatar, "See Avatar Rig Requirements for more information.",
                         VRCSdkControlPanel.AVATAR_RIG_REQUIREMENTS_URL);
