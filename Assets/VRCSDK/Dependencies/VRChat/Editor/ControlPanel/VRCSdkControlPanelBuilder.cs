@@ -221,28 +221,11 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
         
-        if (VRC.Core.ConfigManager.RemoteConfig.IsInitialized())
-        {
-            string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
-            if (Application.unityVersion != sdkUnityVersion)
-            {
-                    null,
-                    () => { Application.OpenURL("https://unity3d.com/get-unity/download/archive"); }
-                );
-            }
-        }
         
         if (VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK2) && VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK3))
         {
             List<Component> sdk2Components = VRCSdk3Analysis.GetSDKInScene(VRCSdk3Analysis.SdkVersion.VRCSDK2);
             List<Component> sdk3Components = VRCSdk3Analysis.GetSDKInScene(VRCSdk3Analysis.SdkVersion.VRCSDK3);
-            if (sdk2Components.Count > 0 && sdk3Components.Count > 0)
-            {
-                OnGUIError(null,
-                    () => { Selection.objects = sdk2Components.ToArray(); },
-                    null
-                );
-            }
         }
         
         if (Lightmapping.giWorkflowMode == Lightmapping.GIWorkflowMode.Iterative)
