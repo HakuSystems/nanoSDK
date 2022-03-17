@@ -226,7 +226,6 @@ public partial class VRCSdkControlPanel : EditorWindow
             string sdkUnityVersion = VRC.Core.ConfigManager.RemoteConfig.GetString("sdkUnityVersion");
             if (Application.unityVersion != sdkUnityVersion)
             {
-                OnGUIWarning(null, "You are not using the recommended Unity version for the SDK. Content built with this version may not work correctly. Please use Unity " + sdkUnityVersion,
                     null,
                     () => { Application.OpenURL("https://unity3d.com/get-unity/download/archive"); }
                 );
@@ -240,7 +239,6 @@ public partial class VRCSdkControlPanel : EditorWindow
             if (sdk2Components.Count > 0 && sdk3Components.Count > 0)
             {
                 OnGUIError(null,
-                    "This scene contains components from the SDK version 2.0 and version 3.0 Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
                     () => { Selection.objects = sdk2Components.ToArray(); },
                     null
                 );
@@ -301,7 +299,6 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             string message = "";
 #if VRC_SDK_VRCSDK2
-            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build SDK Content";
 #elif UDON
             message = "A VRCSceneDescriptor is required to build a World";
 #elif VRC_SDK_VRCSDK3
@@ -640,6 +637,5 @@ public partial class VRCSdkControlPanel : EditorWindow
             VRC.Core.ConfigManager.RemoteConfig.Init(() => ShowContentPublishPermissionsDialog());
             return;
         }
-
     }
 }

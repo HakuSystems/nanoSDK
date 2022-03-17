@@ -17,7 +17,6 @@ using System.Text;
 using nanoSDK;
 using Microsoft.Win32;
 using Assets.VRCSDK.nanoSDK.Premium.Editor;
-
 public partial class VRCSdkControlPanel : EditorWindow
 {
     const int PageLimit = 20;
@@ -124,14 +123,13 @@ public partial class VRCSdkControlPanel : EditorWindow
             ApiAvatar.SortHeading.None,
             ApiAvatar.SortOrder.Descending,
             null,
-            null, 
+            null,
             true,
             false,
             null,
             false
             );
     }
-
 
     private static void FetchTestAvatars()
     {
@@ -140,9 +138,9 @@ public partial class VRCSdkControlPanel : EditorWindow
         string[] sdkavatars = Directory.GetFiles(sdkAvatarFolder);
         string filename = "";
         List<ApiAvatar> avatars = new List<ApiAvatar>();
-        foreach(string sdkap in sdkavatars)
+        foreach (string sdkap in sdkavatars)
         {
-            if(Path.GetExtension(sdkap) != ".vrca")
+            if (Path.GetExtension(sdkap) != ".vrca")
                 continue;
 
             filename = Path.GetFileNameWithoutExtension(sdkap);
@@ -199,7 +197,7 @@ public partial class VRCSdkControlPanel : EditorWindow
             "",
             ApiWorld.ReleaseStatus.All,
             null,
-            null, 
+            null,
             true,
             false);
     }
@@ -220,11 +218,11 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     static void SetupAvatarData(List<ApiAvatar> avatars)
     {
-        if (avatars == null || uploadedAvatars == null )
+        if (avatars == null || uploadedAvatars == null)
             return;
 
         avatars.RemoveAll(a => a == null || uploadedAvatars.Any(a2 => a2.id == a.id));
-        foreach(var avatar in avatars)
+        foreach (var avatar in avatars)
         {
             if (string.IsNullOrEmpty(avatar.name))
                 avatar.name = "(unnamed)";
@@ -248,7 +246,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             return;
         }
-        
+
         EditorCoroutine.Start(VRCCachedWebRequest.Get(url, OnDone));
         void OnDone(Texture2D texture)
         {
@@ -265,7 +263,6 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     Vector2 contentScrollPos;
     private string _avatarName;
-
     bool OnGUIUserInfo()
     {
         bool updatedContent = false;
@@ -515,13 +512,13 @@ public partial class VRCSdkControlPanel : EditorWindow
                             a.releaseStatus = oppositeReleaseStatus;
 
                             a.SaveReleaseStatus((c) =>
-                            {
-                                ApiAvatar savedBP = (ApiAvatar)c.Model;
+                                {
+                                    ApiAvatar savedBP = (ApiAvatar)c.Model;
 
-                                if (justUpdatedAvatars == null) justUpdatedAvatars = new List<ApiAvatar>();
-                                justUpdatedAvatars.Add(savedBP);
+                                    if (justUpdatedAvatars == null) justUpdatedAvatars = new List<ApiAvatar>();
+                                    justUpdatedAvatars.Add(savedBP);
 
-                            },
+                                },
                                 (c) =>
                                 {
                                     UnityEngine.Debug.LogError(c.Error);
@@ -667,7 +664,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             if (GUILayout.Button("Download AssetBundle"))
             {
-                
+
                 if (!NanoApiManager.IsLoggedInAndVerified())
                 {
                     NanoApiManager.OpenLoginWindow();
@@ -708,49 +705,51 @@ public partial class VRCSdkControlPanel : EditorWindow
 
     private void ShowContent()
     {
-        GUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        GUILayout.BeginVertical();
-
-        if (uploadedWorlds == null || uploadedAvatars == null || testAvatars == null)
         {
-            if (uploadedWorlds == null)
-                uploadedWorlds = new List<ApiWorld>();
-            if (uploadedAvatars == null)
-                uploadedAvatars = new List<ApiAvatar>();
-            if (testAvatars == null)
-                testAvatars = new List<ApiAvatar>();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginVertical();
 
-            EditorCoroutine.Start(FetchUploadedData());
-        }
-
-        if (fetchingWorlds != null || fetchingAvatars != null)
-        {
-            GUILayout.BeginVertical(boxGuiStyle, GUILayout.Width(SdkWindowWidth));
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Fetching Records", titleGuiStyle);
-            EditorGUILayout.Space();
-            GUILayout.EndVertical();
-        }
-        else
-        {
-            GUILayout.BeginVertical(boxGuiStyle, GUILayout.Width(SdkWindowWidth));
-            EditorGUILayout.Space();
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Fetch updated records from the VRChat server");
-            if (GUILayout.Button("Fetch"))
+            if (uploadedWorlds == null || uploadedAvatars == null || testAvatars == null)
             {
-                ClearContent();
+                if (uploadedWorlds == null)
+                    uploadedWorlds = new List<ApiWorld>();
+                if (uploadedAvatars == null)
+                    uploadedAvatars = new List<ApiAvatar>();
+                if (testAvatars == null)
+                    testAvatars = new List<ApiAvatar>();
+
+                EditorCoroutine.Start(FetchUploadedData());
             }
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.Space();
+
+            if (fetchingWorlds != null || fetchingAvatars != null)
+            {
+                GUILayout.BeginVertical(boxGuiStyle, GUILayout.Width(SdkWindowWidth));
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField("Fetching Records", titleGuiStyle);
+                EditorGUILayout.Space();
+                GUILayout.EndVertical();
+            }
+            else
+            {
+                GUILayout.BeginVertical(boxGuiStyle, GUILayout.Width(SdkWindowWidth));
+                EditorGUILayout.Space();
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Label("Fetch updated records from the VRChat server");
+                if (GUILayout.Button("Fetch"))
+                {
+                    ClearContent();
+                }
+                EditorGUILayout.EndHorizontal();
+                EditorGUILayout.Space();
+                GUILayout.EndVertical();
+            }
+
             GUILayout.EndVertical();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            OnGUIUserInfo();
         }
-
-        GUILayout.EndVertical();
-        GUILayout.FlexibleSpace();
-        GUILayout.EndHorizontal();
-
-        OnGUIUserInfo();
     }
 }

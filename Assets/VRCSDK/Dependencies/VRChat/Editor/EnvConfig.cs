@@ -292,7 +292,7 @@ public class EnvConfig
                 importer.SetCompatibleWithPlatform(BuildTarget.StandaloneWindows64, false);
                 importer.SetCompatibleWithPlatform(BuildTarget.StandaloneLinux64, false);
             }
-            
+
             importer.SaveAndReimport();
         }
     }

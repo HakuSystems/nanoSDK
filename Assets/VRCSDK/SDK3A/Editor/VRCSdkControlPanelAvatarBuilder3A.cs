@@ -144,9 +144,8 @@ namespace VRC.SDK3.Editor
                         isValid = false;
                 }
 
-                if (!isValid)
-                    _builder.OnGUIInformation(avatar, "Images used for Actions & Moods are too large. Max size: " + MAX_ACTION_TEXTURE_SIZE);
-            }
+                if (!isValid) { }
+                }
 
             //Expression menu parameters
             if (avatarSDK3 != null)
@@ -168,8 +167,6 @@ namespace VRC.SDK3.Editor
                 //Check if parameters is valid
                 if (avatarSDK3.expressionParameters != null && avatarSDK3.expressionParameters.CalcTotalCost() > VRCExpressionParameters.MAX_PARAMETER_COST)
                 {
-                    _builder.OnGUIInformation(avatar, "VRCExpressionParameters has too many parameters defined, count:" +
-                     avatarSDK3.expressionParameters.CalcTotalCost() + "Maximum perameter count: " + VRCExpressionParameters.MAX_PARAMETER_COST);
                 }
 
                 //Find all existing parameters
@@ -295,16 +292,10 @@ namespace VRC.SDK3.Editor
                     componentsToRemoveNames.Add(c.GetType().Name);
             }
 
-            if (componentsToRemoveNames.Count > 0)
-                _builder.OnGUIInformation(avatar,
-                    "Unsuported scripts/components count: " +
-                    string.Join(", ", componentsToRemoveNames.ToArray()));
 
 
             List<VRCStation> stations =
                 avatar.gameObject.GetComponentsInChildren<VRCStation>(true).ToList();
-            if (stations.Count > 0)
-                _builder.OnGUIInformation(avatar, "Stations found on Avatar. Station count: " + stations.Count);
 
             if (VRCSdkControlPanel.HasSubstances(avatar.gameObject))
             {
@@ -317,13 +308,6 @@ namespace VRC.SDK3.Editor
             CheckAvatarMeshesForLegacyBlendShapesSetting(avatar);
             CheckAvatarMeshesForMeshReadWriteSetting(avatar);
 
-#if UNITY_ANDROID
-        IEnumerable<Shader> illegalShaders = AvatarValidation.FindIllegalShaders(avatar.gameObject);
-        foreach (Shader s in illegalShaders)
-        {
-            _builder.OnGUIInformation(avatar, "Avatar uses unsupported shader '" + s.name + "'. his might impact game performance for quest users");
-        }
-#endif
 
             foreach (AvatarPerformanceCategory perfCategory in Enum.GetValues(typeof(AvatarPerformanceCategory)))
             {
@@ -518,7 +502,6 @@ namespace VRC.SDK3.Editor
 #else
                         EditorPrefs.SetBool("VRC.SDKBase_StripAllShaders", false);
 #endif
-
                         VRC_SdkBuilder.shouldBuildUnityPackage = false;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);
 
@@ -534,11 +517,10 @@ namespace VRC.SDK3.Editor
                     }
                 }
             }
-            
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.Space();
-            
+
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
 
@@ -555,7 +537,6 @@ namespace VRC.SDK3.Editor
             }
             EditorGUILayout.Space();
             EditorGUILayout.EndVertical();
-
             GUI.enabled = true;
         }
     }

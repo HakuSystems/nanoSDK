@@ -300,8 +300,6 @@ namespace VRC.SDKBase.Editor
                 }
                 else if (rating > PerformanceRating.Good)
                 {
-                    if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPerformance;
-                    _builder.OnGUIInformation(avatar, "This avatar does not have an overall rating of Good or better, so it can not be used as a custom fallback.");
                 }
                 else
                 {
@@ -419,7 +417,6 @@ namespace VRC.SDKBase.Editor
 #endif
 
 #if VRC_SDK_VRCSDK2
-                        VRC_SdkBuilder.shouldBuildUnityPackage = false;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);
 #endif
 

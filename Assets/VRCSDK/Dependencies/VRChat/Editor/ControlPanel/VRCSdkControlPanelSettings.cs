@@ -47,7 +47,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         EditorGUILayout.LabelField("Developer", EditorStyles.boldLabel);
 
         VRCSettings.DisplayAdvancedSettings = EditorGUILayout.ToggleLeft("Show Extra Options on build page and account page", VRCSettings.DisplayAdvancedSettings);
-        
+
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.Separator();
@@ -105,7 +105,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                 UnityEditor.EditorPrefs.SetBool("allLoggingEnabled", false);
         }
 
-        
+
 
 
         if (APIUser.CurrentUser != null)
