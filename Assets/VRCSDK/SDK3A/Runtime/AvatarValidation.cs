@@ -106,6 +106,11 @@ namespace VRC.SDK3.Validation
             "VRC.SDK3.VRCTestMarker",
             "VRC.SDK3.Avatars.Components.VRCAvatarDescriptor",
             "VRC.SDK3.Avatars.Components.VRCStation",
+            "VRC.SDK3.Dynamics.PhysBone.Components.VRCPhysBone",
+            "VRC.SDK3.Dynamics.PhysBone.Components.VRCPhysBoneCollider",
+            "VRC.SDK3.Dynamics.Contact.Components.VRCContactSender",
+            "VRC.SDK3.Dynamics.Contact.Components.VRCContactReceiver",
+            "VRC.SDKBase.VRC_Slider",
         };
 
 #pragma warning disable 0414

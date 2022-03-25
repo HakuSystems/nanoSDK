@@ -622,7 +622,7 @@ namespace VRC.SDKBase.Validation.Performance
                         case PerformanceRating.Good:
                         {
                             displayLevel = PerformanceInfoDisplayLevel.Verbose;
-                            text = string.Format("Dynamic Bone Components: {0}", perfStats.dynamicBoneComponentCount);
+                            text = string.Format("Dynamic Bone Components: {0}", perfStats.dynamicBone?.componentCount);
                             break;
                         }
                         case PerformanceRating.Medium:
@@ -631,8 +631,8 @@ namespace VRC.SDKBase.Validation.Performance
                             displayLevel = PerformanceInfoDisplayLevel.Warning;
                             text = string.Format(
                                 "Dynamic Bone Components: {0} (Recommended: {1}) - Reduce number of DynamicBone components for better performance.",
-                                perfStats.dynamicBoneComponentCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBoneComponentCount);
+                                perfStats.dynamicBone?.componentCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.componentCount);
 
                             break;
                         }
@@ -642,9 +642,9 @@ namespace VRC.SDKBase.Validation.Performance
                             text = string.Format(
                                 "Dynamic Bone Components: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many DynamicBone components." +
                                 " Reduce number of DynamicBone components for better performance.",
-                                perfStats.dynamicBoneComponentCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBoneComponentCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBoneComponentCount);
+                                perfStats.dynamicBone?.componentCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBone.componentCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.componentCount);
 
                             break;
                         }
@@ -660,7 +660,7 @@ namespace VRC.SDKBase.Validation.Performance
                         case PerformanceRating.Good:
                         {
                             displayLevel = PerformanceInfoDisplayLevel.Verbose;
-                            text = string.Format("Dynamic Bone Simulated Bone Count: {0}", perfStats.dynamicBoneSimulatedBoneCount);
+                            text = string.Format("Dynamic Bone Simulated Bone Count: {0}", perfStats.dynamicBone?.transformCount);
                             break;
                         }
                         case PerformanceRating.Medium:
@@ -670,8 +670,8 @@ namespace VRC.SDKBase.Validation.Performance
                             text = string.Format(
                                 "Dynamic Bone Simulated Bone Count: {0} (Recommended: {1}) - " +
                                 "Reduce number of transforms in hierarchy under DynamicBone components, or set EndLength or EndOffset to zero to reduce the number of simulated bones.",
-                                perfStats.dynamicBoneSimulatedBoneCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBoneSimulatedBoneCount);
+                                perfStats.dynamicBone?.transformCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.transformCount);
 
                             break;
                         }
@@ -681,9 +681,9 @@ namespace VRC.SDKBase.Validation.Performance
                             text = string.Format(
                                 "Dynamic Bone Simulated Bone Count: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many bones simulated by DynamicBone." +
                                 " Reduce number of transforms in hierarchy under DynamicBone components, or set EndLength or EndOffset to zero to reduce the number of simulated bones.",
-                                perfStats.dynamicBoneSimulatedBoneCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBoneSimulatedBoneCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBoneSimulatedBoneCount);
+                                perfStats.dynamicBone?.transformCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBone.transformCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.transformCount);
 
                             break;
                         }
@@ -699,7 +699,7 @@ namespace VRC.SDKBase.Validation.Performance
                         case PerformanceRating.Good:
                         {
                             displayLevel = PerformanceInfoDisplayLevel.Verbose;
-                            text = string.Format("Dynamic Bone Collider Count: {0}", perfStats.dynamicBoneColliderCount);
+                            text = string.Format("Dynamic Bone Collider Count: {0}", perfStats.dynamicBone?.colliderCount);
                             break;
                         }
                         case PerformanceRating.Medium:
@@ -708,8 +708,8 @@ namespace VRC.SDKBase.Validation.Performance
                             displayLevel = PerformanceInfoDisplayLevel.Warning;
                             text = string.Format(
                                 "Dynamic Bone Collider Count: {0} (Recommended: {1}) - Avoid use of DynamicBoneColliders for better performance.",
-                                perfStats.dynamicBoneColliderCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBoneColliderCount);
+                                perfStats.dynamicBone?.colliderCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.colliderCount);
 
                             break;
                         }
@@ -719,9 +719,9 @@ namespace VRC.SDKBase.Validation.Performance
                             text = string.Format(
                                 "Dynamic Bone Collider Count: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many DynamicBoneColliders." +
                                 " Avoid use of DynamicBoneColliders for better performance.",
-                                perfStats.dynamicBoneColliderCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBoneColliderCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBoneColliderCount);
+                                perfStats.dynamicBone?.colliderCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBone.colliderCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.colliderCount);
 
                             break;
                         }
@@ -737,7 +737,7 @@ namespace VRC.SDKBase.Validation.Performance
                         case PerformanceRating.Good:
                         {
                             displayLevel = PerformanceInfoDisplayLevel.Verbose;
-                            text = string.Format("Dynamic Bone Collision Check Count: {0}", perfStats.dynamicBoneCollisionCheckCount);
+                            text = string.Format("Dynamic Bone Collision Check Count: {0}", perfStats.dynamicBone?.collisionCheckCount);
                             break;
                         }
                         case PerformanceRating.Medium:
@@ -746,8 +746,8 @@ namespace VRC.SDKBase.Validation.Performance
                             displayLevel = PerformanceInfoDisplayLevel.Warning;
                             text = string.Format(
                                 "Dynamic Bone Collision Check Count: {0} (Recommended: {1}) - Avoid use of DynamicBoneColliders for better performance.",
-                                perfStats.dynamicBoneCollisionCheckCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBoneCollisionCheckCount);
+                                perfStats.dynamicBone?.collisionCheckCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.collisionCheckCount);
 
                             break;
                         }
@@ -757,9 +757,199 @@ namespace VRC.SDKBase.Validation.Performance
                             text = string.Format(
                                 "Dynamic Bone Collision Check Count: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many DynamicBoneColliders." +
                                 " Avoid use of DynamicBoneColliders for better performance.",
-                                perfStats.dynamicBoneCollisionCheckCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBoneCollisionCheckCount,
-                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBoneCollisionCheckCount);
+                                perfStats.dynamicBone?.collisionCheckCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBone.collisionCheckCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.collisionCheckCount);
+
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case AvatarPerformanceCategory.PhysBoneComponentCount:
+                {
+                    switch (rating)
+                    {
+                        case PerformanceRating.Excellent:
+                        case PerformanceRating.Good:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Verbose;
+                            text = string.Format("Phys Bone Components: {0}", perfStats.physBone?.componentCount);
+                            break;
+                        }
+                        case PerformanceRating.Medium:
+                        case PerformanceRating.Poor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Phys Bone Components: {0} (Recommended: {1}) - Reduce number of VRCPhysBone components for better performance.",
+                                perfStats.physBone?.componentCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).physBone.componentCount);
+
+                            break;
+                        }
+                        case PerformanceRating.VeryPoor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Phys Bone Components: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many VRCPhysBone components." +
+                                " Reduce number of VRCPhysBone components for better performance.",
+                                perfStats.physBone?.componentCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).physBone.componentCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).physBone.componentCount);
+
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case AvatarPerformanceCategory.PhysBoneTransformCount:
+                {
+                    switch (rating)
+                    {
+                        case PerformanceRating.Excellent:
+                        case PerformanceRating.Good:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Verbose;
+                            text = string.Format("Phys Bone Transform Count: {0}", perfStats.physBone?.transformCount);
+                            break;
+                        }
+                        case PerformanceRating.Medium:
+                        case PerformanceRating.Poor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Phys Bone Transform Count: {0} (Recommended: {1}) - " +
+                                "Reduce number of transforms in hierarchy under VRCPhysBone components.",
+                                perfStats.physBone?.transformCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).physBone.transformCount);
+
+                            break;
+                        }
+                        case PerformanceRating.VeryPoor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Phys Bone Transform Count: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many transforms modified by VRCPhysBone." +
+                                " Reduce number of transforms in hierarchy under VRCPhysBone components.",
+                                perfStats.physBone?.transformCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).physBone.transformCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).physBone.transformCount);
+
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case AvatarPerformanceCategory.PhysBoneColliderCount:
+                {
+                    switch (rating)
+                    {
+                        case PerformanceRating.Excellent:
+                        case PerformanceRating.Good:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Verbose;
+                            text = string.Format("Phys Bone Collider Count: {0}", perfStats.physBone?.colliderCount);
+                            break;
+                        }
+                        case PerformanceRating.Medium:
+                        case PerformanceRating.Poor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Phys Bone Collider Count: {0} (Recommended: {1}) - Avoid use of VRCPhysBoneColliders for better performance.",
+                                perfStats.physBone?.colliderCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).physBone.colliderCount);
+
+                            break;
+                        }
+                        case PerformanceRating.VeryPoor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Phys Bone Collider Count: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many VRCPhysBoneColliders." +
+                                " Avoid use of DynamicBoneColliders for better performance.",
+                                perfStats.dynamicBone?.colliderCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).dynamicBone.colliderCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).dynamicBone.colliderCount);
+
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case AvatarPerformanceCategory.PhysBoneCollisionCheckCount:
+                {
+                    switch (rating)
+                    {
+                        case PerformanceRating.Excellent:
+                        case PerformanceRating.Good:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Verbose;
+                            text = string.Format("Phys Bone Collision Check Count: {0}", perfStats.physBone?.collisionCheckCount);
+                            break;
+                        }
+                        case PerformanceRating.Medium:
+                        case PerformanceRating.Poor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Phys Bone Collision Check Count: {0} (Recommended: {1}) - Avoid use of VRCPhysBoneColliders for better performance.",
+                                perfStats.physBone?.collisionCheckCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).physBone.collisionCheckCount);
+
+                            break;
+                        }
+                        case PerformanceRating.VeryPoor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Phys Bone Collision Check Count: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many VRCPhysBoneColliders." +
+                                " Avoid use of VRCPhysBoneColliders for better performance.",
+                                perfStats.physBone?.collisionCheckCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).physBone.collisionCheckCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).physBone.collisionCheckCount);
+
+                            break;
+                        }
+                    }
+
+                    break;
+                }
+                case AvatarPerformanceCategory.ContactCount:
+                {
+                    switch (rating)
+                    {
+                        case PerformanceRating.Excellent:
+                        case PerformanceRating.Good:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Verbose;
+                            text = string.Format("Contact Component Count: {0}", perfStats.contactCount);
+                            break;
+                        }
+                        case PerformanceRating.Medium:
+                        case PerformanceRating.Poor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Contact Component Count: {0} (Recommended: {1}) - Avoid use of VRCContact components for optimal performance.",
+                                perfStats.contactCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).contactCount);
+
+                            break;
+                        }
+                        case PerformanceRating.VeryPoor:
+                        {
+                            displayLevel = PerformanceInfoDisplayLevel.Warning;
+                            text = string.Format(
+                                "Cloth Component Count: {0} (Maximum: {1}, Recommended: {2}) - This avatar has too many VRCContact components.",
+                                perfStats.contactCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Poor).contactCount,
+                                AvatarPerformanceStats.GetStatLevelForRating(PerformanceRating.Excellent).contactCount);
 
                             break;
                         }

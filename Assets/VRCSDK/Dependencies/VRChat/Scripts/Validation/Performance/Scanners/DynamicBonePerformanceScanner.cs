@@ -36,6 +36,15 @@ namespace VRC.SDKBase.Validation.Performance.Scanners
                 yield break;
             }
 
+#if VRC_CLIENT
+            //Zero out dynamic bone count from perf stats
+            if (VRCInputManager.ConvertAllDynamicBones.Value == true)
+            {
+                perfStats.dynamicBone = new AvatarPerformanceStats.PhysBoneStats();
+                yield break;
+            }
+#endif
+
             // Dynamic Bone as Component
             List<Component> dynamicBoneComponentBuffer = new List<Component>();
             List<object> dynamicBoneColliderObjectBuffer = new List<object>();
@@ -92,10 +101,18 @@ namespace VRC.SDKBase.Validation.Performance.Scanners
 
             yield return null;
 
-            perfStats.dynamicBoneComponentCount = dynamicBoneComponentBuffer.Count;
-            perfStats.dynamicBoneSimulatedBoneCount = totalSimulatedBoneCount;
-            perfStats.dynamicBoneColliderCount = dynamicBoneColliderObjectBuffer.Count;
-            perfStats.dynamicBoneCollisionCheckCount = totalCollisionChecks;
+            //Record
+            if (dynamicBoneComponentBuffer.Count > 0)
+            {
+                var stats = new AvatarPerformanceStats.PhysBoneStats();
+                stats.componentCount = dynamicBoneComponentBuffer.Count;
+                stats.transformCount = totalSimulatedBoneCount;
+                stats.colliderCount = dynamicBoneColliderObjectBuffer.Count;
+                stats.collisionCheckCount = totalCollisionChecks;
+                perfStats.dynamicBone = stats;
+            }
+            else
+                perfStats.dynamicBone = null;
         }
 
         private void FindDynamicBoneTypes()
@@ -111,8 +128,9 @@ namespace VRC.SDKBase.Validation.Performance.Scanners
                 return;
             }
 
-            Type dyBoneColliderType = ValidationUtils.GetTypeFromName("DynamicBoneColliderBase") ?? ValidationUtils.GetTypeFromName("DynamicBoneCollider");
-            if(dyBoneColliderType == null)
+            Type dyBoneColliderType1 = ValidationUtils.GetTypeFromName("DynamicBoneColliderBase");
+            Type dyBoneColliderType2 = ValidationUtils.GetTypeFromName("DynamicBoneCollider");
+            if(dyBoneColliderType1 == null && dyBoneColliderType2 == null)
             {
                 return;
             }
@@ -131,7 +149,7 @@ namespace VRC.SDKBase.Validation.Performance.Scanners
 
             FieldInfo collidersFieldInfo = dyBoneType.GetField("m_Colliders", BindingFlags.Public | BindingFlags.Instance);
             if(collidersFieldInfo == null || collidersFieldInfo.FieldType.GetGenericTypeDefinition() != typeof(List<>) ||
-               collidersFieldInfo.FieldType.GetGenericArguments().Single() != dyBoneColliderType)
+               !(collidersFieldInfo.FieldType.GetGenericArguments().Single() == dyBoneColliderType1 || collidersFieldInfo.FieldType.GetGenericArguments().Single() == dyBoneColliderType2))
             {
                 return;
             }

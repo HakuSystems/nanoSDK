@@ -29,12 +29,19 @@ MonoBehaviour:
   particleCollisionEnabled: 0
   trailRendererCount: 0
   lineRendererCount: 0
-  dynamicBoneComponentCount: 0
-  dynamicBoneSimulatedBoneCount: 0
-  dynamicBoneColliderCount: 0
-  dynamicBoneCollisionCheckCount: 0
   clothCount: 0
   clothMaxVertices: 0
   physicsColliderCount: 0
   physicsRigidbodyCount: 0
   audioSourceCount: 0
+  dynamicBone:
+    componentCount: 0
+    transformCount: 0
+    colliderCount: 0
+    collisionCheckCount: 0
+  physBone:
+    componentCount: 4
+    transformCount: 16
+    colliderCount: 4
+    collisionCheckCount: 16
+  contactCount: 4

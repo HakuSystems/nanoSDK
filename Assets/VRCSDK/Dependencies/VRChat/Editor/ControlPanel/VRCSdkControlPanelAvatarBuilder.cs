@@ -241,7 +241,6 @@ namespace VRC.SDKBase.Editor
 
 
 
-
             VerifyAvatarMipMapStreaming(avatar);
 
             Animator anim = avatar.GetComponent<Animator>();

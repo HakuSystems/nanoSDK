@@ -19,14 +19,14 @@ namespace VRC.SDKBase.Validation.Performance.Stats
         public bool particleCollisionEnabled;
         public int trailRendererCount;
         public int lineRendererCount;
-        public int dynamicBoneComponentCount;
-        public int dynamicBoneSimulatedBoneCount;
-        public int dynamicBoneColliderCount;
-        public int dynamicBoneCollisionCheckCount;
         public int clothCount;
         public int clothMaxVertices;
         public int physicsColliderCount;
         public int physicsRigidbodyCount;
         public int audioSourceCount;
+
+        public AvatarPerformanceStats.PhysBoneStats dynamicBone;
+        public AvatarPerformanceStats.PhysBoneStats physBone;
+        public int contactCount;
     }
 }

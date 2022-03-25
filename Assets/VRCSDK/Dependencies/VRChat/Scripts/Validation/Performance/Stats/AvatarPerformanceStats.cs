@@ -12,6 +12,15 @@ namespace VRC.SDKBase.Validation.Performance.Stats
     {
         private delegate int ComparePerformanceStatsDelegate(AvatarPerformanceStats stats, AvatarPerformanceStatsLevel statsLevel);
 
+        [System.Serializable]
+        public struct PhysBoneStats
+        {
+            public int componentCount;
+            public int transformCount;
+            public int colliderCount;
+            public int collisionCheckCount; // number of collider simulated bones excluding the root multiplied by the number of colliders
+        }
+
         #region Public Fields
 
         public string avatarName;
@@ -31,16 +40,15 @@ namespace VRC.SDKBase.Validation.Performance.Stats
         public bool? particleCollisionEnabled;
         public int? trailRendererCount;
         public int? lineRendererCount;
-        public int? dynamicBoneComponentCount;
-        public int? dynamicBoneSimulatedBoneCount;
-        public int? dynamicBoneColliderCount;
-        public int? dynamicBoneCollisionCheckCount; // number of collider simulated bones excluding the root multiplied by the number of colliders
         public int? clothCount;
         public int? clothMaxVertices;
         public int? physicsColliderCount;
         public int? physicsRigidbodyCount;
         public int? audioSourceCount;
         public float? downloadSize;
+        public PhysBoneStats? dynamicBone;
+        public PhysBoneStats? physBone;
+        public int? contactCount;
 
         #endregion
 
@@ -148,16 +156,15 @@ namespace VRC.SDKBase.Validation.Performance.Stats
             particleCollisionEnabled = null;
             trailRendererCount = null;
             lineRendererCount = null;
-            dynamicBoneComponentCount = null;
-            dynamicBoneSimulatedBoneCount = null;
-            dynamicBoneColliderCount = null;
-            dynamicBoneCollisionCheckCount = null;
             clothCount = null;
             clothMaxVertices = null;
             physicsColliderCount = null;
             physicsRigidbodyCount = null;
             audioSourceCount = null;
             downloadSize = null;
+            dynamicBone = null;
+            physBone = null;
+            contactCount = null;
 
             for(int i = 0; i < (int)AvatarPerformanceCategory.AvatarPerformanceCategoryCount; i++)
             {
@@ -433,39 +440,84 @@ namespace VRC.SDKBase.Validation.Performance.Stats
                 }
                 case AvatarPerformanceCategory.DynamicBoneComponentCount:
                 {
-                    if(!dynamicBoneComponentCount.HasValue)
+                    if(!dynamicBone.HasValue)
                     {
                         return PerformanceRating.None;
                     }
 
-                    return CalculatePerformanceRating((x, y) => x.dynamicBoneComponentCount.GetValueOrDefault() - y.dynamicBoneComponentCount);
+                    return CalculatePerformanceRating((x, y) => x.dynamicBone.Value.componentCount - y.dynamicBone.componentCount);
                 }
                 case AvatarPerformanceCategory.DynamicBoneSimulatedBoneCount:
                 {
-                    if(!dynamicBoneSimulatedBoneCount.HasValue)
+                    if(!dynamicBone.HasValue)
                     {
                         return PerformanceRating.None;
                     }
 
-                    return CalculatePerformanceRating((x, y) => x.dynamicBoneSimulatedBoneCount.GetValueOrDefault() - y.dynamicBoneSimulatedBoneCount);
+                    return CalculatePerformanceRating((x, y) => x.dynamicBone.Value.transformCount - y.dynamicBone.transformCount);
                 }
                 case AvatarPerformanceCategory.DynamicBoneColliderCount:
                 {
-                    if(!dynamicBoneColliderCount.HasValue)
+                    if(!dynamicBone.HasValue)
                     {
                         return PerformanceRating.None;
                     }
 
-                    return CalculatePerformanceRating((x, y) => x.dynamicBoneColliderCount.GetValueOrDefault() - y.dynamicBoneColliderCount);
+                    return CalculatePerformanceRating((x, y) => x.dynamicBone.Value.colliderCount - y.dynamicBone.colliderCount);
                 }
                 case AvatarPerformanceCategory.DynamicBoneCollisionCheckCount:
                 {
-                    if(!dynamicBoneCollisionCheckCount.HasValue)
+                    if(!dynamicBone.HasValue)
                     {
                         return PerformanceRating.None;
                     }
 
-                    return CalculatePerformanceRating((x, y) => x.dynamicBoneCollisionCheckCount.GetValueOrDefault() - y.dynamicBoneCollisionCheckCount);
+                    return CalculatePerformanceRating((x, y) => x.dynamicBone.Value.collisionCheckCount - y.dynamicBone.collisionCheckCount);
+                }
+                case AvatarPerformanceCategory.PhysBoneComponentCount:
+                {
+                    if (!physBone.HasValue)
+                    {
+                        return PerformanceRating.None;
+                    }
+
+                    return CalculatePerformanceRating((x, y) => x.physBone.Value.componentCount - y.physBone.componentCount);
+                }
+                case AvatarPerformanceCategory.PhysBoneTransformCount:
+                {
+                    if (!physBone.HasValue)
+                    {
+                        return PerformanceRating.None;
+                    }
+
+                    return CalculatePerformanceRating((x, y) => x.physBone.Value.transformCount - y.physBone.transformCount);
+                }
+                case AvatarPerformanceCategory.PhysBoneColliderCount:
+                {
+                    if (!physBone.HasValue)
+                    {
+                        return PerformanceRating.None;
+                    }
+
+                    return CalculatePerformanceRating((x, y) => x.physBone.Value.colliderCount - y.physBone.colliderCount);
+                }
+                case AvatarPerformanceCategory.PhysBoneCollisionCheckCount:
+                {
+                    if (!physBone.HasValue)
+                    {
+                        return PerformanceRating.None;
+                    }
+
+                    return CalculatePerformanceRating((x, y) => x.physBone.Value.collisionCheckCount - y.physBone.collisionCheckCount);
+                }
+                case AvatarPerformanceCategory.ContactCount:
+                {
+                    if (!contactCount.HasValue)
+                    {
+                        return PerformanceRating.None;
+                    }
+
+                    return CalculatePerformanceRating((x, y) => x.contactCount.GetValueOrDefault() - y.contactCount);
                 }
                 case AvatarPerformanceCategory.ClothCount:
                 {
@@ -583,10 +635,14 @@ namespace VRC.SDKBase.Validation.Performance.Stats
             sb.AppendFormat("Particle Collision Enabled: {0}\n", particleCollisionEnabled);
             sb.AppendFormat("Trail Renderer Count: {0}\n", trailRendererCount);
             sb.AppendFormat("Line Renderer Count: {0}\n", lineRendererCount);
-            sb.AppendFormat("Dynamic Bone Component Count: {0}\n", dynamicBoneComponentCount);
-            sb.AppendFormat("Dynamic Bone Simulated Bone Count: {0}\n", dynamicBoneSimulatedBoneCount);
-            sb.AppendFormat("Dynamic Bone Collider Count: {0}\n", dynamicBoneColliderCount);
-            sb.AppendFormat("Dynamic Bone Collision Check Count: {0}\n", dynamicBoneCollisionCheckCount);
+            sb.AppendFormat("Dynamic Bone Component Count: {0}\n", dynamicBone?.componentCount);
+            sb.AppendFormat("Dynamic Bone Simulated Bone Count: {0}\n", dynamicBone?.transformCount);
+            sb.AppendFormat("Dynamic Bone Collider Count: {0}\n", dynamicBone?.colliderCount);
+            sb.AppendFormat("Dynamic Bone Collision Check Count: {0}\n", dynamicBone?.collisionCheckCount);
+            sb.AppendFormat("PhysBone Component Count: {0}\n", physBone?.componentCount);
+            sb.AppendFormat("PhysBone Transform Count: {0}\n", physBone?.transformCount);
+            sb.AppendFormat("PhysBone Collider Count: {0}\n", physBone?.colliderCount);
+            sb.AppendFormat("PhysBone Collision Check Count: {0}\n", physBone?.collisionCheckCount);
             sb.AppendFormat("Cloth Count: {0}\n", clothCount);
             sb.AppendFormat("Cloth Max Vertices: {0}\n", clothMaxVertices);
             sb.AppendFormat("Physics Collider Count: {0}\n", physicsColliderCount);
@@ -622,10 +678,9 @@ namespace VRC.SDKBase.Validation.Performance.Stats
             public readonly bool? particleCollisionEnabled;
             public readonly int? trailRendererCount;
             public readonly int? lineRendererCount;
-            public readonly int? dynamicBoneComponentCount;
-            public readonly int? dynamicBoneSimulatedBoneCount;
-            public readonly int? dynamicBoneColliderCount;
-            public readonly int? dynamicBoneCollisionCheckCount; // number of collider simulated bones excluding the root multiplied by the number of colliders
+            public readonly PhysBoneStats? dynamicBone;
+            public readonly PhysBoneStats? physBone;
+            public readonly int? contactCount;
             public readonly int? clothCount;
             public readonly int? clothMaxVertices;
             public readonly int? physicsColliderCount;
@@ -654,6 +709,11 @@ namespace VRC.SDKBase.Validation.Performance.Stats
             public readonly PerformanceRating dynamicBoneSimulatedBoneCountRating;
             public readonly PerformanceRating dynamicBoneColliderCountRating;
             public readonly PerformanceRating dynamicBoneCollisionCheckCountRating;
+            public readonly PerformanceRating physBoneComponentCountRating;
+            public readonly PerformanceRating physBoneTransformCountRating;
+            public readonly PerformanceRating physBoneColliderCountRating;
+            public readonly PerformanceRating physBoneCollisionCheckCountRating;
+            public readonly PerformanceRating contactCountRating;
             public readonly PerformanceRating clothCountRating;
             public readonly PerformanceRating clothMaxVerticesRating;
             public readonly PerformanceRating physicsColliderCountRating;
@@ -679,10 +739,9 @@ namespace VRC.SDKBase.Validation.Performance.Stats
                 particleCollisionEnabled = avatarPerformanceStats.particleCollisionEnabled;
                 trailRendererCount = avatarPerformanceStats.trailRendererCount;
                 lineRendererCount = avatarPerformanceStats.lineRendererCount;
-                dynamicBoneComponentCount = avatarPerformanceStats.dynamicBoneComponentCount;
-                dynamicBoneSimulatedBoneCount = avatarPerformanceStats.dynamicBoneSimulatedBoneCount;
-                dynamicBoneColliderCount = avatarPerformanceStats.dynamicBoneColliderCount;
-                dynamicBoneCollisionCheckCount = avatarPerformanceStats.dynamicBoneCollisionCheckCount;
+                dynamicBone = avatarPerformanceStats.dynamicBone;
+                physBone = avatarPerformanceStats.physBone;
+                contactCount = avatarPerformanceStats.contactCount;
                 clothCount = avatarPerformanceStats.clothCount;
                 clothMaxVertices = avatarPerformanceStats.clothMaxVertices;
                 physicsColliderCount = avatarPerformanceStats.physicsColliderCount;
@@ -710,6 +769,11 @@ namespace VRC.SDKBase.Validation.Performance.Stats
                 dynamicBoneSimulatedBoneCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.DynamicBoneSimulatedBoneCount);
                 dynamicBoneColliderCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.DynamicBoneColliderCount);
                 dynamicBoneCollisionCheckCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.DynamicBoneCollisionCheckCount);
+                physBoneComponentCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.PhysBoneComponentCount);
+                physBoneTransformCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.PhysBoneTransformCount);
+                physBoneColliderCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.PhysBoneColliderCount);
+                physBoneCollisionCheckCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.PhysBoneCollisionCheckCount);
+                contactCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.ContactCount);
                 clothCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.ClothCount);
                 clothMaxVerticesRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.ClothMaxVertices);
                 physicsColliderCountRating = avatarPerformanceStats.GetPerformanceRatingForCategory(AvatarPerformanceCategory.PhysicsColliderCount);
@@ -738,16 +802,21 @@ namespace VRC.SDKBase.Validation.Performance.Stats
                 sb.AppendFormat("Particle Collision Enabled: {0}\n", particleCollisionEnabled);
                 sb.AppendFormat("Trail Renderer Count: {0}\n", trailRendererCount);
                 sb.AppendFormat("Line Renderer Count: {0}\n", lineRendererCount);
-                sb.AppendFormat("Dynamic Bone Component Count: {0}\n", dynamicBoneComponentCount);
-                sb.AppendFormat("Dynamic Bone Simulated Bone Count: {0}\n", dynamicBoneSimulatedBoneCount);
-                sb.AppendFormat("Dynamic Bone Collider Count: {0}\n", dynamicBoneColliderCount);
-                sb.AppendFormat("Dynamic Bone Collision Check Count: {0}\n", dynamicBoneCollisionCheckCount);
+                sb.AppendFormat("Dynamic Bone Component Count: {0}\n", dynamicBone?.componentCount);
+                sb.AppendFormat("Dynamic Bone Simulated Bone Count: {0}\n", dynamicBone?.transformCount);
+                sb.AppendFormat("Dynamic Bone Collider Count: {0}\n", dynamicBone?.colliderCount);
+                sb.AppendFormat("Dynamic Bone Collision Check Count: {0}\n", dynamicBone?.collisionCheckCount);
+                sb.AppendFormat("Phys Bone Component Count: {0}\n", physBone?.componentCount);
+                sb.AppendFormat("Phys Bone Transform Count: {0}\n", physBone?.transformCount);
+                sb.AppendFormat("Phys Bone Collider Count: {0}\n", physBone?.colliderCount);
+                sb.AppendFormat("Phys Bone Collision Check Count: {0}\n", physBone?.collisionCheckCount);
+                sb.AppendFormat("Contact Count: {0}\n", contactCount);
                 sb.AppendFormat("Cloth Count: {0}\n", clothCount);
                 sb.AppendFormat("Cloth Max Vertices: {0}\n", clothMaxVertices);
                 sb.AppendFormat("Physics Collider Count: {0}\n", physicsColliderCount);
                 sb.AppendFormat("Physics Rigidbody Count: {0}\n", physicsRigidbodyCount);
                 sb.AppendFormat("Download Size: {0} MB\n", downloadSize);
-            
+
                 return sb.ToString();
             }
         }

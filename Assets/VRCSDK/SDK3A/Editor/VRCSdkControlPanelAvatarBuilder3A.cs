@@ -11,7 +11,6 @@ using VRC.SDK3.Editor;
 using VRC.SDKBase;
 using VRC.SDKBase.Editor.BuildPipeline;
 using VRC.SDKBase.Validation.Performance;
-using VRC.SDKBase.Validation;
 using VRC.SDKBase.Validation.Performance.Stats;
 using VRCStation = VRC.SDK3.Avatars.Components.VRCStation;
 using VRC.SDK3.Validation;
@@ -264,6 +263,14 @@ namespace VRC.SDK3.Editor
                         }
                     }
                 }
+
+                //Dynamic Bones
+                if (perfStats.dynamicBone != null && (perfStats.dynamicBone.Value.colliderCount > 0 || perfStats.dynamicBone.Value.componentCount > 0))
+                {
+                    _builder.OnGUIWarning(avatar, "This avatar uses depreciated DynamicBone components. Upgrade to PhysBones to guarantee future compatibility.",
+                        null,
+                        () => { PhysBoneMigration.Migrate(avatarSDK3); });
+                }
             }
 
             List<Component> componentsToRemove = AvatarValidation.FindIllegalComponents(avatar.gameObject).ToList();
@@ -382,6 +389,17 @@ namespace VRC.SDK3.Editor
                         break;
                     case AvatarPerformanceCategory.TrailRendererCount:
                         show = GetAvatarSubSelectAction(avatar, typeof(TrailRenderer));
+                        break;
+                    case AvatarPerformanceCategory.PhysBoneComponentCount:
+                    case AvatarPerformanceCategory.PhysBoneTransformCount:
+                        show = GetAvatarSubSelectAction(avatar, typeof(VRC.SDK3.Dynamics.PhysBone.Components.VRCPhysBone));
+                        break;
+                    case AvatarPerformanceCategory.PhysBoneColliderCount:
+                    case AvatarPerformanceCategory.PhysBoneCollisionCheckCount:
+                        show = GetAvatarSubSelectAction(avatar, typeof(VRC.SDK3.Dynamics.PhysBone.Components.VRCPhysBoneCollider));
+                        break;
+                    case AvatarPerformanceCategory.ContactCount:
+                        show = GetAvatarSubSelectAction(avatar, typeof(VRC.Dynamics.ContactBase));
                         break;
                 }
 
@@ -523,7 +541,6 @@ namespace VRC.SDK3.Editor
 
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();
-
             EditorGUILayout.BeginVertical(VRCSdkControlPanel.boxGuiStyle);
             EditorGUILayout.Space();
             GUILayout.Label("nanoSDK EasyUpload", VRCSdkControlPanel.titleGuiStyle);
