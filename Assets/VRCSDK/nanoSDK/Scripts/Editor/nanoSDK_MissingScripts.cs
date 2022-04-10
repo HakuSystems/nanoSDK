@@ -10,6 +10,7 @@ namespace nanoSDK
 { 
     public class NanoSDK_MissingScripts
     {
+        [MenuItem("nanoSDK/DelteMissingScripts", false, 200)]
         public static async void GetAndDelScripts()
         {
             var deepSelection = EditorUtility.CollectDeepHierarchy(Selection.gameObjects);

@@ -32,7 +32,7 @@ public class nanoSDK_FastUploader
             {
                 if (EditorUtility.DisplayDialog("nanoSDK EasyUpload", "This Method lets " +
                     "you upload anything. but some of the content will be blocked " +
-                    "ingame because of VRChat Networking!", "Okay"))
+                    "ingame because of VRChat Networking!", "Upload now"))
                 {
                     UploadNow(avatar.gameObject);
                 }
@@ -41,6 +41,7 @@ public class nanoSDK_FastUploader
         else
         {
             EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Cant Upload Avatar", "Upload Anyways");
+            UploadNow(avatar.gameObject);
         }
 
     }
