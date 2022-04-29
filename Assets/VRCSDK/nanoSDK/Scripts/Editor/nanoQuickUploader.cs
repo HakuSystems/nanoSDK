@@ -6,17 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using VRC.Core;
-using VRC.SDKBase.Editor;
+//using VRC.Core;
+//using VRC.SDKBase.Editor;
 
 namespace Assets.VRCSDK.nanoSDK.Scripts.Editor
 {
-    public class nanoQuickUploader
+    public class NanoQuickUploader
     {
         [MenuItem("nanoSDK/QuickUpload", false, 560)]
         public static void QuickUploadContent()
         {
-            nanoSDK_FastUploader.RunFastUpload();
+           nanoSDK_FastUploader.RunFastUpload();
         }
     }
 }

@@ -43,7 +43,7 @@ namespace nanoSDK
             var response = await HttpClient.SendAsync(request); //without AuthKey Sending
 
             string result = await response.Content.ReadAsStringAsync();
-            var SERVERCHECKproperties = JsonConvert.DeserializeObject<sdkVersionBaseINTERN<sdkVersionBaseINTERNDATA>>(result);
+            var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionBaseINTERN<SdkVersionBaseINTERNDATA>>(result);
             SERVERVERSION = SERVERCHECKproperties.Data.Version;
             SERVERURL = SERVERCHECKproperties.Data.Url;
             if (currentVersion != SERVERCHECKproperties.Data.Version)
@@ -74,6 +74,11 @@ namespace nanoSDK
 
         public static async Task DownloadnanoSDK()
         {
+            if (EditorUtility.DisplayDialog("nanoSDK", "This is Still indevelopment we will announce it when its finished.", "okay"))
+            {
+                NanoLog("Cancel");
+            }
+            /*
             NanoLog("Asking for Approval..");
             if (EditorUtility.DisplayDialog("nanoSDK Updater", "Your Version (V" + currentVersion.ToString() + ") is Outdated!" + " do you want to Download and Import the Newest Version?", "Yes", "No"))
             {
@@ -85,10 +90,14 @@ namespace nanoSDK
                 //canceling the whole process
                 NanoLog("You pressed no.");
             }
+            */
         }
 
         public static async Task DeleteAndDownloadAsync()
         {
+            await DownloadnanoSDK();
+            #region old Method
+            /*
             try
             {
                 if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "The Old SDK will Be Deleted and the New SDK Will be imported!", "Okay"))
@@ -152,6 +161,8 @@ namespace nanoSDK
                     Application.OpenURL("https://nanosdk.net/discord");
                 }
             }
+            */
+            #endregion
         }
 
         private static void FileDownloadProgress(object sender, DownloadProgressChangedEventArgs e)
@@ -199,14 +210,29 @@ namespace nanoSDK
         }
     }
 
-    public class sdkVersionBaseINTERNDATA
+    public class SdkVersionBaseINTERNDATA
     {
         public string Url { get; set; }
         public string Version { get; set; }
-        public string Type { get; set; }
+        public ReleaseType Type { get; set; }
+
+        public BranchType Branch { get; set; }
+
+        public enum ReleaseType
+        {
+            Avatar = 0,
+            World = 1
+        }
+
+        public enum BranchType
+        {
+            Release = 0,
+            Beta = 1,
+            PrivateBeta = 2
+        }
     }
 
-    public class sdkVersionBaseINTERN<T>
+    public class SdkVersionBaseINTERN<T>
     {
         public string Message { get; set; }
         public T Data { get; set; }

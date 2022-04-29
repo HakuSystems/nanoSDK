@@ -5,18 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
-using VRC.Core;
-using VRC.SDKBase.Editor;
+//using VRC.Core;
+//using VRC.SDKBase.Editor;
 
 namespace nanoSDK
 {
-    public class nanoSDKTabView : EditorWindow
+    public class NanoSDKTabView : EditorWindow
     {
-        public static nanoSDKTabView window;
+        public static NanoSDKTabView window;
         [MenuItem("nanoSDK/Manage", false, 100)]
         public static void ShowWindow()
         {
-            window = (nanoSDKTabView)GetWindow(typeof(nanoSDKTabView));
+            window = (NanoSDKTabView)GetWindow(typeof(NanoSDKTabView));
             InitializeWindow();
         }
         private void OnEnable()
@@ -37,7 +37,7 @@ namespace nanoSDK
         {
             if (window == null)
             {
-                window = (nanoSDKTabView)GetWindow(typeof(nanoSDKTabView));
+                window = (NanoSDKTabView)GetWindow(typeof(NanoSDKTabView));
             }
             
         }
@@ -51,10 +51,10 @@ namespace nanoSDK
             GUILayout.BeginVertical();
             //tab things
                 EditorWindow loginWindow = GetWindow<NanoSDK_Login>("Account");
-                EditorWindow changelogWindow = GetWindow<NanoSDK_Info>("Changelog", typeof(nanoSDKTabView));
-                EditorWindow importPanelWindow = GetWindow<NanoSDK_ImportPanel>("Importables", typeof(nanoSDKTabView));
-                EditorWindow settingsWindow = GetWindow<NanoSDK_Settings>("Settings", typeof(nanoSDKTabView));
-                loginWindow.Show();
+            _ = GetWindow<NanoSDK_Info>("Changelog", typeof(NanoSDKTabView));
+            _ = GetWindow<NanoSDK_ImportPanel>("Importables", typeof(NanoSDKTabView));
+            _ = GetWindow<NanoSDK_Settings>("Settings", typeof(NanoSDKTabView));
+            loginWindow.Show();
             
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();

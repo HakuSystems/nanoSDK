@@ -46,7 +46,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Help/Utilities/Check for Sdk Updates")]
         public static void UpdatesdkBtn()
         {
-            NanoApiManager.CheckServerVersion();
+            NanoApiManager.CheckServerVersion("latest");
         }
 
     }

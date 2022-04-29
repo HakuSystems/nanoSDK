@@ -17,93 +17,86 @@ public partial class AvatarDescriptorEditor3 : Editor
 		{
 			UpdateAutoColliders();
 
-			//Mirror
-			var mirrored = serializedObject.FindProperty("collidersMirrored");
-			if (EditorGUILayout.PropertyField(mirrored, new GUIContent("Mirrored")) && mirrored.boolValue)
-				MirrorColliders();
-
 			//Colliders
 			DrawElement("Head", serializedObject.FindProperty("collider_head"));
 			DrawElement("Torso", serializedObject.FindProperty("collider_torso"));
-			if (mirrored.boolValue)
+
+			DrawMirroredElement("Hand", "collider_handL", "collider_handR");
+			DrawMirroredElement("Foot", "collider_footL", "collider_footR");
+			DrawMirroredElement("Finger Index", "collider_fingerIndexL", "collider_fingerIndexR", true);
+			DrawMirroredElement("Finger Middle", "collider_fingerMiddleL", "collider_fingerMiddleR", true);
+			DrawMirroredElement("Finger Ring", "collider_fingerRingL", "collider_fingerRingR", true);
+			DrawMirroredElement("Finger Little", "collider_fingerLittleL", "collider_fingerLittleR", true);
+
+			void DrawMirroredElement(string displayName, string propNameL, string propNameR, bool isFinger = false)
 			{
+				var configL = serializedObject.FindProperty(propNameL);
+				var configR = serializedObject.FindProperty(propNameR);
+				var isMirrored = configL.FindPropertyRelative("isMirrored");
+
 				EditorGUI.BeginChangeCheck();
+				if (isMirrored.boolValue)
 				{
-					DrawElement("Hand", serializedObject.FindProperty("collider_handR"));
-					DrawElement("Foot", serializedObject.FindProperty("collider_footR"));
-					DrawElement("Finger Index", serializedObject.FindProperty("collider_fingerIndexR"), true);
-					DrawElement("Finger Middle", serializedObject.FindProperty("collider_fingerMiddleR"), true);
-					DrawElement("Finger Ring", serializedObject.FindProperty("collider_fingerRingR"), true);
-					DrawElement("Finger Little", serializedObject.FindProperty("collider_fingerLittleR"), true);
+					DrawElement(displayName, configL, isFinger, true);
 				}
-				if (EditorGUI.EndChangeCheck())
-					MirrorColliders();
-			}
-			else
-			{
-				DrawElement("Hand L", serializedObject.FindProperty("collider_handL"));
-				DrawElement("Hand R", serializedObject.FindProperty("collider_handR"));
-				DrawElement("Foot L", serializedObject.FindProperty("collider_footR"));
-				DrawElement("Foot R", serializedObject.FindProperty("collider_footL"));
-				DrawElement("Finger Index L", serializedObject.FindProperty("collider_fingerIndexL"), true);
-				DrawElement("Finger Middle L", serializedObject.FindProperty("collider_fingerMiddleL"), true);
-				DrawElement("Finger Ring L", serializedObject.FindProperty("collider_fingerRingL"), true);
-				DrawElement("Finger Little L", serializedObject.FindProperty("collider_fingerLittleL"), true);
-				DrawElement("Finger Index R", serializedObject.FindProperty("collider_fingerIndexR"), true);
-				DrawElement("Finger Middle R", serializedObject.FindProperty("collider_fingerMiddleR"), true);
-				DrawElement("Finger Ring R", serializedObject.FindProperty("collider_fingerRingR"), true);
-				DrawElement("Finger Little R", serializedObject.FindProperty("collider_fingerLittleR"), true);
+				else
+				{
+					DrawElement($"{displayName} L", configL, isFinger, true);
+					DrawElement($"{displayName} R", configR, isFinger);
+				}
+				if (EditorGUI.EndChangeCheck() && isMirrored.boolValue)
+					MirrorCollider(configL, configR);
 			}
 		}
 		if (EditorPrefs.GetBool(_CollidersFoldoutPrefsKey) != prevFoldout)
 			EditorUtility.SetDirty(target); //Repaint
 	}
-	void MirrorColliders()
+	void MirrorCollider(SerializedProperty sourceProp, SerializedProperty destProp)
 	{
-		Mirror("collider_handR", "collider_handL");
-		Mirror("collider_footR", "collider_footL");
-		Mirror("collider_fingerIndexR", "collider_fingerIndexL");
-		Mirror("collider_fingerMiddleR", "collider_fingerMiddleL");
-		Mirror("collider_fingerRingR", "collider_fingerRingL");
-		Mirror("collider_fingerLittleR", "collider_fingerLittleL");
+		destProp.FindPropertyRelative("state").enumValueIndex = sourceProp.FindPropertyRelative("state").enumValueIndex;
+		destProp.FindPropertyRelative("radius").floatValue = sourceProp.FindPropertyRelative("radius").floatValue;
+		destProp.FindPropertyRelative("height").floatValue = sourceProp.FindPropertyRelative("height").floatValue;
 
-		void Mirror(string source, string dest)
-		{
-			var sourceProp = serializedObject.FindProperty(source);
-			var destProp = serializedObject.FindProperty(dest);
-			destProp.FindPropertyRelative("state").enumValueIndex = sourceProp.FindPropertyRelative("state").enumValueIndex;
-			destProp.FindPropertyRelative("radius").floatValue = sourceProp.FindPropertyRelative("radius").floatValue;
-			destProp.FindPropertyRelative("height").floatValue = sourceProp.FindPropertyRelative("height").floatValue;
+		var sourceTransform = (Transform)sourceProp.FindPropertyRelative("transform").objectReferenceValue;
+		var destTransform = (Transform)destProp.FindPropertyRelative("transform").objectReferenceValue;
+		if (sourceTransform == null || destTransform == null)
+			return;
 
-			var sourceTransform = (Transform)sourceProp.FindPropertyRelative("transform").objectReferenceValue;
-			var destTransform = (Transform)destProp.FindPropertyRelative("transform").objectReferenceValue;
-			if (sourceTransform == null || destTransform == null)
-				return;
+		//Position
+		var position = sourceProp.FindPropertyRelative("position").vector3Value;
+		position = sourceTransform.TransformPoint(position); //Move into world space
+		position = new Vector3(-position.x, position.y, position.z); //Mirror
+		position = destTransform.InverseTransformPoint(position); //Move into dest local space
+		destProp.FindPropertyRelative("position").vector3Value = position;
 
-			//Position
-			var position = sourceProp.FindPropertyRelative("position").vector3Value;
-			position = sourceTransform.TransformPoint(position); //Move into world space
-			position = new Vector3(-position.x, position.y, position.z); //Mirror
-			position = destTransform.InverseTransformPoint(position); //Move into dest local space
-			destProp.FindPropertyRelative("position").vector3Value = position;
-
-			//Rotation
-			var rotation = sourceProp.FindPropertyRelative("rotation").quaternionValue;
-			var globalRotation = sourceTransform.rotation * rotation;
-			var euler = globalRotation.eulerAngles;
-			destProp.FindPropertyRelative("rotation").quaternionValue = Quaternion.Inverse(destTransform.rotation) * Quaternion.Euler(euler.x, -euler.y, -euler.z);
-		}
+		//Rotation
+		var rotation = sourceProp.FindPropertyRelative("rotation").quaternionValue;
+		var globalRotation = sourceTransform.rotation * rotation;
+		var euler = globalRotation.eulerAngles;
+		destProp.FindPropertyRelative("rotation").quaternionValue = Quaternion.Inverse(destTransform.rotation) * Quaternion.Euler(euler.x, -euler.y, -euler.z);
 	}
 
-	void DrawElement(string title, SerializedProperty property, bool isFinger = false)
+	void DrawElement(string title, SerializedProperty property, bool isFinger = false, bool mirror = false)
 	{
 		EditorGUILayout.BeginVertical(GUI.skin.box);
-		EditorGUI.indentLevel += 1;
 		{
 			var state = property.FindPropertyRelative("state");
 			EditorGUILayout.BeginHorizontal();
 			{
-				EditorGUILayout.LabelField(title);
+				if (mirror)
+				{
+					var isMirrored = property.FindPropertyRelative("isMirrored");
+					if (GUILayout.Button(new GUIContent(_linkIcon), GUI.skin.label, GUILayout.MaxWidth(16)))
+					{
+						isMirrored.boolValue = !isMirrored.boolValue;
+					}
+				}
+				else
+				{
+					EditorGUILayout.Space(16f);
+				}
+
+				EditorGUILayout.PrefixLabel(title);
 				EditorGUILayout.PropertyField(state, new GUIContent(""));
 
 				bool isActiveProperty = IsActiveProperty(property);
@@ -152,7 +145,6 @@ public partial class AvatarDescriptorEditor3 : Editor
 				}
 			}
 		}
-		EditorGUI.indentLevel -= 1;
 		EditorGUILayout.EndVertical();
 	}
 	void UpdateAutoColliders()
@@ -189,6 +181,7 @@ public partial class AvatarDescriptorEditor3 : Editor
 
 		void UpdateConfig(ref VRCAvatarDescriptor.ColliderConfig dest, VRCAvatarDescriptor.ColliderConfig config)
 		{
+			config.isMirrored = dest.isMirrored;
 			if (dest.state == VRCAvatarDescriptor.ColliderConfig.State.Automatic)
 				dest = config;
 			dest.transform = config.transform;
@@ -199,27 +192,34 @@ public partial class AvatarDescriptorEditor3 : Editor
 		if (!EditorPrefs.GetBool(_CollidersFoldoutPrefsKey))
 			return;
 
-		EditorGUI.BeginChangeCheck();
-		{
-			DrawHandle(serializedObject.FindProperty("collider_head"));
-			DrawHandle(serializedObject.FindProperty("collider_torso"));
-			DrawHandle(serializedObject.FindProperty("collider_handL"));
-			DrawHandle(serializedObject.FindProperty("collider_handR"));
-			DrawHandle(serializedObject.FindProperty("collider_footL"));
-			DrawHandle(serializedObject.FindProperty("collider_footR"));
+		DrawHandle(serializedObject.FindProperty("collider_head"));
+		DrawHandle(serializedObject.FindProperty("collider_torso"));
+		DrawMirroredHandle(serializedObject.FindProperty("collider_handL"), serializedObject.FindProperty("collider_handR"));
+		DrawMirroredHandle(serializedObject.FindProperty("collider_footL"), serializedObject.FindProperty("collider_footR"));
+		DrawMirroredHandle(serializedObject.FindProperty("collider_fingerIndexL"), serializedObject.FindProperty("collider_fingerIndexR"), true);
+		DrawMirroredHandle(serializedObject.FindProperty("collider_fingerRingL"), serializedObject.FindProperty("collider_fingerRingR"), true);
+		DrawMirroredHandle(serializedObject.FindProperty("collider_fingerMiddleL"), serializedObject.FindProperty("collider_fingerMiddleR"), true);
+		DrawMirroredHandle(serializedObject.FindProperty("collider_fingerLittleL"), serializedObject.FindProperty("collider_fingerLittleR"), true);
 
-			DrawFingerHandle(serializedObject.FindProperty("collider_fingerIndexL"));
-			DrawFingerHandle(serializedObject.FindProperty("collider_fingerRingL"));
-			DrawFingerHandle(serializedObject.FindProperty("collider_fingerMiddleL"));
-			DrawFingerHandle(serializedObject.FindProperty("collider_fingerLittleL"));
-			DrawFingerHandle(serializedObject.FindProperty("collider_fingerIndexR"));
-			DrawFingerHandle(serializedObject.FindProperty("collider_fingerRingR"));
-			DrawFingerHandle(serializedObject.FindProperty("collider_fingerMiddleR"));
-			DrawFingerHandle(serializedObject.FindProperty("collider_fingerLittleR"));
-		}
-		if (EditorGUI.EndChangeCheck())
+		void DrawMirroredHandle(SerializedProperty configL, SerializedProperty configR, bool isFinger = false)
 		{
-			MirrorColliders();
+			bool isMirrored = configL.FindPropertyRelative("isMirrored").boolValue;
+
+			EditorGUI.BeginChangeCheck();
+			if (isFinger)
+			{
+				DrawFingerHandle(configL);
+				DrawFingerHandle(configR);
+			}
+			else
+			{
+				DrawHandle(configL);
+				DrawHandle(configR);
+			}
+			if (EditorGUI.EndChangeCheck() && isMirrored)
+			{
+				MirrorCollider(configL, configR);
+			}
 		}
 
 		void DrawHandle(SerializedProperty config)

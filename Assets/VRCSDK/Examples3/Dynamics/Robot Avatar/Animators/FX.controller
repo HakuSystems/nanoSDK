@@ -90,7 +90,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 3
-    m_ConditionEvent: EarLeft_Stretched
+    m_ConditionEvent: EarLeft_Stretch
     m_EventTreshold: 0.1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4820242519107215606}
@@ -252,31 +252,31 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: EarRight_IsGrabbed
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   - m_Name: ChestButton_Prox
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: EarLeft_Stretched
+    m_Controller: {fileID: 0}
+  - m_Name: EarLeft_Stretch
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: EarRight_Stretched
+    m_Controller: {fileID: 0}
+  - m_Name: EarRight_Stretch
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
+    m_Controller: {fileID: 0}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -559,10 +559,10 @@ AnimatorStateTransition:
     m_ConditionEvent: EarRight_IsGrabbed
     m_EventTreshold: 0
   - m_ConditionMode: 4
-    m_ConditionEvent: EarLeft_Stretched
+    m_ConditionEvent: EarLeft_Stretch
     m_EventTreshold: 0.09
   - m_ConditionMode: 4
-    m_ConditionEvent: EarRight_Stretched
+    m_ConditionEvent: EarRight_Stretch
     m_EventTreshold: 0.09
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3177125039841979893}
@@ -587,7 +587,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 3
-    m_ConditionEvent: EarRight_Stretched
+    m_ConditionEvent: EarRight_Stretch
     m_EventTreshold: 0.1
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 4820242519107215606}

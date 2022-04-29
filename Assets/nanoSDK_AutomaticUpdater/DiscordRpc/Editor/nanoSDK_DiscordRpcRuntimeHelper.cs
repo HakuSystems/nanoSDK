@@ -5,30 +5,30 @@ using UnityEngine.SceneManagement;
 namespace nanoSDK
 {
     [InitializeOnLoadAttribute]
-    public static class nanoSDK_DiscordRpcRuntimeHelper
+    public static class NanoSDK_DiscordRpcRuntimeHelper
     {
         // register an event handler when the class is initialized
-        static nanoSDK_DiscordRpcRuntimeHelper()
+        static NanoSDK_DiscordRpcRuntimeHelper()
         {
             EditorApplication.playModeStateChanged += LogPlayModeState;
-            EditorSceneManager.activeSceneChanged += sceneChanged;
+            EditorSceneManager.activeSceneChanged += SceneChanged;
         }
 
-        private static void sceneChanged(Scene old, Scene next)
+        private static void SceneChanged(Scene old, Scene next)
         {
-            nanoSDK_DiscordRPC.sceneChanged(next);
+            NanoSDK_DiscordRPC.SceneChanged(next);
         }
 
         private static void LogPlayModeState(PlayModeStateChange state)
         {
             if(state == PlayModeStateChange.EnteredEditMode)
             {
-                nanoSDK_DiscordRPC.updateState(RpcState.EDITMODE);
-                nanoSDK_DiscordRPC.ResetTime();
+                NanoSDK_DiscordRPC.UpdateState(RpcState.EDITMODE);
+                NanoSDK_DiscordRPC.ResetTime();
             } else if(state == PlayModeStateChange.EnteredPlayMode)
             {
-                nanoSDK_DiscordRPC.updateState(RpcState.PLAYMODE);
-                nanoSDK_DiscordRPC.ResetTime();
+                NanoSDK_DiscordRPC.UpdateState(RpcState.PLAYMODE);
+                NanoSDK_DiscordRPC.ResetTime();
             }
         }
     }

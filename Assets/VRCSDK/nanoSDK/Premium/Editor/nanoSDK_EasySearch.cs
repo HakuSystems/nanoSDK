@@ -17,7 +17,7 @@ using nanoSDK.Premium;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
 
-public class nanoSDK_EasySearch : EditorWindow
+public class NanoSDK_EasySearch : EditorWindow
 {
     private static GUIStyle _vrcSdkHeader;
     private static Vector2 _changeLogScroll;
@@ -28,7 +28,7 @@ public class nanoSDK_EasySearch : EditorWindow
     [MenuItem("nanoSDK/EasySearch", false, 501)]
     public static void OpenSplashScreen()
     {
-        GetWindow<nanoSDK_EasySearch>(true);
+        GetWindow<NanoSDK_EasySearch>(true);
         if (NanoApiManager.IsLoggedInAndVerified()) return;
         NanoApiManager.OpenLoginWindow();
     }
@@ -47,7 +47,7 @@ public class nanoSDK_EasySearch : EditorWindow
                 Process.Start("https://www.patreon.com/nanoSDK");
         }
 
-        if (GUILayout.Button("Check for Updates")) NanoApiManager.CheckServerVersion();
+        if (GUILayout.Button("Check for Updates")) NanoApiManager.CheckServerVersion("latest");
         if (GUILayout.Button("Reinstall SDK"))
             Task.FromResult(NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync());
         GUILayout.EndHorizontal();
@@ -130,7 +130,7 @@ public class nanoSDK_EasySearch : EditorWindow
         GUILayout.EndScrollView();
     }
 
-    private List<Everything.Result> _results = new List<Everything.Result>();
+    private readonly List<Everything.Result> _results = new List<Everything.Result>();
 
     private void FillList()
     {

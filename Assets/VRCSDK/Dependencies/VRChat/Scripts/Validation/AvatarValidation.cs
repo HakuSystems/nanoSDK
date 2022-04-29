@@ -19,9 +19,6 @@ namespace VRC.SDKBase.Validation
         private const float MAX_STATION_LOCATION_DISTANCE = 2f;
         private const float MAX_STATION_COLLIDER_DIMENSION = 2f;
 
-        private static ProfilerMarker _clampRenderQueuesProfilerMarker = new ProfilerMarker("AvatarValidation.ClampRenderQueues");
-        private static readonly List<Material> _clampRenderQueuesMaterialsTempList = new List<Material>();
-
         public static readonly string[] ComponentTypeWhiteListCommon = new string[]
         {
             #if UNITY_STANDALONE

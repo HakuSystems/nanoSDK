@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 namespace nanoSDK
 {
     [InitializeOnLoad]
-    public class nanoSDK_DiscordRPC
+    public class NanoSDK_DiscordRPC
     {
         private static readonly DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence();
 
@@ -14,24 +14,24 @@ namespace nanoSDK
         private static long timestamp = (long)time.TotalSeconds;
 
         private static RpcState rpcState = RpcState.EDITMODE;
-        private static string GameName = Application.productName;
+        private static readonly string GameName = Application.productName;
         private static string SceneName = SceneManager.GetActiveScene().name;
 
-        static nanoSDK_DiscordRPC()
+        static NanoSDK_DiscordRPC()
         {
             if (EditorPrefs.GetBool("nanoSDK_discordRPC", true))
             {
-                nanoLog("Starting discord rpc");
-                DiscordRpc.EventHandlers eventHandlers = default(DiscordRpc.EventHandlers);
+                NanoLog("Starting discord rpc");
+                DiscordRpc.EventHandlers eventHandlers = default;
                 DiscordRpc.Initialize("612263853442465793", ref eventHandlers, false, string.Empty);
-                updateDRPC();
+                UpdateDRPC();
             }
         }
 
-        public static void updateDRPC()
+        public static void UpdateDRPC()
         {
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
-            nanoLog("Updating everything");
+            NanoLog("Updating everything");
             SceneName = SceneManager.GetActiveScene().name;
             presence.details = string.Format("Project: {0} Scene: {1}", GameName, SceneName);
             presence.state = "State: " + rpcState.StateName();
@@ -41,17 +41,17 @@ namespace nanoSDK
             DiscordRpc.UpdatePresence(presence);
         }
 
-        public static void updateState(RpcState state)
+        public static void UpdateState(RpcState state)
         {
-            nanoLog("Updating state to '" + state.StateName() + "'");
+            NanoLog("Updating state to '" + state.StateName() + "'");
             rpcState = state;
             presence.state = "State: " + state.StateName();
             DiscordRpc.UpdatePresence(presence);
         }
 
-        public static void sceneChanged(Scene newScene)
+        public static void SceneChanged(Scene newScene)
         {
-            nanoLog("Updating scene name");
+            NanoLog("Updating scene name");
             SceneName = newScene.name;
             presence.details = string.Format("Project: {0} Scene: {1}", GameName, SceneName);
             DiscordRpc.UpdatePresence(presence);
@@ -59,7 +59,7 @@ namespace nanoSDK
 
         public static void ResetTime()
         {
-            nanoLog("Reseting timer");
+            NanoLog("Reseting timer");
             time = (DateTime.UtcNow - new DateTime(1970, 1, 1));
             timestamp = (long)time.TotalSeconds;
             presence.startTimestamp = timestamp;
@@ -67,7 +67,7 @@ namespace nanoSDK
             DiscordRpc.UpdatePresence(presence);
         }
 
-        private static void nanoLog(string message)
+        private static void NanoLog(string message)
         {
             Debug.Log("[nanoSDK] DiscordRPC: " + message);
         }

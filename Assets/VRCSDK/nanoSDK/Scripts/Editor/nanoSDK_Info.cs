@@ -34,7 +34,7 @@ namespace nanoSDK
         public static void OpenSplashScreen()
         {
             //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
-            nanoSDKTabView.ShowWindow();
+            NanoSDKTabView.ShowWindow();
             //GetWindow<nanoSDKTabView>(true);
             if (NanoApiManager.IsLoggedInAndVerified()) return;
             NanoApiManager.OpenLoginWindow();
@@ -93,7 +93,7 @@ namespace nanoSDK
             GUI.backgroundColor = Color.gray;
             if (GUILayout.Button("Check for Updates"))
             {
-                NanoApiManager.CheckServerVersion();
+                NanoApiManager.CheckServerVersion("latest");
             }
             if (GUILayout.Button("Reinstall SDK"))
             {

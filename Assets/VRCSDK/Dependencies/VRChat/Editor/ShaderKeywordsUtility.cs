@@ -113,7 +113,7 @@ public class ShaderKeywordsUtility : EditorWindow
     {
         //ShaderKeywordsUtility window = EditorWindow.GetWindow<ShaderKeywordsUtility>();
         //window.titleContent = new GUIContent("Shader Keywords Utility");
-        //window.minSize = new Vector2(325, 410);
+       //window.minSize = new Vector2(325, 410);
         //window.Show();
 
         titleGuiStyle = new GUIStyle

@@ -16,13 +16,7 @@ namespace nanoSDK
         
 
         //[MenuItem("nanoSDK/Import panel", false, 501)]
-        public static void OpenImportPanel()
-        {
-            //nanoSDK_AutomaticUpdateAndInstall.apiCheckFileExists();
-            GetWindow<NanoSDK_ImportPanel>(false);
-            if (NanoApiManager.IsLoggedInAndVerified()) return;
-            NanoApiManager.OpenLoginWindow();
-        }
+
 
         public void OnEnable()
         {
@@ -90,7 +84,7 @@ namespace nanoSDK
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Check for Updates"))
             {
-                NanoApiManager.CheckServerVersion();
+                NanoApiManager.CheckServerVersion("latest");
             }
             if (GUILayout.Button("Reinstall SDK"))
             {

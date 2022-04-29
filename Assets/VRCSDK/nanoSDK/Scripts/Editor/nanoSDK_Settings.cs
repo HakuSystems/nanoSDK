@@ -9,6 +9,9 @@ namespace nanoSDK
     [InitializeOnLoad]
     public class NanoSDK_Settings : EditorWindow
     {
+        static NanoSDK_Settings()
+        {
+        }
 
         public static string projectConfigPath = "Assets/VRCSDK/nanoSDK/Configs/";
         private readonly string backgroundConfig = "BackgroundVideo.txt";
@@ -123,7 +126,7 @@ namespace nanoSDK
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Check for Updates"))
             {
-                NanoApiManager.CheckServerVersion();
+                NanoApiManager.CheckServerVersion("latest");
             }
             if (GUILayout.Button("Reinstall SDK"))
             {

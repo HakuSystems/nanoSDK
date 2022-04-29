@@ -43,14 +43,12 @@ namespace nanoSDK
         private string redeemCode;
 
         //[MenuItem("nanoSDK/Login", false, 501)]
-        public static void OpenImportPanel()
-        {
-            NanoApiManager.OpenLoginWindow();
-        }
+
 
         public void OnEnable()
         {
-            maxSize = new Vector2(500, 250);
+            maxSize = new Vector2(600, 350);
+            minSize = maxSize;
         }
         private void OnLostFocus()
         {
@@ -67,6 +65,12 @@ namespace nanoSDK
 
         private void OnGUI()
         {
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.LabelField("YOURE USING A BETA VERSION");
+            EditorGUILayout.LabelField("FOLLOWING FEATURES WONT WORK WITH BETA:");
+            EditorGUILayout.LabelField("AUTO UPDATER, VERSION SELECTOR, REINSTALL SDK, BETTER MANAGE TAB");
+            EditorGUILayout.LabelField("YOURE USING A BETA VERSION");
+            EditorGUILayout.EndVertical();
             EditorGUILayout.BeginVertical();
             if (NanoApiManager.IsUserLoggedIn())
             {
@@ -156,11 +160,6 @@ ID: {NanoApiManager.User.ID}
             EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
             EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
             EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
-        }
-
-        private void nanoLog(string message)
-        {
-            UnityEngine.Debug.Log("[nanoSDK Auth]: " + message);
         }
     }
 }

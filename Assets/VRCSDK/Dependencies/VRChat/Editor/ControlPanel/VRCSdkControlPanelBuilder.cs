@@ -221,11 +221,19 @@ public partial class VRCSdkControlPanel : EditorWindow
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
         
-        
+      
         if (VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK2) && VRCSdk3Analysis.IsSdkDllActive(VRCSdk3Analysis.SdkVersion.VRCSDK3))
         {
             List<Component> sdk2Components = VRCSdk3Analysis.GetSDKInScene(VRCSdk3Analysis.SdkVersion.VRCSDK2);
             List<Component> sdk3Components = VRCSdk3Analysis.GetSDKInScene(VRCSdk3Analysis.SdkVersion.VRCSDK3);
+            if (sdk2Components.Count > 0 && sdk3Components.Count > 0)
+            {
+                OnGUIError(null,
+                    "This scene contains components from the VRChat SDK version 2 and version 3. Version two elements will have to be replaced with their version 3 counterparts to build with SDK3 and UDON.",
+                    () => { Selection.objects = sdk2Components.ToArray(); },
+                    null
+                );
+            }
         }
         
         if (Lightmapping.giWorkflowMode == Lightmapping.GIWorkflowMode.Iterative)

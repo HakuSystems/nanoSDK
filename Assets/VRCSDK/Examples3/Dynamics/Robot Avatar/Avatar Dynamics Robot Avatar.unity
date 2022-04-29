@@ -149,7 +149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 277755984}
   m_Layer: 0
-  m_Name: AvatarTriggers
+  m_Name: AvatarContacts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

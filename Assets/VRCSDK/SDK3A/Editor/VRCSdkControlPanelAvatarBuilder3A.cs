@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using VRC.SDKBase.Editor;
+using VRC.SDK3.Avatars;
 using VRC.SDK3.Avatars.Components;
 using VRC.SDK3.Avatars.ScriptableObjects;
 using VRC.SDK3.Editor;
@@ -102,6 +103,26 @@ namespace VRC.SDK3.Editor
                     return true;
                 }
 
+                void FixTexture(Texture2D texture)
+                {
+                    string path = AssetDatabase.GetAssetPath(texture);
+                    TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+                    if (importer == null)
+                        return;
+                    TextureImporterPlatformSettings settings = importer.GetDefaultPlatformTextureSettings();
+
+                    //Max texture size
+                    if (texture.width > MAX_ACTION_TEXTURE_SIZE || texture.height > MAX_ACTION_TEXTURE_SIZE)
+                        settings.maxTextureSize = Math.Min(settings.maxTextureSize, MAX_ACTION_TEXTURE_SIZE);
+
+                    //Compression
+                    if (settings.textureCompression == TextureImporterCompression.Uncompressed)
+                        settings.textureCompression = TextureImporterCompression.Compressed;
+
+                    //Set & Reimport
+                    importer.SetPlatformTextureSettings(settings);
+                    AssetDatabase.ImportAsset(path);
+                }
 
                 //Find all textures
                 List<Texture2D> textures = new List<Texture2D>();
@@ -143,8 +164,17 @@ namespace VRC.SDK3.Editor
                         isValid = false;
                 }
 
-                if (!isValid) { }
+                if (!isValid)
+                    _builder.OnGUIError(avatar, "Images used for Actions & Moods are too large.",
+                        delegate { Selection.activeObject = avatar.gameObject; }, FixTextures);
+
+                //Fix
+                void FixTextures()
+                {
+                    foreach (Texture2D texture in textures)
+                        FixTexture(texture);
                 }
+            }
 
             //Expression menu parameters
             if (avatarSDK3 != null)
@@ -166,6 +196,8 @@ namespace VRC.SDK3.Editor
                 //Check if parameters is valid
                 if (avatarSDK3.expressionParameters != null && avatarSDK3.expressionParameters.CalcTotalCost() > VRCExpressionParameters.MAX_PARAMETER_COST)
                 {
+                    _builder.OnGUIError(avatar, "VRCExpressionParameters has too many parameters defined.",
+                        delegate { Selection.activeObject = avatarSDK3.expressionParameters; }, null);
                 }
 
                 //Find all existing parameters
@@ -269,7 +301,7 @@ namespace VRC.SDK3.Editor
                 {
                     _builder.OnGUIWarning(avatar, "This avatar uses depreciated DynamicBone components. Upgrade to PhysBones to guarantee future compatibility.",
                         null,
-                        () => { PhysBoneMigration.Migrate(avatarSDK3); });
+                        () => { AvatarDynamicsSetup.ConvertDynamicBonesToPhysBones( new GameObject[]{ avatarSDK3.gameObject} ); });
                 }
             }
 
@@ -288,7 +320,7 @@ namespace VRC.SDK3.Editor
             // delete PipelineSaver(s) from the list of the Components we will destroy now
             foreach (Component c in toRemoveSilently)
             {
-                    componentsToRemove.Remove(c);
+                componentsToRemove.Remove(c);
             }
 
             HashSet<string> componentsToRemoveNames = new HashSet<string>();
@@ -299,10 +331,25 @@ namespace VRC.SDK3.Editor
                     componentsToRemoveNames.Add(c.GetType().Name);
             }
 
+            if (componentsToRemoveNames.Count > 0)
+                _builder.OnGUIError(avatar,
+                    "The following component types are found on the Avatar and will be removed by the client: " +
+                    string.Join(", ", componentsToRemoveNames.ToArray()),
+                    delegate { ShowRestrictedComponents(toRemove); },
+                    delegate { FixRestrictedComponents(toRemove); });
 
+            List<AudioSource> audioSources =
+                avatar.gameObject.GetComponentsInChildren<AudioSource>(true).ToList();
+            if (audioSources.Count > 0)
+                _builder.OnGUIWarning(avatar,
+                    "Audio sources found on Avatar, they will be adjusted to safe limits, if necessary.",
+                    GetAvatarSubSelectAction(avatar, typeof(AudioSource)), null);
 
             List<VRCStation> stations =
                 avatar.gameObject.GetComponentsInChildren<VRCStation>(true).ToList();
+            if (stations.Count > 0)
+                _builder.OnGUIWarning(avatar, "Stations found on Avatar, they will be adjusted to safe limits, if necessary.",
+                    GetAvatarSubSelectAction(avatar, typeof(VRCStation)), null);
 
             if (VRCSdkControlPanel.HasSubstances(avatar.gameObject))
             {
@@ -315,6 +362,14 @@ namespace VRC.SDK3.Editor
             CheckAvatarMeshesForLegacyBlendShapesSetting(avatar);
             CheckAvatarMeshesForMeshReadWriteSetting(avatar);
 
+#if UNITY_ANDROID
+        IEnumerable<Shader> illegalShaders = AvatarValidation.FindIllegalShaders(avatar.gameObject);
+        foreach (Shader s in illegalShaders)
+        {
+            _builder.OnGUIError(avatar, "Avatar uses unsupported shader '" + s.name + "'. You can only use the shaders provided in 'VRChat/Mobile' for Quest avatars.", delegate () { Selection.activeObject
+ = avatar.gameObject; }, null);
+        }
+#endif
 
             foreach (AvatarPerformanceCategory perfCategory in Enum.GetValues(typeof(AvatarPerformanceCategory)))
             {
@@ -353,11 +408,11 @@ namespace VRC.SDK3.Editor
                         break;
                     case AvatarPerformanceCategory.MaterialCount:
                         show = GetAvatarSubSelectAction(avatar,
-                            new[] {typeof(MeshRenderer), typeof(SkinnedMeshRenderer)});
+                            new[] { typeof(MeshRenderer), typeof(SkinnedMeshRenderer) });
                         break;
                     case AvatarPerformanceCategory.MeshCount:
                         show = GetAvatarSubSelectAction(avatar,
-                            new[] {typeof(MeshRenderer), typeof(SkinnedMeshRenderer)});
+                            new[] { typeof(MeshRenderer), typeof(SkinnedMeshRenderer) });
                         break;
                     case AvatarPerformanceCategory.ParticleCollisionEnabled:
                         show = GetAvatarSubSelectAction(avatar, typeof(ParticleSystem));
@@ -382,7 +437,7 @@ namespace VRC.SDK3.Editor
                         break;
                     case AvatarPerformanceCategory.PolyCount:
                         show = GetAvatarSubSelectAction(avatar,
-                            new[] {typeof(MeshRenderer), typeof(SkinnedMeshRenderer)});
+                            new[] { typeof(MeshRenderer), typeof(SkinnedMeshRenderer) });
                         break;
                     case AvatarPerformanceCategory.SkinnedMeshCount:
                         show = GetAvatarSubSelectAction(avatar, typeof(SkinnedMeshRenderer));
@@ -449,9 +504,9 @@ namespace VRC.SDK3.Editor
             GUILayout.Label("Offline Testing", VRCSdkControlPanel.infoGuiStyle);
             if (GUI.enabled)
             {
-            GUILayout.Label(
-                "Before uploading your avatar you may build and test it in the VRChat client. Other users will not able to see the test avatar.",
-                VRCSdkControlPanel.infoGuiStyle);
+                GUILayout.Label(
+                    "Before uploading your avatar you may build and test it in the VRChat client. Other users will not able to see the test avatar.",
+                    VRCSdkControlPanel.infoGuiStyle);
             }
             else
             {
@@ -487,7 +542,7 @@ namespace VRC.SDK3.Editor
 
             EditorGUILayout.Separator();
 
-                       EditorGUILayout.BeginVertical(VRCSdkControlPanel.boxGuiStyle);
+            EditorGUILayout.BeginVertical(VRCSdkControlPanel.boxGuiStyle);
             EditorGUILayout.BeginHorizontal();
 
             EditorGUILayout.BeginVertical(GUILayout.Width(300));
@@ -499,6 +554,7 @@ namespace VRC.SDK3.Editor
                 VRCSdkControlPanel.infoGuiStyle);
 
             EditorGUILayout.EndVertical();
+
             EditorGUILayout.BeginVertical(GUILayout.Width(200));
             EditorGUILayout.Space();
 
@@ -520,6 +576,7 @@ namespace VRC.SDK3.Editor
 #else
                         EditorPrefs.SetBool("VRC.SDKBase_StripAllShaders", false);
 #endif
+
                         VRC_SdkBuilder.shouldBuildUnityPackage = false;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);
 

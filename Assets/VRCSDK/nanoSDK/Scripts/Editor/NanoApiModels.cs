@@ -21,9 +21,24 @@ namespace nanoSDK
     {
         public string Url { get; set; }
         public string Version { get; set; }
-        public string Type { get; set; }
+        public ReleaseType Type { get; set; }
+
+        public BranchType Branch { get; set; }
+
+        public enum ReleaseType
+        {
+            Avatar = 0,
+            World = 1
+        }
+
+        public enum BranchType
+        {
+            Release = 0,
+            Beta = 1,
+            PrivateBeta = 2
+        }
     }
-    
+
     public enum Permissions
     {
         User = 0,

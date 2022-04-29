@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !VRC_CLIENT
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
 using VRC.SDKBase.Editor.BuildPipeline;
+using VRC.SDKBase.Editor.Validation;
 using VRC.SDKBase.Validation.Performance;
 using VRC.SDKBase.Validation.Performance.Stats;
 using Object = UnityEngine.Object;
@@ -216,16 +218,17 @@ namespace VRC.SDKBase.Editor
         public virtual void OnGUIAvatarCheck(VRC_AvatarDescriptor avatar)
         {
             string vrcFilePath = UnityWebRequest.UnEscapeURL(EditorPrefs.GetString("currentBuildingAssetBundlePath"));
+            bool isMobilePlatform = ValidationEditorHelpers.IsMobilePlatform();
             if (!string.IsNullOrEmpty(vrcFilePath) &&
-                ValidationHelpers.CheckIfAssetBundleFileTooLarge(ContentType.Avatar, vrcFilePath, out int fileSize))
+                ValidationHelpers.CheckIfAssetBundleFileTooLarge(ContentType.Avatar, vrcFilePath, out int fileSize, isMobilePlatform))
             {
                 _builder.OnGUIWarning(avatar,
-                    ValidationHelpers.GetAssetBundleOverSizeLimitMessageSDKWarning(ContentType.Avatar, fileSize),
+                    ValidationHelpers.GetAssetBundleOverSizeLimitMessageSDKWarning(ContentType.Avatar, fileSize, isMobilePlatform),
                     delegate { Selection.activeObject = avatar.gameObject; }, null);
             }
 
-            AvatarPerformanceStats perfStats = new AvatarPerformanceStats();
-            AvatarPerformance.CalculatePerformanceStats(avatar.Name, avatar.gameObject, perfStats);
+            AvatarPerformanceStats perfStats = new AvatarPerformanceStats(ValidationEditorHelpers.IsMobilePlatform());
+            AvatarPerformance.CalculatePerformanceStats(avatar.Name, avatar.gameObject, perfStats, isMobilePlatform);
 
             OnGUIPerformanceInfo(avatar, perfStats, AvatarPerformanceCategory.Overall,
                 GetAvatarSubSelectAction(avatar, typeof(VRC_AvatarDescriptor)), null);
@@ -239,14 +242,6 @@ namespace VRC.SDKBase.Editor
                 _builder.OnGUIError(avatar, "This avatar uses Visemes but the Face Mesh is not specified.",
                     delegate { Selection.activeObject = avatar.gameObject; }, null);
 
-            if (ShaderKeywordsUtility.DetectCustomShaderKeywords(avatar))
-                _builder.OnGUIWarning(avatar,
-                    "A Material on this avatar has custom shader keywords. Please consider optimizing it using the Shader Keywords Utility.",
-                    () => { Selection.activeObject = avatar.gameObject; },
-                    () =>
-                    {
-                        EditorApplication.ExecuteMenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility");
-                    });
 
             VerifyAvatarMipMapStreaming(avatar);
 
@@ -306,6 +301,7 @@ namespace VRC.SDKBase.Editor
                 }
                 else if (rating > PerformanceRating.Good)
                 {
+                    //nanoSDK Ignores this
                 }
                 else
                 {
@@ -423,7 +419,6 @@ namespace VRC.SDKBase.Editor
 #endif
 
 #if VRC_SDK_VRCSDK2
-                        VRC_SdkBuilder.shouldBuildUnityPackage = VRCSdkControlPanel.FutureProofPublishEnabled;
                         VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(avatar.gameObject);
 #endif
 
@@ -1127,3 +1122,4 @@ namespace VRC.SDKBase.Editor
         }
     }
 }
+#endif

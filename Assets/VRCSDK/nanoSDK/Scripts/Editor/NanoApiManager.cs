@@ -45,7 +45,7 @@ namespace nanoSDK
             User = null;
             NanoApiConfig.Config.AuthKey = null;
             NanoApiConfig.Save();
-            OpenLoginWindow();
+            //OpenLoginWindow();
         }
 
         private static async Task<HttpResponseMessage> MakeApiCall(HttpRequestMessage request)
@@ -85,34 +85,6 @@ namespace nanoSDK
             Log("Successfully checked user");
             running = false;
         }
-        public static async void CheckServerVersion()
-        {
-            string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
-            var request = new HttpRequestMessage()
-            {
-                Method = HttpMethod.Get,
-                RequestUri = SdkVersionUri
-            };
-
-            var response = await MakeApiCall(request);
-
-            string result = await response.Content.ReadAsStringAsync();
-            var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionOutput<SdkVersionData>>(result);
-            SERVERVERSION = SERVERCHECKproperties.Data.Version;
-            SERVERURL = SERVERCHECKproperties.Data.Url;
-            if (currentVersion != SERVERCHECKproperties.Data.Version)
-            {
-                NanoSDK_AutomaticUpdateAndInstall.CheckServerVersionINTERN();
-            }
-            else
-            {
-                EditorUtility.DisplayDialog("You are up to date",
-                    "Current nanoSDK version: V" + currentVersion,
-                    "Okay"
-                    );
-            }
-        }
-
         public static async void RedeemLicense(string code)
         {
             var content = new StringContent(JsonConvert.SerializeObject(new LicenseData
@@ -137,6 +109,39 @@ namespace nanoSDK
             {
                 EditorUtility.DisplayDialog("nanoAPI", props.Message, "Okay");
             }
+        }
+        public static async void CheckServerVersion(string version)
+        {
+            //finden fix ding
+            string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
+            Log("Getting Versions");
+            var request = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = SdkVersionUri
+            };
+
+            var response = await MakeApiCall(request);
+            string result = await response.Content.ReadAsStringAsync();
+            var properties = JsonConvert.DeserializeObject<SdkVersionOutput<SdkVersionData>>(result);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                Log("Something Went Wrong");
+                return;
+            }
+            if (currentVersion != properties.Data.Version.ToString() + "," + properties.Data.Type.ToString() + "," + properties.Data.Branch.ToString())
+            {
+                NanoSDK_AutomaticUpdateAndInstall.CheckServerVersionINTERN();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("You are up to date",
+                    "Current nanoSDK version: V" + currentVersion,
+                    "Okay"
+                    );
+            }
+            Log(properties.Data.Branch.ToString()+ " - " +properties.Data.Version.ToString()+" - "+properties.Data.Url);
         }
 
         public static async void Login(string username, string password)

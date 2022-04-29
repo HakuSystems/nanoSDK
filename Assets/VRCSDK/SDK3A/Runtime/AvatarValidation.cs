@@ -18,9 +18,6 @@ namespace VRC.SDK3.Validation
         private const float MAX_STATION_LOCATION_DISTANCE = 2f;
         private const float MAX_STATION_COLLIDER_DIMENSION = 2f;
 
-        private static ProfilerMarker _clampRenderQueuesProfilerMarker = new ProfilerMarker("AvatarValidation.ClampRenderQueues");
-        private static readonly List<Material> _clampRenderQueuesMaterialsTempList = new List<Material>();
-
         public static readonly string[] ComponentTypeWhiteListCommon = new string[]
         {
             #if UNITY_STANDALONE
@@ -508,7 +505,6 @@ namespace VRC.SDK3.Validation
                             #if VRC_CLIENT
                             if(markedForDestruction)
                             {
-                                
                                 ValidationUtils.RemoveComponent(station);
                                 if(stationInternal != null)
                                 {
@@ -1044,39 +1040,6 @@ namespace VRC.SDK3.Validation
 
                 warning = warning.Remove(warning.LastIndexOf(",", StringComparison.Ordinal));
                 Debug.LogWarning(warning + ".");
-            }
-        }
-
-        public static void ClampRenderQueues(List<Renderer> avatarRenderers, int minimumRenderQueue, int maximumRenderQueue)
-        {
-            using(_clampRenderQueuesProfilerMarker.Auto())
-            {
-                foreach(Renderer avatarRenderer in avatarRenderers)
-                {
-                    if(avatarRenderer == null)
-                    {
-                        continue;
-                    }
-
-                    avatarRenderer.GetSharedMaterials(_clampRenderQueuesMaterialsTempList);
-                    foreach(Material avatarSharedMaterial in _clampRenderQueuesMaterialsTempList)
-                    {
-                        if(avatarSharedMaterial == null)
-                        {
-                            continue;
-                        }
-
-                        int renderQueue = avatarSharedMaterial.renderQueue;
-                        if(renderQueue < minimumRenderQueue)
-                        {
-                            avatarSharedMaterial.renderQueue = minimumRenderQueue;
-                        }
-                        else if(renderQueue > maximumRenderQueue)
-                        {
-                            avatarSharedMaterial.renderQueue = maximumRenderQueue;
-                        }
-                    }
-                }
             }
         }
     }

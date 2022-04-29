@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+
 using VRC.Core;
 using VRC.SDKBase.Editor;
 
@@ -17,39 +18,42 @@ public class nanoSDK_FastUploader
         //  EnvConfig.ConfigurePlayerSettings();
 
 
-        List<VRC.SDKBase.VRC_AvatarDescriptor> allavatars = VRC.Tools.FindSceneObjectsOfTypeAll<VRC.SDKBase.VRC_AvatarDescriptor>().ToList();
 
-        var avatars = allavatars.Where(av => av.gameObject.activeInHierarchy).ToArray();
-        var avatar = allavatars[0];
+List<VRC.SDKBase.VRC_AvatarDescriptor> allavatars = VRC.Tools.FindSceneObjectsOfTypeAll<VRC.SDKBase.VRC_AvatarDescriptor>().ToList();
 
-        if (APIUser.CurrentUser.canPublishAvatars)
+var avatars = allavatars.Where(av => av.gameObject.activeInHierarchy).ToArray();
+var avatar = allavatars[0];
+
+if (APIUser.CurrentUser.canPublishAvatars)
+{
+    if (EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now.", "Nice!", "Information for Quest Users"))
+    {
+        UploadNow(avatar.gameObject);
+    }
+    else
+    {
+        if (EditorUtility.DisplayDialog("nanoSDK EasyUpload", "This Method lets " +
+            "you upload anything. but some of the content will be blocked " +
+            "ingame because of VRChat Networking!", "Upload now"))
         {
-            if (EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Avatar: " + "[" + avatar.gameObject.name + "]" + " Will be Uploaded now.", "Nice!", "Information for Quest Users"))
-            {
-                UploadNow(avatar.gameObject);
-            }
-            else
-            {
-                if (EditorUtility.DisplayDialog("nanoSDK EasyUpload", "This Method lets " +
-                    "you upload anything. but some of the content will be blocked " +
-                    "ingame because of VRChat Networking!", "Upload now"))
-                {
-                    UploadNow(avatar.gameObject);
-                }
-            }
-        }
-        else
-        {
-            EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Cant Upload Avatar", "Upload Anyways");
             UploadNow(avatar.gameObject);
         }
-
     }
+}
+else
+{
+    EditorUtility.DisplayDialog("nanoSDK EasyUpload", "Cant Upload Avatar", "Upload Anyways");
+    UploadNow(avatar.gameObject);
+}
 
-    private static void UploadNow(GameObject gameObject)
-    {
-        NanoSDK_MissingScripts.GetAndDelScripts();
-        VRC_SdkBuilder.shouldBuildUnityPackage = false;
-        VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(gameObject);
-    }
+}
+
+private static void UploadNow(GameObject gameObject)
+{
+NanoSDK_MissingScripts.GetAndDelScripts();
+VRC_SdkBuilder.shouldBuildUnityPackage = false;
+VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(gameObject);
+}
+
+
 }

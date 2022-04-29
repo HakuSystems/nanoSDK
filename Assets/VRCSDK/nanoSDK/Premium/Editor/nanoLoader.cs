@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using UnityEngine.SceneManagement;
 
 namespace Assets.VRCSDK.nanoSDK.Premium.Editor
 {
-    public class nanoLoader : EditorWindow
+    public class NanoLoader : EditorWindow
     {
         private static GUIStyle vrcSdkHeader;
         public static AssetBundle _bundle;
@@ -20,7 +21,7 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
         [MenuItem("nanoSDK/nanoLoader", false, 501)]
         public static void OpenSplashScreen()
         {
-            GetWindow<nanoLoader>(true);
+            GetWindow<NanoLoader>(true);
             if (NanoApiManager.IsLoggedInAndVerified()) return;
             NanoApiManager.OpenLoginWindow();
         }
@@ -40,7 +41,7 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
             }
             if (GUILayout.Button("Check for Updates"))
             {
-                NanoApiManager.CheckServerVersion();
+                NanoApiManager.CheckServerVersion("latest");
             }
             if (GUILayout.Button("Reinstall SDK"))
             {
