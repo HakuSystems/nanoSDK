@@ -282,6 +282,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         {
             string message = "";
 #if VRC_SDK_VRCSDK2
+            message = "A VRC_SceneDescriptor or VRC_AvatarDescriptor\nis required to build VRChat SDK Content";
 #elif UDON
             message = "A VRCSceneDescriptor is required to build a World";
 #elif VRC_SDK_VRCSDK3
