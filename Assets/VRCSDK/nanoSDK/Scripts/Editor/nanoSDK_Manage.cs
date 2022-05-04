@@ -28,24 +28,24 @@ namespace nanoSDK
         private static GUIStyle nanoSdkHeader;
         private static readonly int _sizeX = 1200;
         private static readonly int _sizeY = 800;
-        public string currentVersion = "";
+        public string currentVersion;
 
 
-        int toolbarInt = 0;
-        string[] toolbarStrings = { "Login", "Register" };
+        int toolbarInt = 1;
+        string[] toolbarStrings = { "Changelogs", "Settings", "Importables" };
         public nanoSDK_Manage(){}
 
         [MenuItem("nanoSDK/MANAGE SDK", false, 500)]
         public static void OpenManageWindow()
         {
-            EditorUtility.DisplayDialog("nanoSDK", "This is Still indevelopment we will announce it when its finished.", "okay");
-            //GetWindow<nanoSDK_Manage>(true);
+            GetWindow<nanoSDK_Manage>(true);
+            if (NanoApiManager.IsLoggedInAndVerified()) return;
+            NanoApiManager.OpenLoginWindow();
         }
 
         public void OnEnable()
         {
-            titleContent = new GUIContent("Manage");
-
+            titleContent.text = "nanoSDK";
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
 
@@ -59,32 +59,38 @@ namespace nanoSDK
                     },
                 fixedHeight = 180
             };
-
         }
-
+        private void OnLostFocus()
+        {
+            if (NanoApiManager.IsLoggedInAndVerified()) return;
+            NanoApiManager.OpenLoginWindow();
+        }
 
         public void OnGUI()
         {
-            var version = File.ReadAllText("Assets/VRCSDK/version.txt");
-            if (File.Exists(version))
-                currentVersion = version;
+            autoRepaintOnSceneChange = true;
+            GetVERSION();
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(380); //Space bc idk how to allin it to the middle lol moshiro move
             GUILayout.Box("",nanoSdkHeader, GUILayout.Width(500), GUILayout.Height(0));
             GUILayout.EndHorizontal();
 
-            toolbarInt = GUI.Toolbar(new Rect(515, 675, 250, 30), toolbarInt, toolbarStrings);
+            toolbarInt = GUI.Toolbar(new Rect(500, 770, 250, 30), toolbarInt, toolbarStrings);
 
             switch (toolbarInt)
             {
                 case 0:
-                    ShowLogin();
+                    ShowChangelogs();
                     break;
 
                 case 1:
-                    ShowRegister();
+                    ShowSettings();
                     break;
+
+                case 2:
+                    ShowImportables();
+                        break;
             }
 
             #region bottom Section
@@ -118,97 +124,52 @@ namespace nanoSDK
                         NanoLog("Pressed");
                     }
                 }
-
-                if (GUI.Button(new Rect(1000, 775, 100, 20), "Changelogs"))
-                {
-                    NanoLog("Pressed");
-                }
                 GUI.Label(new Rect(1110, 775, 100, 20), "nanoSDK.net");
                 GUI.contentColor = Color.green;
-                GUI.Label(new Rect(530, 775, 200, 20), "Thanks for Choosing nanoSDK!");
+                GUI.Label(new Rect(530, 750, 200, 20), "Thanks for Choosing nanoSDK!");
             }
             catch (NullReferenceException)
             {
-                currentVersion = "Waiting";
+                GetVERSION();
             }
             GUILayout.EndHorizontal();
             #endregion
         }
 
-        private void ShowRegister()
+        private void ShowImportables()
         {
-            #region register
-            EditorGUILayout.BeginVertical();
-            GUI.Label(new Rect(455, 275, 150, 20), "Register an Account");
-            regUserInputText = EditorGUI.TextField(new Rect(455, 300, 350, 20),
-            "Username",
-            regUserInputText);
-
-            regPassInputText = EditorGUI.TextField(new Rect(455, 325, 350, 20),
-            "Password",
-            regPassInputText);
-
-            regEmailInputText = EditorGUI.TextField(new Rect(455, 350, 350, 20),
-            "Email",
-            regEmailInputText);
-
-            if (GUI.Button(new Rect(705, 380, 100, 20), "Register"))
-            {
-                if (string.IsNullOrEmpty(regUserInputText) || string.IsNullOrEmpty(regPassInputText) ||
-                    string.IsNullOrEmpty(regEmailInputText))
-                    EditorUtility.DisplayDialog("nanoSDK Api", "Credentials Cant be Empty!", "Okay");
-                else NanoApiManager.Register(regUserInputText, regPassInputText, regEmailInputText);
-                
-            }
-            EditorGUILayout.EndVertical();
-            #endregion
-        }
-
-        private void ShowLogin()
-        {
-            #region Login
-            EditorGUILayout.BeginVertical();
-            if (NanoApiManager.IsUserLoggedIn())
+            if (NanoApiManager.IsLoggedInAndVerified())
             {
                 InitializeData();
-
-                if (!NanoApiManager.IsLoggedInAndVerified())
-                {
-                    EditorGUILayout.LabelField("License Key");
-                    redeemCode = EditorGUILayout.TextField("Key", redeemCode);
-                    if (GUILayout.Button("Redeem"))
-                    {
-                        if (string.IsNullOrWhiteSpace(redeemCode))
-                            EditorUtility.DisplayDialog("nanoSDK Api", "LicenseKey Cant be Empty!", "Okay");
-                        else NanoApiManager.RedeemLicense(redeemCode);
-                    }
-                }
-
-                if (GUILayout.Button("Logout")) NanoApiManager.Logout();
-
-                EditorGUILayout.EndVertical();
-                return;
             }
+        }
 
-            GUI.Label(new Rect(455, 275, 150, 20), "Login");
-
-            userInputText = EditorGUI.TextField(new Rect(455, 300, 350, 20),
-            "Username",
-            userInputText);
-
-            passInputText = EditorGUI.TextField(new Rect(455, 325, 350, 20),
-            "Password",
-            passInputText);
-
-            if (GUI.Button(new Rect(455, 380, 100, 20), "Login"))
+        private void ShowSettings()
+        {
+            if (NanoApiManager.IsLoggedInAndVerified())
             {
-                if (string.IsNullOrWhiteSpace(userInputText) || string.IsNullOrWhiteSpace(passInputText))
-                    EditorUtility.DisplayDialog("nanoSDK Api", "Credentials Cant be Empty!", "Okay");
-                else NanoApiManager.Login(userInputText, passInputText);
-                
+                InitializeData();
             }
-            EditorGUILayout.EndVertical();
-            #endregion
+        }
+
+        private void ShowChangelogs()
+        {
+            if (NanoApiManager.IsLoggedInAndVerified())
+            {
+                InitializeData();
+                //Read Changelogs from Website - less File size
+            }
+        }
+
+        private void GetVERSION()
+        {
+            //todoo Json - Type + Version
+            if (File.Exists("Assets/VRCSDK/version.txt"))
+            {
+                var version = File.ReadAllText("Assets/VRCSDK/version.txt");
+                currentVersion = version;
+            }
+            Repaint();
         }
 
         private static void NanoLog(string message)
@@ -218,12 +179,24 @@ namespace nanoSDK
         }
         private void InitializeData()
         {
+            //will show when user is logged in
             EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
             EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
             EditorGUILayout.LabelField($"Email:  {NanoApiManager.User.Email}");
             EditorGUILayout.LabelField($"Permission: {NanoApiManager.User.Permission}");
             EditorGUILayout.LabelField($"Verified:  {NanoApiManager.User.IsVerified}");
             EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
+            if (GUI.Button(new Rect(115, 75, 100, 20), "Copy"))
+            {
+
+                string copyContent = $@"
+Username: {NanoApiManager.User.Username}
+Email: {NanoApiManager.User.Email}
+ID: {NanoApiManager.User.ID}
+                    ";
+                EditorGUIUtility.systemCopyBuffer = copyContent;
+            }
+            if (GUI.Button(new Rect(5, 120, 100, 20), "Logout")) NanoApiManager.Logout();
         }
     }
 }

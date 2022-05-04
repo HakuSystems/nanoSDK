@@ -45,7 +45,7 @@ namespace nanoSDK
             User = null;
             NanoApiConfig.Config.AuthKey = null;
             NanoApiConfig.Save();
-            //OpenLoginWindow();
+            OpenLoginWindow();
         }
 
         private static async Task<HttpResponseMessage> MakeApiCall(HttpRequestMessage request)
