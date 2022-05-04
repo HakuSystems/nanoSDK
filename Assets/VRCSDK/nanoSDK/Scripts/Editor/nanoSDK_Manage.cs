@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -25,10 +26,17 @@ namespace nanoSDK
         // License
         private string redeemCode;
 
+        //Window stuff
         private static GUIStyle nanoSdkHeader;
         private static readonly int _sizeX = 1200;
         private static readonly int _sizeY = 800;
         public string currentVersion;
+        public string _webData;
+        private static Vector2 changeLogScroll;
+
+
+
+
 
 
         int toolbarInt = 1;
@@ -157,7 +165,27 @@ namespace nanoSDK
             if (NanoApiManager.IsLoggedInAndVerified())
             {
                 InitializeData();
-                //Read Changelogs from Website - less File size
+                string url = "https://nanosdk.net/download/changelogs/logs.txt";
+                using (var client = new WebClient())
+                {
+                    var webData = client.DownloadString(url);
+                    _webData = webData;
+                }
+
+                GUILayout.BeginHorizontal();
+
+                GUILayout.Space(300); //Moshiro Move
+
+                changeLogScroll = GUILayout.BeginScrollView(changeLogScroll,GUILayout.Height(500), GUILayout.Width(700));
+                GUI.contentColor = Color.green;
+                GUILayout.Label("The lagg is caused by unity, not our fault :)");
+                GUI.contentColor = Color.white;
+                GUILayout.Space(5);
+                GUILayout.TextArea(_webData);
+
+                GUILayout.EndScrollView();
+
+                GUILayout.EndHorizontal();
             }
         }
 
