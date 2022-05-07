@@ -33,7 +33,7 @@ namespace nanoSDK
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
 
-        [MenuItem("nanoSDK/test version check", false, 500)]
+        //[MenuItem("nanoSDK/test version check", false, 500)]
         public static async void CheckServerVersionINTERN()
         {
             var request = new HttpRequestMessage()
