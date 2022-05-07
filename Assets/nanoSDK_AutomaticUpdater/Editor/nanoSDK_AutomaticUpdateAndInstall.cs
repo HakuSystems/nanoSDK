@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.IO;
 using System;
 using UnityEditor;
@@ -9,14 +9,15 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace nanoSDK
 {
     public class NanoSDK_AutomaticUpdateAndInstall : MonoBehaviour
     { //api features in here bc files will be delted when process is being made
         private const string BASE_URL = "https://api.nanosdk.net";
-        private static readonly Uri SdkVersionUri = new Uri(BASE_URL + "/public/sdk/version");
-        public static string SERVERVERSION = null;
+        private static readonly Uri SdkVersionUri = new Uri(BASE_URL + "/public/sdk/version/list");
+        public static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST = null;
         public static string SERVERURL = null;
 
         private static readonly HttpClient HttpClient = new HttpClient();
@@ -32,6 +33,7 @@ namespace nanoSDK
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
 
+        [MenuItem("nanoSDK/test version check", false, 500)]
         public static async void CheckServerVersionINTERN()
         {
             var request = new HttpRequestMessage()
@@ -43,12 +45,17 @@ namespace nanoSDK
             var response = await HttpClient.SendAsync(request); //without AuthKey Sending
 
             string result = await response.Content.ReadAsStringAsync();
-            var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionBaseINTERN<SdkVersionBaseINTERNDATA>>(result);
-            SERVERVERSION = SERVERCHECKproperties.Data.Version;
-            SERVERURL = SERVERCHECKproperties.Data.Url;
-            if (currentVersion != SERVERCHECKproperties.Data.Version)
+            var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionBaseINTERN<List<SdkVersionBaseINTERNDATA>>>(result);
+            SERVERVERSIONLIST = SERVERCHECKproperties.Data;
+            
+            // foreach(SdkVersionBaseINTERNDATA idata in SERVERVERSIONLIST) {
+            //     NanoLog(idata.Version);
+            // }
+
+            if (currentVersion != SERVERVERSIONLIST[0].Version)
             {
-                NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
+                EditorUtility.DisplayDialog("You are not up to date", "dsfsfdsf","sfd");
+                //NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
             }
             else
             {
@@ -63,7 +70,7 @@ namespace nanoSDK
         {
             try
             {
-                await DownloadnanoSDK();
+                // await DownloadnanoSDK();
             }
             catch (Exception ex)
             {
@@ -78,6 +85,7 @@ namespace nanoSDK
             {
                 NanoLog("Cancel");
             }
+            /* #region old Code */
             /*
             NanoLog("Asking for Approval..");
             if (EditorUtility.DisplayDialog("nanoSDK Updater", "Your Version (V" + currentVersion.ToString() + ") is Outdated!" + " do you want to Download and Import the Newest Version?", "Yes", "No"))
@@ -91,14 +99,14 @@ namespace nanoSDK
                 NanoLog("You pressed no.");
             }
             */
+            /* #endregion old code */
         }
 
         public static async Task DeleteAndDownloadAsync()
         {
             await DownloadnanoSDK();
-            #region old Method
-            /*
-            try
+            /* #region old Method */
+            /*try
             {
                 if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "The Old SDK will Be Deleted and the New SDK Will be imported!", "Okay"))
                 {
@@ -161,8 +169,8 @@ namespace nanoSDK
                     Application.OpenURL("https://nanosdk.net/discord");
                 }
             }
-            */
-            #endregion
+            /* #endregion */
+            
         }
 
         private static void FileDownloadProgress(object sender, DownloadProgressChangedEventArgs e)
@@ -227,8 +235,7 @@ namespace nanoSDK
         public enum BranchType
         {
             Release = 0,
-            Beta = 1,
-            PrivateBeta = 2
+            Beta = 1
         }
     }
 
