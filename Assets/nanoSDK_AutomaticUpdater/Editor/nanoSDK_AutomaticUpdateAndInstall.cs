@@ -10,6 +10,7 @@ using Debug = UnityEngine.Debug;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Dynamic;
 
 namespace nanoSDK
 {
@@ -17,14 +18,11 @@ namespace nanoSDK
     { //api features in here bc files will be delted when process is being made
         private const string BASE_URL = "https://api.nanosdk.net";
         private static readonly Uri SdkVersionUri = new Uri(BASE_URL + "/public/sdk/version/list");
-        public static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST = null;
         public static string SERVERURL = null;
-
         private static readonly HttpClient HttpClient = new HttpClient();
-
-        //GetVersion
-        public static string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
-
+        public static string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt").Replace(" ", "").Replace("\n", "");
+        public static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST {get; set;}
+        
 
         //select where to be imported (sdk)
         public static string assetPath = "Assets\\";
@@ -33,26 +31,31 @@ namespace nanoSDK
         //gets VRCSDK Directory Path
         public static string vrcsdkPath = "Assets\\VRCSDK\\";
 
-        //[MenuItem("nanoSDK/test version check", false, 500)]
+        
+        [MenuItem("nanoSDK/test version check", false, 500)]
         public static async void CheckServerVersionINTERN()
         {
+            currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt").Replace(" ", "").Replace("\n", "");
+
             var request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
                 RequestUri = SdkVersionUri
             };
 
-            var response = await HttpClient.SendAsync(request); //without AuthKey Sending
+            using (var response = await HttpClient.SendAsync(request)) {
+                string result = await response.Content.ReadAsStringAsync();
+                var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionBaseINTERN<List<SdkVersionBaseINTERNDATA>>>(result);
+                SERVERVERSIONLIST = SERVERCHECKproperties.Data;
+            } //without AuthKey Sending
 
-            string result = await response.Content.ReadAsStringAsync();
-            var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionBaseINTERN<List<SdkVersionBaseINTERNDATA>>>(result);
-            SERVERVERSIONLIST = SERVERCHECKproperties.Data;
+            
             
             // foreach(SdkVersionBaseINTERNDATA idata in SERVERVERSIONLIST) {
             //     NanoLog(idata.Version);
             // }
-
-            if (currentVersion != SERVERVERSIONLIST[0].Version)
+            Debug.Log($"!{SERVERVERSIONLIST[0].Version}!{currentVersion}!");
+            if (!currentVersion.Equals(SERVERVERSIONLIST[0].Version))
             {
                 EditorUtility.DisplayDialog("You are not up to date", "dsfsfdsf","sfd");
                 //NanoSDK_AutomaticUpdateAndInstall.AutomaticSDKInstaller();
