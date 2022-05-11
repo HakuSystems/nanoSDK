@@ -22,8 +22,9 @@ namespace nanoSDK
 
         public static string CurrentVersion { get; set; } = File.ReadAllText("Assets/VRCSDK/version.txt").Replace(" ", "").Replace("\n", "");
         public static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST {get; set;}
-        
 
+
+        private static string[] fileBlackList = { "Assets\\VRCSDK\\PLUGINS\\VRC.SDK3.Dynamics.Contact.dll" };
         //select where to be imported (sdk)
         public static string assetPath = "Assets\\";
         //Custom name for downloaded unitypackage
@@ -128,7 +129,12 @@ namespace nanoSDK
                     {
                         //gets every file in VRCSDK folder
                         string[] vrcsdkDir = Directory.GetFiles(vrcsdkPath, "*.*");
-
+                        for (int i = 0; i < vrcsdkDir.Length; i++)
+                        {
+                            Debug.Log(vrcsdkDir[i]);
+                        }
+                        Debug.Log(vrcsdkDir.Length);
+                        return;
                         try
                         {
                             //Deletes All Files in VRCSDK folder
@@ -136,6 +142,7 @@ namespace nanoSDK
                             {
                                 foreach (string f in vrcsdkDir)
                                 {
+                                    if (isStringinArray(fileBlackList, f)) continue;
                                     NanoLog($"{f} - Deleted");
                                     File.Delete(f);
                                 }
@@ -180,6 +187,14 @@ namespace nanoSDK
 
         }
 
+        private static bool isStringinArray(string[] array, string str)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].Equals(str)) return true;
+            }
+            return false;
+        }
         private static string GetUrlFromVersion(string version)
         {
             string url = null;
