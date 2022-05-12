@@ -24,13 +24,13 @@ namespace nanoSDK
         public static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST {get; set;}
 
 
-        private static string[] fileBlackList = { "Assets\\VRCSDK\\PLUGINS\\VRC.SDK3.Dynamics.Contact.dll" };
+        private static string[] fileBlackList = { "Assets/VRCSDK/Plugins/VRC.SDK3.Dynamics.Contact.dll" };
         //select where to be imported (sdk)
         public static string assetPath = "Assets\\";
         //Custom name for downloaded unitypackage
         public static string assetName = "unitypackage";
         //gets VRCSDK Directory Path
-        public static string vrcsdkPath = "Assets\\VRCSDK\\";
+        public static string vrcsdkPath = "Assets/VRCSDK/";
 
 
         //[MenuItem("nanoSDK/Update Test", false, 500)]
@@ -59,7 +59,7 @@ namespace nanoSDK
             //Debug.Log($"!{SERVERVERSIONLIST[0].Version}!{CurrentVersion}!");
             if (!CurrentVersion.Equals(SERVERVERSIONLIST[0].Version))
             {
-                await DownloadnanoSDK("latest");
+                DownloadnanoSDK("latest");
             }
             else
             {
@@ -70,7 +70,7 @@ namespace nanoSDK
             }
         }
 
-        public static async Task DownloadnanoSDK(string version)
+        public static async void DownloadnanoSDK(string version)
         {
             if (EditorUtility.DisplayDialog("nanoSDK", "This is Still indevelopment we will announce it when its finished.", "okay"))
             {
@@ -81,7 +81,7 @@ namespace nanoSDK
             if (EditorUtility.DisplayDialog("nanoSDK Updater", "Your Version (V" + CurrentVersion.ToString() + ") is Outdated!" + " do you want to Download and Import the Newest Version?", "Yes", "No"))
             {
                 //starting deletion of old sdk
-                await DeleteAndDownloadAsync("latest");
+                await DeleteAndDownloadAsync("beta");
             }
             else
             {
@@ -107,7 +107,7 @@ namespace nanoSDK
             {
                 string url = GetUrlFromVersion(version);
                 if (url == null) throw new Exception("Invalid version");
-                await w.DownloadFileTaskAsync(new Uri(url), Path.GetTempPath() + "\\" + $"{version}.{assetName}");
+                await w.DownloadFileTaskAsync(new Uri(url), Path.GetTempPath() + $"{version}.{assetName}");
             }
             catch (Exception ex)
             {
@@ -121,57 +121,54 @@ namespace nanoSDK
            
             NanoLog("Download Complete");
             
-            try
-            {
+            try {
+            
                 if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "The Old SDK will Be Deleted and the New SDK Will be imported!", "Okay"))
                 {
-                    try
+
+                    
+                    NanoLog("Getting Files.....");
+                    //gets every file in VRCSDK folder
+                    string[] vrcsdkDir = Directory.GetFiles(vrcsdkPath, "*.*", SearchOption.AllDirectories);
+                    
+                    
+                    Debug.Log("Deleting Files...");
+
+                    //Deletes All Files in VRCSDK folder
+                    await Task.Run(() =>
                     {
-                        //gets every file in VRCSDK folder
-                        string[] vrcsdkDir = Directory.GetFiles(vrcsdkPath, "*.*");
-                        for (int i = 0; i < vrcsdkDir.Length; i++)
+                        foreach (string f in vrcsdkDir)
                         {
-                            Debug.Log(vrcsdkDir[i]);
+                            if (isDLLFile(f)) {
+                                NanoLog("Ignoring Dll file: " + f);
+                                continue;
+                            }
+                            NanoLog($"{f} - Deleted");
+                            //File.Delete(f);
                         }
-                        Debug.Log(vrcsdkDir.Length);
-                        return;
-                        try
-                        {
-                            //Deletes All Files in VRCSDK folder
-                            await Task.Run(() =>
-                            {
-                                foreach (string f in vrcsdkDir)
-                                {
-                                    if (isStringinArray(fileBlackList, f)) continue;
-                                    NanoLog($"{f} - Deleted");
-                                    File.Delete(f);
-                                }
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            EditorUtility.DisplayDialog("Error Deleting VRCSDK", ex.Message, "Okay");
-                        }
-                    }
-                    catch //catch nothing
-                    {
-                    }
+                    });  
                 }
             }
             catch (DirectoryNotFoundException)
             {
                 EditorUtility.DisplayDialog("Error Deleting Files", "Error wihle trying to find VRCSDK Folder.", "Ignore");
             }
-            //Checks if Directory still exists
-            if (Directory.Exists(vrcsdkPath))
+            catch (Exception ex)
             {
-                NanoLog($"{vrcsdkPath} - Deleted");
-                //Delete Folder
-                Directory.Delete(vrcsdkPath, true);
+                EditorUtility.DisplayDialog("Error Deleting VRCSDK", ex.Message, "Okay");
+                return;
             }
-            NanoLog("sffsdfsdfsdfsdfdsf");
+            
+            //Checks if Directory still exists
+            // if (Directory.Exists(vrcsdkPath))
+            // {
+            //     NanoLog($"{vrcsdkPath} - Deleted");
+            //     //Delete Folder
+            //     Directory.Delete(vrcsdkPath, false);
+            // }
             try {
-                Process.Start(Path.GetTempPath() + "\\" + $"{version}.{assetName}");
+                AssetDatabase.Refresh();
+                AssetDatabase.ImportPackage(Path.GetTempPath() +  $"{version}.{assetName}", true);
 
             } catch (Exception ex) {
 
@@ -182,11 +179,14 @@ namespace nanoSDK
                 }
                 return;
             }
-            AssetDatabase.Refresh();
+            
 
 
         }
-
+        private static bool isDLLFile(string path) {
+            if(path.Substring(path.Length - 3).Equals("dll")) return true;
+            return false;
+        }
         private static bool isStringinArray(string[] array, string str)
         {
             for (int i = 0; i < array.Length; i++)
