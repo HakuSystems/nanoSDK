@@ -376,5 +376,9 @@ FodyWeavers.xsd
 /packages.config
 /app.config
 /Assets/save.unity
+/Assets/Scenes
 .idea
 /Assets/Reupload test
+.vscode
+*.sln
+Assets\\VRCSDK\\nanoSDK\\Configs\\currentHWID.txt
