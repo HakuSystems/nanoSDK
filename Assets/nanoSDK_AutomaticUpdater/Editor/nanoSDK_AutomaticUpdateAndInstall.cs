@@ -20,11 +20,9 @@ namespace nanoSDK
         private const string _BASE_URL = "https://api.nanosdk.net"; 
         private static readonly Uri _SdkVersionUri = new Uri(_BASE_URL + "/public/sdk/version/list");
 
-        public static string CurrentVersion { get; set; } = File.ReadAllText("Assets/VRCSDK/version.txt").Replace(" ", "").Replace("\n", "");
+        public static string CurrentVersion { get; set; } = File.ReadAllText("Assets\\VRCSDK\\version.txt").Replace(" ", "").Replace("\n", "");
         public static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST {get; set;}
 
-
-        private static string[] fileBlackList = { "Assets/VRCSDK/Plugins/VRC.SDK3.Dynamics.Contact.dll" };
         //select where to be imported (sdk)
         public static string assetPath = "Assets\\";
         //Custom name for downloaded unitypackage
@@ -107,7 +105,7 @@ namespace nanoSDK
             {
                 string url = GetUrlFromVersion(version);
                 if (url == null) throw new Exception("Invalid version");
-                await w.DownloadFileTaskAsync(new Uri(url), Path.GetTempPath() + $"{version}.{assetName}");
+                await w.DownloadFileTaskAsync(new Uri(url), Path.GetTempPath() + "\\" + $"{version}.{assetName}");
             }
             catch (Exception ex)
             {
@@ -168,7 +166,7 @@ namespace nanoSDK
             // }
             try {
                 AssetDatabase.Refresh();
-                AssetDatabase.ImportPackage(Path.GetTempPath() +  $"{version}.{assetName}", true);
+                AssetDatabase.ImportPackage(Path.GetTempPath() + "\\" + $"{version}.{assetName}", true);
 
             } catch (Exception ex) {
 
