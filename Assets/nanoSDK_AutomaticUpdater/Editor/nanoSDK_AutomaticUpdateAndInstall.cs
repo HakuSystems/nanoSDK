@@ -20,21 +20,22 @@ namespace nanoSDK
         private const string _BASE_URL = "https://api.nanosdk.net"; 
         private static readonly Uri _SdkVersionUri = new Uri(_BASE_URL + "/public/sdk/version/list");
 
-        public static string CurrentVersion { get; set; } = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace(" ", "").Replace("\n", "");
-        public static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST {get; set;}
+        public static string CurrentVersion { get; set; } = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace("\n", "");
+        private static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST;
 
         //select where to be imported (sdk)
-        public static string assetPath = $"Assets{Path.DirectorySeparatorChar}";
+        private static string assetPath = $"Assets{Path.DirectorySeparatorChar}";
         //Custom name for downloaded unitypackage
-        public static string assetName = "unitypackage";
+        private static string assetName = "unitypackage";
         //gets VRCSDK Directory Path
-        public static string vrcsdkPath = $"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}";
+        private static string vrcsdkPath = $"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}";
 
 
         //[MenuItem("nanoSDK/Update Test", false, 500)]
         public static async void CheckServerVersionINTERN()
         {
             CurrentVersion = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace(" ", "").Replace("\n", "");
+            CurrentVersion = CurrentVersion.Substring(0, CurrentVersion.IndexOf(" ") - 1);
 
             var request = new HttpRequestMessage()
             {
@@ -188,6 +189,22 @@ namespace nanoSDK
                 if(version.Equals(SERVERVERSIONLIST[i].Version)) url = SERVERVERSIONLIST[i].Url;
             }
             return url;
+        }
+        public static async Task<List<SdkVersionBaseINTERNDATA>> GetVersionList() {
+            
+            var request = new HttpRequestMessage()
+            {
+                Method = HttpMethod.Get,
+                RequestUri = _SdkVersionUri
+            };
+
+            using (var response = await HttpClient.SendAsync(request))
+            {
+                string result = await response.Content.ReadAsStringAsync();
+                var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionBaseINTERN<List<SdkVersionBaseINTERNDATA>>>(result);
+                return SERVERCHECKproperties.Data;
+            } //without AuthKey Sending
+
         }
 
         private static void FileDownloadProgress(object sender, DownloadProgressChangedEventArgs e)

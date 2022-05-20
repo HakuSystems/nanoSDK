@@ -32,6 +32,7 @@ namespace nanoSDK
         private static readonly int _sizeX = 1200;
         private static readonly int _sizeY = 800;
         public string currentVersion;
+        public List<SdkVersionBaseINTERNDATA> versionList;
         public string _webData;
         private static Vector2 changeLogScroll;
 
@@ -59,7 +60,7 @@ namespace nanoSDK
             NanoApiManager.OpenLoginWindow();
         }
 
-        public void OnEnable()
+        public async void OnEnable()
         {
             titleContent.text = "nanoSDK";
             maxSize = new Vector2(_sizeX, _sizeY);
@@ -89,6 +90,8 @@ namespace nanoSDK
                     },
                 fixedHeight = 180
             };
+            await GetVERSIONData();
+            
         }
         private void OnLostFocus()
         {
@@ -96,10 +99,11 @@ namespace nanoSDK
             NanoApiManager.OpenLoginWindow();
         }
 
-        public void OnGUI()
+        public async void OnGUI()
         {
             autoRepaintOnSceneChange = true;
-            GetVERSION();
+
+           
 
             GUILayout.BeginHorizontal();
             GUILayout.Space(380); //Space bc idk how to allin it to the middle lol moshiro move
@@ -161,7 +165,8 @@ namespace nanoSDK
             }
             catch (NullReferenceException)
             {
-                GetVERSION();
+                await GetVERSIONData();
+                Repaint();
             }
             GUILayout.EndHorizontal();
             #endregion
@@ -443,15 +448,23 @@ namespace nanoSDK
             }
         }
         #endregion
-        private void GetVERSION()
+        private async Task GetVERSIONData()
         {
             //todoo Json - Type + Version - and mix with autoupdater/versionSelector
-            if (File.Exists("Assets/VRCSDK/version.txt"))
+            if (File.Exists($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt"))
             {
-                var version = File.ReadAllText("Assets/VRCSDK/version.txt");
+                var version = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt");
                 currentVersion = version;
             }
-            Repaint();
+
+            //API Get Version List
+            versionList = await NanoSDK_AutomaticUpdateAndInstall.GetVersionList();
+
+            //      versionList[0] ist die aktuellste Release Version           "latest"
+            //      versionList[versionList.Count - 1] ist die Beta Version     "beta"
+
+            //      Kannst mich anschreiben wenn du das Feature zusammen programmieren willst, erhol dich gut :)
+
         }
         private static void NanoLog(string message)
         {
