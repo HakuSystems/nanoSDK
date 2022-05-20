@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -34,13 +35,20 @@ namespace nanoSDK
         public string _webData;
         private static Vector2 changeLogScroll;
 
-
-
-
-
-
+        //Switch things
         int toolbarInt = 1;
         string[] toolbarStrings = { "Changelogs", "Settings", "Importables" };
+        private bool runChangelog;
+
+        //Migrated from settings
+        public static string projectConfigPath = "Assets/VRCSDK/nanoSDK/Configs/";
+        private readonly string backgroundConfig = "BackgroundVideo.txt";
+        private static readonly string projectDownloadPath = "Assets/VRCSDK/nanoSDK/Assets/";
+
+        //Migrated from Importables
+        private static readonly Dictionary<string, string> assets = new Dictionary<string, string>();
+        private static Vector2 _importLogScroll;
+
         public nanoSDK_Manage(){}
 
         [MenuItem("nanoSDK/MANAGE SDK", false, 500)]
@@ -56,6 +64,20 @@ namespace nanoSDK
             titleContent.text = "nanoSDK";
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
+
+            if (!EditorPrefs.HasKey("nanoSDK_discordRPC"))
+            {
+                EditorPrefs.SetBool("nanoSDK_discordRPC", true);
+            }
+
+            if (!File.Exists(projectConfigPath + backgroundConfig) || !EditorPrefs.HasKey("nanoSDK_background"))
+            {
+                EditorPrefs.SetBool("nanoSDK_background", false);
+                File.WriteAllText(projectConfigPath + backgroundConfig, "False");
+            }
+
+            NanoSDK_ImportManager.CheckForConfigUpdate();
+            LoadJson();
 
             nanoSdkHeader = new GUIStyle
             {
@@ -112,11 +134,12 @@ namespace nanoSDK
                         NanoLog("Pressed");
                     }
                 }
+
                 GUI.Label(new Rect(10, 775, 150, 20), currentVersion);
 
                 if (NanoApiManager.User.IsPremium)
                 {
-                    if (GUI.Button(new Rect(155, 775, 100, 20), "Manage Premium"))
+                    if (GUI.Button(new Rect(155, 775, 110, 20), "Manage Premium"))
                     {
                         NanoLog("Pressed");
                     }
@@ -143,42 +166,262 @@ namespace nanoSDK
             GUILayout.EndHorizontal();
             #endregion
         }
-
+        #region Importables
         private void ShowImportables()
         {
             if (NanoApiManager.IsLoggedInAndVerified())
             {
                 InitializeData();
+
+                GUILayout.Space(50);
+                //Update assets
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Update assets (config)"))
+                {
+                    NanoSDK_ImportManager.UpdateConfig();
+                }
+                GUILayout.EndHorizontal();
+
+                //Imports V!V
+
+                _importLogScroll = GUILayout.BeginScrollView(_importLogScroll, GUILayout.Width(_sizeX));
+                foreach (var asset in assets)
+                {
+                    GUILayout.BeginHorizontal();
+                    if (asset.Value == "")
+                    {
+                        GUILayout.FlexibleSpace();
+                        GUILayout.Label(asset.Key);
+                        GUILayout.FlexibleSpace();
+                    }
+                    else
+                    {
+                        if (GUILayout.Button(
+                            (File.Exists(NanoSDK_Settings.GetAssetPath() + asset.Value) ? "Import" : "Download") +
+                            " " + asset.Key))
+                        {
+                            NanoSDK_ImportManager.DownloadAndImportAssetFromServer(asset.Value);
+                        }
+
+                        if (GUILayout.Button("Del", GUILayout.Width(40)))
+                        {
+                            NanoSDK_ImportManager.DeleteAsset(asset.Value);
+                        }
+                    }
+                    GUILayout.EndHorizontal();
+                }
+
+                GUILayout.EndScrollView();
+
+
             }
         }
 
+        public static void LoadJson()
+        {
+            assets.Clear();
+
+            dynamic configJson =
+                JObject.Parse(File.ReadAllText(NanoSDK_Settings.projectConfigPath + NanoSDK_ImportManager.configName));
+
+            Debug.Log("Server Asset Url is: " + configJson["config"]["serverUrl"]);
+            NanoSDK_ImportManager.serverUrl = configJson["config"]["serverUrl"].ToString();
+
+            foreach (JProperty x in configJson["assets"])
+            {
+                var value = x.Value;
+
+                var buttonName = "";
+                var file = "";
+
+                foreach (var jToken in value)
+                {
+                    var y = (JProperty)jToken;
+                    switch (y.Name)
+                    {
+                        case "name":
+                            buttonName = y.Value.ToString();
+                            break;
+                        case "file":
+                            file = y.Value.ToString();
+                            break;
+                    }
+                }
+                assets[buttonName] = file;
+            }
+        }
+
+        public static string GetAssetPath()
+        {
+            if (EditorPrefs.GetBool("nanoSDK_onlyProject", false))
+            {
+                return projectDownloadPath;
+            }
+
+            var assetPath = EditorPrefs.GetString("nanoSDK_customAssetPath", "%appdata%/nanoSDK/")
+                .Replace("%appdata%", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData))
+                .Replace("/", "\\");
+
+            if (!assetPath.EndsWith("\\"))
+            {
+                assetPath += "\\";
+            }
+
+            Directory.CreateDirectory(assetPath);
+            return assetPath;
+        }
+
+
+        #endregion
+        #region Settings
         private void ShowSettings()
         {
             if (NanoApiManager.IsLoggedInAndVerified())
             {
                 InitializeData();
+
+                GUI.Label(new Rect(580, 155, 100, 20), "Overall:");
+                GUILayout.BeginHorizontal();
+                var isDiscordEnabled = EditorPrefs.GetBool("nanoSDK_discordRPC", true);
+                var enableDiscord = EditorGUI.ToggleLeft(new Rect(560, 175, 100, 20), "Discord RPC", isDiscordEnabled);
+                if (enableDiscord != isDiscordEnabled)
+                {
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", enableDiscord);
+                    EnableCloseMessage();
+                }
+                //Hide Console logs
+                GUILayout.EndHorizontal();
+                GUILayout.Space(4);
+                GUILayout.BeginHorizontal();
+                var isHiddenConsole = EditorPrefs.GetBool("nanoSDK_HideConsole");
+                var enableConsoleHide = EditorGUI.ToggleLeft(new Rect(560, 195, 200, 20), "Hide Console Errors", isHiddenConsole);
+                if (enableConsoleHide == true)
+                {
+                    EditorPrefs.SetBool("nanoSDK_HideConsole", true);
+                    Debug.ClearDeveloperConsole();
+                    Debug.unityLogger.logEnabled = false;
+                }
+                else if (enableConsoleHide == false)
+                {
+                    EditorPrefs.SetBool("nanoSDK_HideConsole", false);
+                    Debug.ClearDeveloperConsole();
+                    Debug.unityLogger.logEnabled = true;
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(4);
+                GUI.Label(new Rect(580, 215, 200, 20), "Upload panel:");
+                GUILayout.BeginHorizontal();
+                var isBackgroundEnabled = EditorPrefs.GetBool("nanoSDK_background", false);
+                var enableBackground = EditorGUI.ToggleLeft(new Rect(560, 235, 200, 20), "Custom background", isBackgroundEnabled);
+                if (enableBackground != isBackgroundEnabled)
+                {
+                    EditorPrefs.SetBool("nanoSDK_background", enableBackground);
+                    File.WriteAllText(projectConfigPath + backgroundConfig, enableBackground.ToString());
+                }
+
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(4);
+                GUI.Label(new Rect(580, 255, 200, 20),"Import panel:");
+                GUILayout.BeginHorizontal();
+                var isOnlyProjectEnabled = EditorPrefs.GetBool("nanoSDK_onlyProject", false);
+                var enableOnlyProject = EditorGUI.ToggleLeft(new Rect(560, 275, 200, 20), "Save files only in project", isOnlyProjectEnabled);
+                if (enableOnlyProject != isOnlyProjectEnabled)
+                {
+                    EditorPrefs.SetBool("nanoSDK_onlyProject", enableOnlyProject);
+                }
+
+                GUILayout.EndHorizontal();
+
+                GUILayout.Space(4);
+                GUI.Label(new Rect(560, 295, 200, 20), "Asset path:");
+                GUILayout.BeginHorizontal();
+                var customAssetPath = EditorGUI.TextField(new Rect(560, 315, 200, 20), "",
+                    EditorPrefs.GetString("nanoSDK_customAssetPath", "%appdata%/nanoSDK/"));
+                if (GUI.Button(new Rect(560, 340, 60, 20), "Choose"))
+                {
+                    var path = EditorUtility.OpenFolderPanel("Asset download folder",
+                        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "nanoSDK");
+                    if (path != "")
+                    {
+                        Debug.Log(path);
+                        customAssetPath = path;
+                    }
+                }
+
+                if (GUI.Button(new Rect(700, 340, 60, 20), "Reset"))
+                {
+                    customAssetPath = "%appdata%/nanoSDK/";
+                }
+
+                if (EditorPrefs.GetString("nanoSDK_customAssetPath", "%appdata%/nanoSDK/") != customAssetPath)
+                {
+                    EditorPrefs.SetString("nanoSDK_customAssetPath", customAssetPath);
+                }
+                GUILayout.EndHorizontal();
+
+
             }
         }
 
+        public static void EnableCloseMessage()
+        {
+            if (EditorPrefs.GetBool("nanoSDK_discordRPC"))
+            {
+                //Debug.Log("ON");
+                if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
+                {
+                    //Debug.Log("set to on");
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", true);
+                    RealCloseProgram();
+                }
+                else
+                {
+                    //Debug.Log("set to off");
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", false);
+                }
+            }
+            else
+            {
+                //Debug.Log("OFF");
+                if (EditorUtility.DisplayDialog("Discord RPC Restart", "To change Discord RPC you must restart unity  WARNING! Make sure you saved everything.", "Close Unity", "Cancel"))
+                {
+                    //Debug.Log("set to off");
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", false);
+                    RealCloseProgram();
+                }
+                else
+                {
+                    //Debug.Log("set to on");
+                    EditorPrefs.SetBool("nanoSDK_discordRPC", true);
+                }
+            }
+        }
+        private static void RealCloseProgram()
+        {
+            NanoLog("Closing Unity");
+            EditorApplication.Exit(0);
+        }
+
+        #endregion
+
+        #region changelogs
         private void ShowChangelogs()
         {
             if (NanoApiManager.IsLoggedInAndVerified())
             {
                 InitializeData();
-                string url = "https://nanosdk.net/download/changelogs/logs.txt";
-                using (var client = new WebClient())
+                if (!runChangelog)
                 {
-                    var webData = client.DownloadString(url);
-                    _webData = webData;
+                    ReadChangelogs();
+                    runChangelog = true;
                 }
 
                 GUILayout.BeginHorizontal();
-
                 GUILayout.Space(300); //Moshiro Move
 
                 changeLogScroll = GUILayout.BeginScrollView(changeLogScroll,GUILayout.Height(500), GUILayout.Width(700));
-                GUI.contentColor = Color.green;
-                GUILayout.Label("The lagg is caused by unity, not our fault :)");
                 GUI.contentColor = Color.white;
                 GUILayout.Space(5);
                 GUILayout.TextArea(_webData);
@@ -189,9 +432,20 @@ namespace nanoSDK
             }
         }
 
+        private void ReadChangelogs()
+        {
+            NanoLog("Getting Changelogs!");
+            string url = "https://nanosdk.net/download/changelogs/logs.txt";
+            using (var client = new WebClient())
+            {
+                var webData = client.DownloadString(url);
+                _webData = webData;
+            }
+        }
+        #endregion
         private void GetVERSION()
         {
-            //todoo Json - Type + Version
+            //todoo Json - Type + Version - and mix with autoupdater/versionSelector
             if (File.Exists("Assets/VRCSDK/version.txt"))
             {
                 var version = File.ReadAllText("Assets/VRCSDK/version.txt");
@@ -199,7 +453,6 @@ namespace nanoSDK
             }
             Repaint();
         }
-
         private static void NanoLog(string message)
         {
             //Our Logger
