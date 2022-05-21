@@ -145,14 +145,13 @@ namespace nanoSDK
 
                 if (NanoApiManager.User.IsPremium)
                 {
-                    if (!EditorGUI.DropdownButton(new Rect(155, 775, 120, 20), new GUIContent("Manage Premium", "Select What window will be opend"), FocusType.Passive))
+                    if (EditorGUI.DropdownButton(new Rect(155, 775, 120, 20), new GUIContent("Manage Premium", "Select What window will be Shown"), FocusType.Passive))
                     {
-                        return;
+                        GenericMenu menu = new GenericMenu();
+                        menu.AddItem(new GUIContent("EasySearch"), false, HandlePremiumItemClicked, 1);
+                        menu.AddItem(new GUIContent("nanoLoader"), false, HandlePremiumItemClicked, 2);
+                        menu.DropDown(new Rect(155, 775, 120, 20));
                     }
-                    GenericMenu menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("EasySearch"), false, HandlePremiumItemClicked, 1);
-                    menu.AddItem(new GUIContent("nanoLoader"), false, HandlePremiumItemClicked, 2);
-                    menu.DropDown(new Rect(155, 775, 120, 20));
                 }
                 else
                 {
@@ -168,6 +167,7 @@ namespace nanoSDK
                 GUI.Label(new Rect(1110, 775, 100, 20), "nanoSDK.net");
                 GUI.contentColor = Color.green;
                 GUI.Label(new Rect(530, 750, 200, 20), "Thanks for Choosing nanoSDK!");
+
             }
             catch (NullReferenceException)
             {
