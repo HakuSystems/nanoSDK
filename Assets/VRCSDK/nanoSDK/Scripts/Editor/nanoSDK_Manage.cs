@@ -155,13 +155,19 @@ namespace nanoSDK
                 }
                 else
                 {
-                    if (GUI.Button(new Rect(155, 775, 100, 20), "Premium"))
+                    if (GUI.Button(new Rect(155, 775, 120, 20), new GUIContent("Purchase Premium", "opens your browser!")))
                     {
-                        NanoLog("Pressed");
+                        string patreonUrl = "https://www.patreon.com/nanoSDK";
+                        Application.OpenURL(patreonUrl);
                     }
-                    if (GUI.Button(new Rect(250, 775, 20, 20), "?"))
+                    if (GUI.Button(new Rect(270, 775, 20, 20), new GUIContent("?", "if you would like to support us with our efforts to make nanoSDK the best it can be, you can Purchase Premium")))
                     {
-                        NanoLog("Pressed");
+                        if (EditorUtility.DisplayDialog("Premium",
+                            "nanoSDK Premium is billed Monthly and gives you more Features(read more in our discord server)",
+                            "Join Discord Server", "Cancel"))
+                        {
+                            Application.OpenURL("https://nanosdk.net/discord");
+                        }
                     }
                 }
                 GUI.Label(new Rect(1110, 775, 100, 20), "nanoSDK.net");
