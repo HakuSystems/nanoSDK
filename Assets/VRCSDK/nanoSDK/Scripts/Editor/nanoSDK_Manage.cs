@@ -90,6 +90,7 @@ namespace nanoSDK
                     },
                 fixedHeight = 110
             };
+            
             await GetVERSIONData();
             
         }
@@ -144,10 +145,14 @@ namespace nanoSDK
 
                 if (NanoApiManager.User.IsPremium)
                 {
-                    if (GUI.Button(new Rect(155, 775, 110, 20), "Manage Premium"))
+                    if (!EditorGUI.DropdownButton(new Rect(155, 775, 120, 20), new GUIContent("Manage Premium", "Select What window will be opend"), FocusType.Passive))
                     {
-                        NanoLog("Pressed");
+                        return;
                     }
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddItem(new GUIContent("EasySearch"), false, HandlePremiumItemClicked, 1);
+                    menu.AddItem(new GUIContent("nanoLoader"), false, HandlePremiumItemClicked, 2);
+                    menu.DropDown(new Rect(155, 775, 120, 20));
                 }
                 else
                 {
@@ -200,6 +205,20 @@ namespace nanoSDK
             GUILayout.Space(4);
             GUILayout.Space(2);
             */
+        }
+        void HandlePremiumItemClicked(object item)
+        {
+            switch (item)
+            {
+                case 1: //EasySearch
+                    Premium.NanoSDK_EasySearch.OpenSplashScreen();
+                        break;
+                case 2: //nanoLoader
+                    Premium.NanoLoader.OpenSplashScreen();
+                        break;
+                default:
+                    break;
+            }
         }
         #region Importables
         private void ShowImportables()
@@ -518,6 +537,7 @@ Email: {NanoApiManager.User.Email}
 ID: {NanoApiManager.User.ID}
                     ";
                 EditorGUIUtility.systemCopyBuffer = copyContent;
+                NanoLog("Copyied!");
             }
             if (GUI.Button(new Rect(5, 120, 100, 20), "Logout")) NanoApiManager.Logout();
 

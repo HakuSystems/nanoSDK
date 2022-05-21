@@ -8,7 +8,6 @@ using UnityEngine.Networking;
 using VRC.Core;
 using nanoSDK;
 using System.Diagnostics;
-using Assets.VRCSDK.nanoSDK.Premium.Editor;
 
 public partial class VRCSdkControlPanel : EditorWindow
 {
@@ -663,7 +662,7 @@ public partial class VRCSdkControlPanel : EditorWindow
                 {
                     if (EditorUtility.DisplayDialog("nanoSDK", "you can drag and drop the file into nanoLoader. do you want to open nanoLoader?", "Open", "Cancel"))
                     {
-                        GetWindow<NanoLoader>(true);
+                        GetWindow<nanoSDK.Premium.NanoLoader>(true);
 
                     }
                 }

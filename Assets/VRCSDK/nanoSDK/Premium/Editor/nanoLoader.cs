@@ -10,7 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Assets.VRCSDK.nanoSDK.Premium.Editor
+namespace nanoSDK.Premium
 {
     public class NanoLoader : EditorWindow
     {
@@ -18,7 +18,7 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
         public static AssetBundle _bundle;
         public static GameObject _object;
 
-        [MenuItem("nanoSDK/nanoLoader", false, 501)]
+        //[MenuItem("nanoSDK/nanoLoader", false, 501)]
         public static void OpenSplashScreen()
         {
             GetWindow<NanoLoader>(true);
@@ -31,14 +31,6 @@ namespace Assets.VRCSDK.nanoSDK.Premium.Editor
             GUILayout.Space(4);
             GUI.backgroundColor = Color.gray;
             GUILayout.BeginHorizontal();
-            if (!NanoApiManager.User.IsPremium)
-            {
-                Close();
-                if (EditorUtility.DisplayDialog("nanoSDK Premium", "This Feature is only for Premium user", "Buy Premium"))
-                {
-                    Process.Start("https://www.patreon.com/nanoSDK");
-                }
-            }
             if (GUILayout.Button("Check for Updates"))
             {
                 NanoApiManager.CheckServerVersion("latest");
