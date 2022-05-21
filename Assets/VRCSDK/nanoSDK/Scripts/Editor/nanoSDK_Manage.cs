@@ -52,7 +52,7 @@ namespace nanoSDK
 
         public nanoSDK_Manage(){}
 
-        [MenuItem("nanoSDK/MANAGE SDK", false, 500)]
+        [MenuItem("nanoSDK/Manage", false, 100)]
         public static void OpenManageWindow()
         {
             GetWindow<nanoSDK_Manage>(true);
@@ -88,7 +88,7 @@ namespace nanoSDK
                        background = Resources.Load("nanoSDKLogo") as Texture2D,
                        textColor = Color.white
                     },
-                fixedHeight = 180
+                fixedHeight = 110
             };
             await GetVERSIONData();
             
@@ -101,15 +101,15 @@ namespace nanoSDK
 
         public async void OnGUI()
         {
-            autoRepaintOnSceneChange = true;
-
-           
-
+            if (NanoApiManager.IsLoggedInAndVerified())
+            {
+                InitializeData();
+            }
             GUILayout.BeginHorizontal();
-            GUILayout.Space(380); //Space bc idk how to allin it to the middle lol moshiro move
-            GUILayout.Box("",nanoSdkHeader, GUILayout.Width(500), GUILayout.Height(0));
+            GUI.Box(new Rect(500, 70, 300, 0), "", nanoSdkHeader);
             GUILayout.EndHorizontal();
 
+            GUILayout.BeginVertical();
             toolbarInt = GUI.Toolbar(new Rect(500, 770, 250, 30), toolbarInt, toolbarStrings);
 
             switch (toolbarInt)
@@ -124,8 +124,9 @@ namespace nanoSDK
 
                 case 2:
                     ShowImportables();
-                        break;
+                    break;
             }
+            GUILayout.EndVertical();
 
             #region bottom Section
             GUILayout.BeginHorizontal();
@@ -170,14 +171,41 @@ namespace nanoSDK
             }
             GUILayout.EndHorizontal();
             #endregion
+
+            /*
+            GUILayout.Space(4);
+            GUILayout.BeginHorizontal();
+            GUI.backgroundColor = Color.gray;
+            if (GUILayout.Button("Check for Updates"))
+            {
+                NanoApiManager.CheckServerVersion("latest");
+            }
+            if (GUILayout.Button("Reinstall SDK"))
+            {
+                await NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("nanoSDK Discord"))
+            {
+                Application.OpenURL("https://nanosdk.net/discord");
+            }
+
+            if (GUILayout.Button("nanoSDK Website"))
+            {
+                Application.OpenURL("https://nanoSDK.net/");
+            }
+            GUI.backgroundColor = Color.white;
+            GUILayout.EndHorizontal();
+            GUILayout.Space(4);
+            GUILayout.Space(2);
+            */
         }
         #region Importables
         private void ShowImportables()
         {
             if (NanoApiManager.IsLoggedInAndVerified())
             {
-                InitializeData();
-
                 GUILayout.Space(50);
                 //Update assets
                 GUILayout.BeginHorizontal();
@@ -202,7 +230,7 @@ namespace nanoSDK
                     else
                     {
                         if (GUILayout.Button(
-                            (File.Exists(NanoSDK_Settings.GetAssetPath() + asset.Value) ? "Import" : "Download") +
+                            (File.Exists(GetAssetPath() + asset.Value) ? "Import" : "Download") +
                             " " + asset.Key))
                         {
                             NanoSDK_ImportManager.DownloadAndImportAssetFromServer(asset.Value);
@@ -227,9 +255,9 @@ namespace nanoSDK
             assets.Clear();
 
             dynamic configJson =
-                JObject.Parse(File.ReadAllText(NanoSDK_Settings.projectConfigPath + NanoSDK_ImportManager.configName));
+                JObject.Parse(File.ReadAllText(projectConfigPath + NanoSDK_ImportManager.configName));
 
-            Debug.Log("Server Asset Url is: " + configJson["config"]["serverUrl"]);
+            //Debug.Log("Server Asset Url is: " + configJson["config"]["serverUrl"]);
             NanoSDK_ImportManager.serverUrl = configJson["config"]["serverUrl"].ToString();
 
             foreach (JProperty x in configJson["assets"])
@@ -283,7 +311,7 @@ namespace nanoSDK
         {
             if (NanoApiManager.IsLoggedInAndVerified())
             {
-                InitializeData();
+                
 
                 GUI.Label(new Rect(580, 155, 100, 20), "Overall:");
                 GUILayout.BeginHorizontal();
@@ -416,13 +444,13 @@ namespace nanoSDK
         {
             if (NanoApiManager.IsLoggedInAndVerified())
             {
-                InitializeData();
+
+                
                 if (!runChangelog)
                 {
                     ReadChangelogs();
                     runChangelog = true;
                 }
-
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(300); //Moshiro Move
 
@@ -439,7 +467,7 @@ namespace nanoSDK
 
         private void ReadChangelogs()
         {
-            NanoLog("Getting Changelogs!");
+            NanoLog("Loaded Changelogs!");
             string url = "https://nanosdk.net/download/changelogs/logs.txt";
             using (var client = new WebClient())
             {
@@ -473,6 +501,7 @@ namespace nanoSDK
         }
         private void InitializeData()
         {
+            GUILayout.BeginVertical();
             //will show when user is logged in
             EditorGUILayout.LabelField($"ID:  {NanoApiManager.User.ID}");
             EditorGUILayout.LabelField($"Logged in as:  {NanoApiManager.User.Username}");
@@ -491,6 +520,8 @@ ID: {NanoApiManager.User.ID}
                 EditorGUIUtility.systemCopyBuffer = copyContent;
             }
             if (GUI.Button(new Rect(5, 120, 100, 20), "Logout")) NanoApiManager.Logout();
+
+            GUILayout.EndVertical();
         }
     }
 }

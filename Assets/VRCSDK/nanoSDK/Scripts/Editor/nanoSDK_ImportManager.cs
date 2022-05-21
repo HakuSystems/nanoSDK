@@ -15,7 +15,7 @@ namespace nanoSDK
 
         public static void DownloadAndImportAssetFromServer(string assetName)
         {
-            if (File.Exists(NanoSDK_Settings.GetAssetPath() + assetName))
+            if (File.Exists(nanoSDK_Manage.GetAssetPath() + assetName))
             {
                 NanoLog(assetName + " exists. Importing it..");
                 ImportDownloadedAsset(assetName);
@@ -35,12 +35,12 @@ namespace nanoSDK
             w.DownloadFileCompleted += FileDownloadCompleted;
             w.DownloadProgressChanged += FileDownloadProgress;
             string url = serverUrl + assetName;
-            w.DownloadFileAsync(new Uri(url), NanoSDK_Settings.GetAssetPath() + assetName);
+            w.DownloadFileAsync(new Uri(url), nanoSDK_Manage.GetAssetPath() + assetName);
         }
 
         public static void DeleteAsset(string assetName)
         {
-            File.Delete(NanoSDK_Settings.GetAssetPath() + assetName);
+            File.Delete(nanoSDK_Manage.GetAssetPath() + assetName);
         }
 
         public static void UpdateConfig()
@@ -50,7 +50,7 @@ namespace nanoSDK
             w.DownloadFileCompleted += ConfigDownloadCompleted;
             w.DownloadProgressChanged += FileDownloadProgress;
             string url = internalServerUrl + configName;
-            w.DownloadFileAsync(new Uri(url), NanoSDK_Settings.projectConfigPath + "update_" + configName);
+            w.DownloadFileAsync(new Uri(url), nanoSDK_Manage.projectConfigPath + "update_" + configName);
         }
 
         private static void ConfigDownloadCompleted(object sender, AsyncCompletedEventArgs e)
@@ -58,10 +58,10 @@ namespace nanoSDK
             if (e.Error == null)
             {
                 //var updateFile = File.ReadAllText(nanoSDK_Settings.projectConfigPath + "update_" + configName);
-                File.Delete(NanoSDK_Settings.projectConfigPath + configName);
-                File.Move(NanoSDK_Settings.projectConfigPath + "update_" + configName,
-                    NanoSDK_Settings.projectConfigPath + configName);
-                NanoSDK_ImportPanel.LoadJson();
+                File.Delete(nanoSDK_Manage.projectConfigPath + configName);
+                File.Move(nanoSDK_Manage.projectConfigPath + "update_" + configName,
+                    nanoSDK_Manage.projectConfigPath + configName);
+                nanoSDK_Manage.LoadJson();
 
                 EditorPrefs.SetInt("nanoSDK_configImportLastUpdated", (int) DateTimeOffset.UtcNow.ToUnixTimeSeconds());
                 NanoLog("Import Config has been updated!");
@@ -112,7 +112,7 @@ namespace nanoSDK
 
                 if (currentTime - lastUpdated < 3600)
                 {
-                    Debug.Log("Not updating config: " + (currentTime - lastUpdated));
+                    NanoLog("Not updating config due to much request, Time in seconds before last request: " + (currentTime - lastUpdated));
                     return;
                 }
             }
@@ -127,7 +127,7 @@ namespace nanoSDK
 
         public static void ImportDownloadedAsset(string assetName)
         {
-            AssetDatabase.ImportPackage(NanoSDK_Settings.GetAssetPath() + assetName, true);
+            AssetDatabase.ImportPackage(nanoSDK_Manage.GetAssetPath() + assetName, true);
         }
     }
 }
