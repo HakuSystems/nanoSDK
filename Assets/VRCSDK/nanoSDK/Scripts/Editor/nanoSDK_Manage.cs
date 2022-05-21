@@ -106,7 +106,7 @@ namespace nanoSDK
                 InitializeData();
             }
             GUILayout.BeginHorizontal();
-            GUI.Box(new Rect(500, 70, 300, 0), "", nanoSdkHeader);
+            GUI.Box(new Rect(920, -20, 300, 0), "", nanoSdkHeader);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginVertical();
