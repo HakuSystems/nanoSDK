@@ -133,12 +133,13 @@ namespace nanoSDK
             GUILayout.BeginHorizontal();
             try
             {
-                if (GUI.Button(new Rect(10, 755, 100, 20), "Switch Version"))
+                if (EditorGUI.DropdownButton(new Rect(10, 755, 105, 20), new GUIContent("Switch Version", "Want to Downgrade?"), FocusType.Passive))
                 {
-                    if (NanoApiManager.IsLoggedInAndVerified())
-                    {
-                        NanoLog("Pressed");
-                    }
+                    //Version selctor mit foreach loop maybe (todoo)
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddItem(new GUIContent("111111"), false, HandleVersionItemClicked, 1);
+                    menu.AddItem(new GUIContent("222222"), false, HandleVersionItemClicked, 2);
+                    menu.DropDown(new Rect(10, 755, 105, 20));
                 }
 
                 GUI.Label(new Rect(10, 775, 150, 20), currentVersion);
@@ -183,7 +184,7 @@ namespace nanoSDK
             GUILayout.EndHorizontal();
             #endregion
 
-            /*
+            /* save for wann auch immer
             GUILayout.Space(4);
             GUILayout.BeginHorizontal();
             GUI.backgroundColor = Color.gray;
@@ -218,13 +219,17 @@ namespace nanoSDK
             {
                 case 1: //EasySearch
                     Premium.NanoSDK_EasySearch.OpenSplashScreen();
-                        break;
+                    break;
                 case 2: //nanoLoader
                     Premium.NanoLoader.OpenSplashScreen();
-                        break;
+                    break;
                 default:
                     break;
             }
+        }
+        void HandleVersionItemClicked(object item)
+        {
+            
         }
         #region Importables
         private void ShowImportables()
