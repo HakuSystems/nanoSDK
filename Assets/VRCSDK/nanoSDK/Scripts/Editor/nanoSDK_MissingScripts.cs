@@ -13,6 +13,19 @@ namespace nanoSDK
         [MenuItem("nanoSDK/DelteMissingScripts", false, 200)]
         public static async void GetAndDelScripts()
         {
+            var gmjs = GameObject.FindObjectsOfType<GameObject>().Where(gmj => GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(gmj) != 0).ToArray();
+            for (int i = 0; i < gmjs.Length; i++)
+            {
+                GameObjectUtility.RemoveMonoBehavioursWithMissingScript(gmjs[i]);
+            }
+            await Task.Run(()=>
+            {
+                string message = gmjs.Length == 0 ? "No missing scripts found" : $"{gmjs.Length} missing scripts deleted";
+                NanoLog(message);
+            });
+
+
+            /*
             var deepSelection = EditorUtility.CollectDeepHierarchy(Selection.gameObjects);
             int compCount = 0;
             int goCount = 0;
@@ -44,14 +57,7 @@ namespace nanoSDK
                     NanoErrLog(ex.Message);
                 });
             }
-        }
-
-        private static async void NanoErrLog(string message)
-        {
-            await Task.Run(() =>
-            {
-                Debug.LogError("[nanoSDK_MissingScripts]: " + message);
-            });
+            */
         }
 
         private static async void NanoLog(string message)
