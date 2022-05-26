@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using VRC.SDKBase.Editor;
+using Newtonsoft.Json;
 
 namespace nanoSDK
 {
@@ -44,49 +45,37 @@ namespace nanoSDK
 
         public static string CreateMd5ForFolder(string path)
         {
-            // assuming you want to include nested folders
+            
             var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
                                  .OrderBy(p => p).ToList();
-            //foreach if meta file is found
-            for (int i = 0; i < files.Count; i++)
+            /*
+            foreach (var file in files)
             {
-                if (!files[i].EndsWith(".cs"))
+                if (!file.EndsWith(".cs"))
                 {
-                    files.RemoveAt(i);
+                    continue;
                 }
             }
-            foreach (string s in files)
-            {
-                Debug.Log(s);
-            }
-
-
-
-            MD5 md5 = MD5.Create();
-
-            for (int i = 0; i < files.Count; i++)
-            {
-                string file = files[i];
-
-                // hash path
-                string relativePath = file.Substring(path.Length + 1);
-                byte[] pathBytes = Encoding.UTF8.GetBytes(relativePath.ToLower());
-                md5.TransformBlock(pathBytes, 0, pathBytes.Length, pathBytes, 0);
-
-                // hash contents
-                byte[] contentBytes = File.ReadAllBytes(file);
-                if (i == files.Count - 1)
-                    md5.TransformFinalBlock(contentBytes, 0, contentBytes.Length);
-                else
-                    md5.TransformBlock(contentBytes, 0, contentBytes.Length, contentBytes, 0);
-            }
+            */
             
-            //now hash the result
-            byte[] hash = md5.Hash;
-            string result = BitConverter.ToString(hash).Replace("-", "").ToLower();
-            Debug.Log("MD5: " + result);
-            return result;
-        }        
+            var md5 = MD5.Create();
+            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(path));
+            var hashString = BitConverter.ToString(hash).Replace("-", "").ToLower();
+            File.WriteAllText($"{path}{Path.DirectorySeparatorChar}hash.txt", hashString);
+            /*
+            var hashFile = File.ReadAllText($"{path}{Path.DirectorySeparatorChar}hash.txt");
+            if (hashString == hashFile)
+            {
+                Debug.Log("Hashes are the same");
+            }
+            else
+            {
+                Debug.Log("Hashes are different");
+            }
+            */
+            return hashString;
+
+        }
 
 
         private void AvatarSelectSave()
