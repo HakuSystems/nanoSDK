@@ -77,26 +77,26 @@ namespace nanoSDK
         }
         public static async void DeleteAndDownloadAsync(string version = "latest")
         {
-            WebClient w = new WebClient();
-            w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
-            //w.DownloadFileCompleted += new AsyncCompletedEventHandler(FileDownloadComplete);
-            w.DownloadProgressChanged += FileDownloadProgress;
-            try
+            using (WebClient w = new WebClient())
             {
-                string url = GetUrlFromVersion(version);
-                if (url == null) throw new Exception("Invalid version");
-                await w.DownloadFileTaskAsync(new Uri(url), Path.GetTempPath() + Path.DirectorySeparatorChar + $"{version}.{assetName}");
-            }
-            catch (Exception ex)
-            {
-                NanoLog("Download failed!");
-                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDK Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
+                w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
+                w.DownloadProgressChanged += FileDownloadProgress;
+                try
                 {
-                    Application.OpenURL("https://nanosdk.net/discord");
+                    string url = GetUrlFromVersion(version);
+                    if (url == null) throw new Exception("Invalid version");
+                    await w.DownloadFileTaskAsync(new Uri(url), Path.GetTempPath() + Path.DirectorySeparatorChar + $"{version}.{assetName}");
                 }
-                return;
+                catch (Exception ex)
+                {
+                    NanoLog("Download failed!");
+                    if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDK Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
+                    {
+                        Application.OpenURL("https://nanosdk.net/discord");
+                    }
+                    return;
+                }
             }
-
             NanoLog("Download Complete");
 
             try
