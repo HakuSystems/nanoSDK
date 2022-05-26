@@ -65,7 +65,7 @@ namespace nanoSDK
                     //canceling the whole process
                     return;
                 }
-                await DeleteAndDownloadAsync("latest");
+                DeleteAndDownloadAsync("latest");
             }
             else
             {
@@ -75,7 +75,7 @@ namespace nanoSDK
                     );
             }
         }
-        public static async Task DeleteAndDownloadAsync(string version = "latest")
+        public static async void DeleteAndDownloadAsync(string version = "latest")
         {
             WebClient w = new WebClient();
             w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
@@ -102,7 +102,7 @@ namespace nanoSDK
             try
             {
 
-                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "The Old SDK will Be Deleted and the New SDK Will be imported!", "Okay"))
+                if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "The Old SDK will Be Deleted and the New SDK Will be imported!", "Okay", "Cancel"))
                 {
                     // Shutting down DiscordRPC to fix problems while removing
                     DiscordRpc.Shutdown();
@@ -137,6 +137,12 @@ namespace nanoSDK
                             catch (Exception) { }
                         }
                     });
+                }
+                else
+                {
+                    NanoLog("User declined update");
+                    //canceling the whole process
+                    return;
                 }
             }
             catch (DirectoryNotFoundException)

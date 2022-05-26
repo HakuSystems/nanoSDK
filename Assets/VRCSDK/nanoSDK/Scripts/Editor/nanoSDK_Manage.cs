@@ -137,9 +137,9 @@ namespace nanoSDK
                 {
                     //Version selctor mit foreach loop maybe (todoo)
                     GenericMenu menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("(Latest) Release"), false, HandleVersionItemClicked, 1);
-                    menu.AddItem(new GUIContent("(Latest) Beta"), false, HandleVersionItemClicked, 2);
-                    menu.AddItem(new GUIContent("(Others)"), false, HandleVersionItemClicked, 3);
+                    menu.AddItem(new GUIContent("(Latest) Release"), false, HandleVersionItemClickedAsync, 1);
+                    menu.AddItem(new GUIContent("(Latest) Beta"), false, HandleVersionItemClickedAsync, 2);
+                    menu.AddItem(new GUIContent("(Others)"), false, HandleVersionItemClickedAsync, 3);
                     menu.DropDown(new Rect(10, 755, 105, 20));
                 }
 
@@ -228,18 +228,25 @@ namespace nanoSDK
                     break;
             }
         }
-        void HandleVersionItemClicked(object item)
+        void HandleVersionItemClickedAsync(object item)
         {
             switch (item)
             {
                 case 1: //Release
-                    
+                    if (EditorUtility.DisplayDialog("Release", "Do you want to download the latest Release Version?", "OK", "Cancel"))
+                    {
+                        NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync("latest");
+                    }
                     break;
                 case 2: //Beta
-                    
+                    if (EditorUtility.DisplayDialog("Beta", "Do you want to download the latest Beta Version?", "OK", "Cancel"))
+                    {
+                       NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync("beta");
+                    }
                     break;
                 case 3: //Others
                     //open new window
+                    
                     break;
                 default:
                     break;

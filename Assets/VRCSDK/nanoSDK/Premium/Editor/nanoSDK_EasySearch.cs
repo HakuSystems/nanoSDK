@@ -43,7 +43,7 @@ namespace nanoSDK.Premium
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Check for Updates")) NanoApiManager.CheckServerVersion("latest");
             if (GUILayout.Button("Reinstall SDK"))
-                Task.FromResult(NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync());
+                NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
