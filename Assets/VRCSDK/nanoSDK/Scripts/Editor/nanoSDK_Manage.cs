@@ -137,8 +137,8 @@ namespace nanoSDK
                 {
                     //Version selctor mit foreach loop maybe (todoo)
                     GenericMenu menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("(Latest) Release"), false, HandleVersionItemClickedAsync, 1);
-                    menu.AddItem(new GUIContent("(Latest) Beta"), false, HandleVersionItemClickedAsync, 2);
+                    menu.AddItem(new GUIContent("(Latest) Stable "+ versionList[0].Version), false, HandleVersionItemClickedAsync, 1);
+                    menu.AddItem(new GUIContent("(Latest) Beta " + versionList[versionList.Count -1].Version), false, HandleVersionItemClickedAsync, 2);
                     menu.AddItem(new GUIContent("(Others)"), false, HandleVersionItemClickedAsync, 3);
                     menu.DropDown(new Rect(10, 755, 105, 20));
                 }
@@ -245,8 +245,9 @@ namespace nanoSDK
                     }
                     break;
                 case 3: //Others
-                    //open new window
-                    
+                    NanoSDKOtherVersions window = (NanoSDKOtherVersions)EditorWindow.GetWindow(typeof(NanoSDKOtherVersions));
+                    window.Show();
+
                     break;
                 default:
                     break;

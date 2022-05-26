@@ -83,7 +83,7 @@ namespace nanoSDK
                 w.DownloadProgressChanged += FileDownloadProgress;
                 try
                 {
-                    string url = GetUrlFromVersion(version);
+                    string url = await GetUrlFromVersion(version);
                     if (url == null) throw new Exception("Invalid version");
                     await w.DownloadFileTaskAsync(new Uri(url), Path.GetTempPath() + Path.DirectorySeparatorChar + $"{version}.{assetName}");
                 }
@@ -186,8 +186,9 @@ namespace nanoSDK
             }
             return false;
         }
-        private static string GetUrlFromVersion(string version)
+        private async static Task<string> GetUrlFromVersion(string version)
         {
+            SERVERVERSIONLIST = await GetVersionList();
             string url = null;
             if (version.Equals("latest")) url = SERVERVERSIONLIST[0].Url;
             else if (version.Equals("beta")) url = SERVERVERSIONLIST[SERVERVERSIONLIST.Count - 1].Url;
