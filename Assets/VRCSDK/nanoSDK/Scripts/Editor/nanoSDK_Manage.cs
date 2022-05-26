@@ -137,8 +137,9 @@ namespace nanoSDK
                 {
                     //Version selctor mit foreach loop maybe (todoo)
                     GenericMenu menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("111111"), false, HandleVersionItemClicked, 1);
-                    menu.AddItem(new GUIContent("222222"), false, HandleVersionItemClicked, 2);
+                    menu.AddItem(new GUIContent("(Latest) Release"), false, HandleVersionItemClicked, 1);
+                    menu.AddItem(new GUIContent("(Latest) Beta"), false, HandleVersionItemClicked, 2);
+                    menu.AddItem(new GUIContent("(Others)"), false, HandleVersionItemClicked, 3);
                     menu.DropDown(new Rect(10, 755, 105, 20));
                 }
 
@@ -229,7 +230,20 @@ namespace nanoSDK
         }
         void HandleVersionItemClicked(object item)
         {
-            
+            switch (item)
+            {
+                case 1: //Release
+                    
+                    break;
+                case 2: //Beta
+                    
+                    break;
+                case 3: //Others
+                    //open new window
+                    break;
+                default:
+                    break;
+            }
         }
         #region Importables
         private void ShowImportables()
