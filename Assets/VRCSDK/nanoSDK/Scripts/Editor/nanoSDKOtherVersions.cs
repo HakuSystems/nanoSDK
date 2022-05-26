@@ -35,7 +35,7 @@ namespace nanoSDK
             if (versionList == null)
                 return;
             GUILayout.BeginVertical();
-            GUILayout.Label(versionList.Count+" Other Versions for Avatar", EditorStyles.boldLabel);
+            GUILayout.Label(versionList.Count+" Other Versions", EditorStyles.boldLabel);
             GUILayout.EndVertical();
             scrollView = GUILayout.BeginScrollView(scrollView);
 
