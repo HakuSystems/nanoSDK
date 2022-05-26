@@ -123,13 +123,25 @@ namespace nanoSDK
                     {
                         foreach (string f in vrcsdkDir)
                         {
+                            if (!isDLLFile(f))
+                            {
+                                NanoLog($"{f} - Deleted");
+                                File.Delete(f);
+                            }
                             // if (isDLLFile(f)) {
                             //     NanoLog("Ignoring Dll file: " + f);
                             //     continue;
                             // }
+                            //NanoLog($"{f} - Deleted");
+                            //File.Delete(f);
+                        }
+                        string[] dllDir = Directory.GetFiles(vrcsdkPath, "*.dll", SearchOption.AllDirectories);
+                        foreach (string f in dllDir)
+                        {
                             NanoLog($"{f} - Deleted");
                             File.Delete(f);
                         }
+                        
                     });  
                 }
             }
