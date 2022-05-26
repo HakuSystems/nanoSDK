@@ -13,7 +13,31 @@ namespace nanoSDK
         {
             Application.OpenURL("https://nanoSDK.net/discord");
         }
-        
+        [MenuItem("nanoSDK/Premium/EasySearch", false, 1049)]
+        public static void OpenEasySearch()
+        {
+            if (NanoApiManager.User.IsPremium)
+            {
+                Premium.NanoSDK_EasySearch.OpenSplashScreen();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Premium", "You need to be a premium user to use this feature.", "OK");
+            }
+        }
+        [MenuItem("nanoSDK/Premium/nanoLoader", false, 1049)]
+        public static void OpenNanoLoader()
+        {
+            if (NanoApiManager.User.IsPremium)
+            {
+                Premium.NanoLoader.OpenSplashScreen();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Premium", "You need to be a premium user to use this feature.", "OK");
+            }
+        }
+
         [MenuItem("nanoSDK/Help/How to upload: Avatar", false, 1050)]
         public static void OpenAvatarLink()
         {

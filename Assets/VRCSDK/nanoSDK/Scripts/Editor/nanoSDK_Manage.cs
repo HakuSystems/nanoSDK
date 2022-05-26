@@ -144,7 +144,6 @@ namespace nanoSDK
                 }
 
                 GUI.Label(new Rect(10, 775, 150, 20), currentVersion);
-
                 if (NanoApiManager.User.IsPremium)
                 {
                     if (EditorGUI.DropdownButton(new Rect(155, 775, 120, 20), new GUIContent("Manage Premium", "Select What window will be Shown"), FocusType.Passive))
