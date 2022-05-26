@@ -77,12 +77,6 @@ namespace nanoSDK
         }
         public static async Task DeleteAndDownloadAsync(string version = "latest")
         {
-            if (EditorUtility.DisplayDialog("nanoSDK", "This is Still indevelopment we will announce it when its finished.", "okay"))
-            {
-                NanoLog("Cancel");
-
-            }
-            return;
             WebClient w = new WebClient();
             w.Headers.Set(HttpRequestHeader.UserAgent, "Webkit Gecko wHTTPS (Keep Alive 55)");
             //w.DownloadFileCompleted += new AsyncCompletedEventHandler(FileDownloadComplete);
@@ -110,13 +104,15 @@ namespace nanoSDK
 
                 if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "The Old SDK will Be Deleted and the New SDK Will be imported!", "Okay"))
                 {
-
+                    // Shutting down DiscordRPC to fix problems while removing
+                    DiscordRpc.Shutdown();
+                    
 
                     NanoLog("Getting Files.....");
                     //gets every file in VRCSDK folder
                     string[] vrcsdkDir = Directory.GetFiles(vrcsdkPath, "*.*", SearchOption.AllDirectories);
-
-
+                   
+                    
                     Debug.Log("Deleting Files...");
 
                     //Deletes All Files in VRCSDK folder
