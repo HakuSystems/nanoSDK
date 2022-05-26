@@ -17,7 +17,7 @@ namespace nanoSDK
     { //api features in here bc files will be delted when process is being made
         private static readonly HttpClient HttpClient = new HttpClient();
 
-        private const string _BASE_URL = "https://api.nanosdk.net"; 
+        private const string _BASE_URL = "https://api.nanosdk.net";
         private static readonly Uri _SdkVersionUri = new Uri(_BASE_URL + "/public/sdk/version/list");
 
         public static string CurrentVersion { get; set; } = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace("\n", "");
@@ -35,7 +35,7 @@ namespace nanoSDK
         public static async void CheckServerVersionINTERN()
         {
             CurrentVersion = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace(" ", "").Replace("\n", "");
-            CurrentVersion = CurrentVersion.Substring(0, CurrentVersion.IndexOf(" ") - 1);
+            CurrentVersion = CurrentVersion.Substring(0, CurrentVersion.IndexOf(';'));
 
             var request = new HttpRequestMessage()
             {
@@ -65,7 +65,7 @@ namespace nanoSDK
                     //canceling the whole process
                     return;
                 }
-                await DeleteAndDownloadAsync("latest");    
+                await DeleteAndDownloadAsync("latest");
             }
             else
             {
@@ -102,20 +102,21 @@ namespace nanoSDK
                 }
                 return;
             }
-           
+
             NanoLog("Download Complete");
-            
-            try {
-            
+
+            try
+            {
+
                 if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "The Old SDK will Be Deleted and the New SDK Will be imported!", "Okay"))
                 {
 
-                    
+
                     NanoLog("Getting Files.....");
                     //gets every file in VRCSDK folder
                     string[] vrcsdkDir = Directory.GetFiles(vrcsdkPath, "*.*", SearchOption.AllDirectories);
-                    
-                    
+
+
                     Debug.Log("Deleting Files...");
 
                     //Deletes All Files in VRCSDK folder
@@ -128,21 +129,18 @@ namespace nanoSDK
                                 NanoLog($"{f} - Deleted");
                                 File.Delete(f);
                             }
-                            // if (isDLLFile(f)) {
-                            //     NanoLog("Ignoring Dll file: " + f);
-                            //     continue;
-                            // }
-                            //NanoLog($"{f} - Deleted");
-                            //File.Delete(f);
                         }
                         string[] dllDir = Directory.GetFiles(vrcsdkPath, "*.dll", SearchOption.AllDirectories);
                         foreach (string f in dllDir)
                         {
-                            NanoLog($"{f} - Deleted");
-                            File.Delete(f);
+                            try
+                            {
+                                NanoLog($"{f} - Deleted");
+                                File.Delete(f);
+                            }
+                            catch (Exception) { }
                         }
-                        
-                    });  
+                    });
                 }
             }
             catch (DirectoryNotFoundException)
@@ -154,32 +152,28 @@ namespace nanoSDK
                 EditorUtility.DisplayDialog("Error Deleting VRCSDK", ex.Message, "Okay");
                 return;
             }
-            
-            //Checks if Directory still exists
-            // if (Directory.Exists(vrcsdkPath))
-            // {
-            //     NanoLog($"{vrcsdkPath} - Deleted");
-            //     //Delete Folder
-            //     Directory.Delete(vrcsdkPath, false);
-            // }
-            try {
+
+            try
+            {
                 AssetDatabase.ImportPackage(Path.GetTempPath() + Path.DirectorySeparatorChar + $"{version}.{assetName}", false);
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
 
                 NanoLog("Download failed!");
                 if (EditorUtility.DisplayDialog("nanoSDK_Automatic_DownloadAndInstall", "nanoSDK Failed Download: " + ex.Message, "Join Discord for help", "Cancel"))
                 {
                     Application.OpenURL("https://nanosdk.net/discord");
                 }
-                return;
             }
-            
 
+            AssetDatabase.Refresh();
 
         }
-        private static bool isDLLFile(string path) {
-            if(path.Substring(path.Length - 3).Equals("dll")) return true;
+        private static bool isDLLFile(string path)
+        {
+            if (path.Substring(path.Length - 3).Equals("dll")) return true;
             return false;
         }
         private static bool isStringinArray(string[] array, string str)
@@ -194,16 +188,17 @@ namespace nanoSDK
         {
             string url = null;
             if (version.Equals("latest")) url = SERVERVERSIONLIST[0].Url;
-            else if (version.Equals("beta")) url = SERVERVERSIONLIST[SERVERVERSIONLIST.Count - 1].Url; 
+            else if (version.Equals("beta")) url = SERVERVERSIONLIST[SERVERVERSIONLIST.Count - 1].Url;
 
             for (int i = 0; i < SERVERVERSIONLIST.Count; i++)
             {
-                if(version.Equals(SERVERVERSIONLIST[i].Version)) url = SERVERVERSIONLIST[i].Url;
+                if (version.Equals(SERVERVERSIONLIST[i].Version)) url = SERVERVERSIONLIST[i].Url;
             }
             return url;
         }
-        public static async Task<List<SdkVersionBaseINTERNDATA>> GetVersionList() {
-            
+        public static async Task<List<SdkVersionBaseINTERNDATA>> GetVersionList()
+        {
+
             var request = new HttpRequestMessage()
             {
                 Method = HttpMethod.Get,
