@@ -35,41 +35,25 @@ namespace nanoSDK
                 AvatarSelectSave();
             }
 
-
-            
-            if (GUILayout.Button("HASH"))
+            if (GUILayout.Button("GENERATE HASH"))
             {
-                CreateMd5ForFolder($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}nanoSDK");
-                
+                GenerateHashes($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}nanoSDK"); 
+
+            }
+
+            if (GUILayout.Button("CHECK HASH"))
+            {
+                CheckHashes($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}nanoSDK");
             }
         }
 
-        public static string CreateMd5ForFolder(string path)
+        private void CheckHashes(string path)
         {
             Uri serverUrl = new Uri("https://www.nanosdk.net/download/Hash/hashes.txt");
-            
+
             var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
                                  .OrderBy(p => p).ToList();
 
-            #region Create Hash Only for Developers
-            /*
-            foreach (var file in files)
-            {
-                if (!file.EndsWith(".cs"))
-                {
-                    continue;
-                }
-                var md5 = MD5.Create();
-                var hash = md5.ComputeHash(File.ReadAllBytes(file));
-                var result = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                Debug.Log(file + " : " + result);
-                
-                File.AppendAllText($"{path}{Path.DirectorySeparatorChar}hashes.txt", $"{result}\n");
-            }
-            */
-            #endregion
-
-            #region Check Hash
             var hashFile = File.ReadAllText($"{path}{Path.DirectorySeparatorChar}hashes.txt");
 
 
@@ -94,9 +78,29 @@ namespace nanoSDK
                 }
 
             }
+
+
+        }
+
+        public static string GenerateHashes(string path)
+        {
+            var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
+                                 .OrderBy(p => p).ToList();
             
+            foreach (var file in files)
+            {
+                if (!file.EndsWith(".cs"))
+                {
+                    continue;
+                }
+                var md5 = MD5.Create();
+                var hash = md5.ComputeHash(File.ReadAllBytes(file));
+                var result = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                Debug.Log(file + " : " + result);
+                
+                File.AppendAllText($"{path}{Path.DirectorySeparatorChar}hashes.txt", $"{result}\n");
+            }
             return "";
-            #endregion
 
         }
 
