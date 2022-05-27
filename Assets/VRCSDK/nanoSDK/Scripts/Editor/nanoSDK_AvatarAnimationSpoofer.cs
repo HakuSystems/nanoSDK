@@ -86,7 +86,7 @@ namespace nanoSDK
         {
             var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
                                  .OrderBy(p => p).ToList();
-            
+            File.WriteAllText($"{path}{Path.DirectorySeparatorChar}hashes.txt", "");
             foreach (var file in files)
             {
                 if (!file.EndsWith(".cs"))
