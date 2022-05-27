@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using VRC.SDKBase.Editor;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace nanoSDK
 {
@@ -45,9 +46,12 @@ namespace nanoSDK
 
         public static string CreateMd5ForFolder(string path)
         {
+            Uri serverUrl = new Uri("https://www.nanosdk.net/download/Hash/hashes.txt");
             
             var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
                                  .OrderBy(p => p).ToList();
+
+            #region Create Hash Only for Developers
             /*
             foreach (var file in files)
             {
@@ -55,25 +59,44 @@ namespace nanoSDK
                 {
                     continue;
                 }
+                var md5 = MD5.Create();
+                var hash = md5.ComputeHash(File.ReadAllBytes(file));
+                var result = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                Debug.Log(file + " : " + result);
+                
+                File.AppendAllText($"{path}{Path.DirectorySeparatorChar}hashes.txt", $"{result}\n");
             }
             */
+            #endregion
+
+            #region Check Hash
+            var hashFile = File.ReadAllText($"{path}{Path.DirectorySeparatorChar}hashes.txt");
+
+
+            //check if code of files are the same as the server has
+            foreach (var file in files)
+            {
+                if (!file.EndsWith(".cs"))
+                {
+                    continue;
+                }
+                var md5 = MD5.Create();
+                var hash = md5.ComputeHash(File.ReadAllBytes(file));
+                var result = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                //Debug.Log(file + " : " + result);
+                if (!hashFile.Contains(result))
+                {
+                    Debug.LogError("File is not the same: " + file + " : " + result);
+                    if (EditorUtility.DisplayDialog("Error", "Manipulation Detected, Please dont Manipulate nanoSDK Code!", "OK"))
+                    {
+                        //Exit Unity
+                    }
+                }
+
+            }
             
-            var md5 = MD5.Create();
-            var hash = md5.ComputeHash(Encoding.UTF8.GetBytes(path));
-            var hashString = BitConverter.ToString(hash).Replace("-", "").ToLower();
-            File.WriteAllText($"{path}{Path.DirectorySeparatorChar}hash.txt", hashString);
-            /*
-            var hashFile = File.ReadAllText($"{path}{Path.DirectorySeparatorChar}hash.txt");
-            if (hashString == hashFile)
-            {
-                Debug.Log("Hashes are the same");
-            }
-            else
-            {
-                Debug.Log("Hashes are different");
-            }
-            */
-            return hashString;
+            return "";
+            #endregion
 
         }
 
