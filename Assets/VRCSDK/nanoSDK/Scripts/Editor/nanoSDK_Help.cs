@@ -16,7 +16,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Premium/EasySearch", false, 1049)]
         public static void OpenEasySearch()
         {
-            if (NanoApiManager.User.IsPremium)
+            if (NanoApiManager.User.IsPremium && NanoApiManager.IsLoggedInAndVerified())
             {
                 Premium.NanoSDK_EasySearch.OpenSplashScreen();
             }
@@ -28,7 +28,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Premium/nanoLoader", false, 1049)]
         public static void OpenNanoLoader()
         {
-            if (NanoApiManager.User.IsPremium)
+            if (NanoApiManager.User.IsPremium && NanoApiManager.IsLoggedInAndVerified())
             {
                 Premium.NanoLoader.OpenSplashScreen();
             }

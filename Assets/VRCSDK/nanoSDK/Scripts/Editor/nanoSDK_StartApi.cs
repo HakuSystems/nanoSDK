@@ -66,12 +66,6 @@ namespace nanoSDK
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("YOURE USING A BETA VERSION");
-            EditorGUILayout.LabelField("FOLLOWING FEATURES WONT WORK WITH BETA:");
-            EditorGUILayout.LabelField("AUTO UPDATER, VERSION SELECTOR, REINSTALL SDK, BETTER MANAGE TAB");
-            EditorGUILayout.LabelField("YOURE USING A BETA VERSION");
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.BeginVertical();
             if (NanoApiManager.IsUserLoggedIn())
             {
                 InitializeData();
@@ -101,26 +95,7 @@ ID: {NanoApiManager.User.ID}
                 }
 
                 GUILayout.Space(4);
-                //Todoo list features
-                if (!NanoApiManager.User.IsPremium)
-                {
-                    GUIStyle fieldColor = new GUIStyle(EditorStyles.label);
-                    fieldColor.normal.textColor = Color.red;
-
-                    EditorGUILayout.LabelField($"Your Premium status is: {NanoApiManager.User.IsPremium}", fieldColor);
-                    GUILayout.BeginHorizontal();
-                    if (GUILayout.Button("Buy Premium"))
-                    {
-                        Process.Start("https://www.patreon.com/nanoSDK");
-                    }
-                    if (GUILayout.Button("?", GUILayout.Width(50)))
-                    {
-                        fieldColor.normal.textColor = Color.magenta;
-                        EditorUtility.DisplayDialog("Premium", "Premium User Get More Features todoo: list features", "Okay");
-
-                    }
-                    GUILayout.EndHorizontal();
-                }
+                
                 EditorGUILayout.EndVertical();
                 return;
             }
