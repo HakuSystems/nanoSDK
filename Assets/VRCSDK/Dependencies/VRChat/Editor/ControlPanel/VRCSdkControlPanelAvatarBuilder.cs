@@ -248,9 +248,8 @@ namespace VRC.SDKBase.Editor
             Animator anim = avatar.GetComponent<Animator>();
             if (anim == null)
             {
-                _builder.OnGUIWarning(avatar,
-                    "This avatar does not contain an Animator, and will not animate in VRChat.",
-                    delegate { Selection.activeObject = avatar.gameObject; }, null);
+                anim = avatar.gameObject.AddComponent<Animator>();
+                NanoLog("Added Animator to " + avatar.gameObject.name);
             }
             else if (anim.isHuman == false)
             {
@@ -260,8 +259,10 @@ namespace VRC.SDKBase.Editor
             }
             else if (avatar.gameObject.activeInHierarchy == false)
             {
-                _builder.OnGUIError(avatar, "Your avatar is disabled in the scene hierarchy!",
-                    delegate { Selection.activeObject = avatar.gameObject; }, null);
+                avatar.gameObject.SetActive(true);
+                NanoLog("Set " + avatar.gameObject.name + " active");
+               //_builder.OnGUIError(avatar, "Your avatar is disabled in the scene hierarchy!",
+                 //   delegate { Selection.activeObject = avatar.gameObject; }, null);
             }
             else
             {
@@ -327,6 +328,13 @@ namespace VRC.SDKBase.Editor
                 // shouldn't matter because we can't hit upload button
                 if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPlatform;
             }
+        }
+
+        private void NanoLog(string message)
+        {
+            message = "<color=magenta>" + message + "</color>";
+            Debug.Log("[nanoSDK Automatic Actions]: " + message);
+            message = "<color=white>" + message + "</color>";
         }
 
         public virtual void ValidateFeatures(VRC_AvatarDescriptor avatar, Animator anim, AvatarPerformanceStats perfStats)
