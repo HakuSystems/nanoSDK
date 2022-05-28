@@ -548,7 +548,11 @@ namespace nanoSDK
         private static void NanoLog(string message)
         {
             //Our Logger
+
+            message = "<color=magenta>" + message + "</color>";
+
             Debug.Log("[nanoSDK] Manage: " + message);
+            message = "<color=white>" + message + "</color>";
         }
         private void InitializeData()
         {

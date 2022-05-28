@@ -122,7 +122,10 @@ namespace nanoSDK
 
         private static void NanoLog(string message)
         {
+            message = "<color=magenta>" + message + "</color>";
+
             Debug.Log("[nanoSDK] AssetDownloadManager: " + message);
+            message = "<color=white>" + message + "</color>";
         }
 
         public static void ImportDownloadedAsset(string assetName)
