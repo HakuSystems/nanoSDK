@@ -141,8 +141,12 @@ namespace nanoSDK
                 else
                 {
                     NanoLog("User declined update");
-                    //canceling the whole process
+                    
+                    NanoLog("Deleting downloaded file");
+                    File.Delete(Path.GetTempPath() + Path.DirectorySeparatorChar + $"{version}.{assetName}");
+                    NanoLog("finished deletion of downloaded file");
                     return;
+                    
                 }
             }
             catch (DirectoryNotFoundException)

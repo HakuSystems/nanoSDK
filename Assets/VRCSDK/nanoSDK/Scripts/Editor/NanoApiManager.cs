@@ -259,7 +259,11 @@ namespace nanoSDK
 
         private static void Log(string msg)
         {
+
+            msg = "<color=magenta>" + msg + "</color>";
+
             Debug.Log("[nanoAPI] " + msg);
+            msg = "<color=white>" + msg + "</color>";
         }
     }
 }
