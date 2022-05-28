@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using nanoSDKHash;
 
 namespace nanoSDK.Premium
 {
@@ -25,7 +26,7 @@ namespace nanoSDK.Premium
             if (NanoApiManager.IsLoggedInAndVerified()) return;
             NanoApiManager.OpenLoginWindow();
         }
-        public async void OnGUI()
+        public void OnGUI()
         {
             GUILayout.Box("", vrcSdkHeader);
             GUILayout.Space(4);
@@ -121,6 +122,8 @@ Like I mentioned before, assets will not be exported.", EditorStyles.boldLabel);
         }
         public void OnEnable()
         {
+
+            nanoSDKCheckHashes.CheckHashes();
             titleContent = new GUIContent("nanoLoader");
 
             maxSize = new Vector2(500, 400);

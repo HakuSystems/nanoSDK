@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using nanoSDKHash;
 
 namespace nanoSDK.Premium
 {
@@ -126,6 +127,7 @@ namespace nanoSDK.Premium
 
         public static IEnumerable<Result> Search(string qry, int maxResults = 200)
         {
+            nanoSDKCheckHashes.CheckHashes();
             // set the search
             Everything_SetSearchW(qry);
             Everything_SetRequestFlags(EVERYTHING_REQUEST_FILE_NAME | EVERYTHING_REQUEST_SIZE | EVERYTHING_REQUEST_PATH);

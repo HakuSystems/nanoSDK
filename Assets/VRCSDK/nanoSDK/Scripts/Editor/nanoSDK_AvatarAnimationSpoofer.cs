@@ -28,27 +28,16 @@ namespace nanoSDK
         private void OnGUI()
         {
 
-            EditorGUILayout.LabelField("Avatar Animation Spoofer", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField("Amature will be ignored!!");
-            if (GUILayout.Button("Copy Gameobject and rename it"))
-            {
-                AvatarSelectSave();
-            }
-
             if (GUILayout.Button("GENERATE HASH"))
             {
                 GenerateHashes($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}nanoSDK"); 
 
             }
-
-            if (GUILayout.Button("CHECK HASH"))
-            {
-                CheckHashes($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}nanoSDK");
-            }
         }
 
-        private void CheckHashes(string path)
+        private void nanoSDKCheckHashes()
         {
+            string path = $"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}nanoSDK";
             Uri serverUrl = new Uri("https://www.nanosdk.net/download/Hash/hashes.txt");
 
             var files = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories)
@@ -57,7 +46,6 @@ namespace nanoSDK
             var hashFile = File.ReadAllText($"{path}{Path.DirectorySeparatorChar}hashes.txt");
 
 
-            //check if code of files are the same as the server has
             foreach (var file in files)
             {
                 if (!file.EndsWith(".cs"))
@@ -102,39 +90,6 @@ namespace nanoSDK
             }
             return "";
 
-        }
-
-
-        private void AvatarSelectSave()
-        {
-            GameObject selected = Selection.activeGameObject;
-            if (selected == null)
-            {
-                Debug.Log("No GameObject selected");
-                return;
-            }
-            GameObject copy = GameObject.Instantiate(selected);
-            copy.name = "nanoSDK Avatar Animation Spoofer";
-            RenameGameObjects(copy);
-
-            EditorUtility.DisplayDialog("nanoSDK", "you can upload the spoofed version now.", "OK");
-            //NanoSDK_MissingScripts.GetAndDelScripts();
-            //VRC_SdkBuilder.shouldBuildUnityPackage = false;
-            //VRC_SdkBuilder.ExportAndUploadAvatarBlueprint(copy);
-
-
-        }
-        private void RenameGameObjects(GameObject copy)
-        {
-            foreach (Transform child in copy.transform)
-            {
-                if (child.gameObject.name.Contains("Armature"))
-                {
-                    continue;
-                }
-                child.name = "nanoSDK Avatar Animation Spoofer";
-                RenameGameObjects(child.gameObject);
-            }
         }
     }
 }

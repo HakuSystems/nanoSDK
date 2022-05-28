@@ -15,6 +15,7 @@ using UnityEngine.UIElements;
 using nanoSDK.Premium;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
+using nanoSDKHash;
 
 namespace nanoSDK.Premium
 {
@@ -142,6 +143,8 @@ namespace nanoSDK.Premium
 
         public void OnEnable()
         {
+
+            nanoSDKCheckHashes.CheckHashes();
             titleContent = new GUIContent("EasySearch");
 
             maxSize = new Vector2(800, 820);

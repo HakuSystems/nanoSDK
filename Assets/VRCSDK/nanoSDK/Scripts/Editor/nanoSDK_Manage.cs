@@ -10,11 +10,13 @@ using System.Threading.Tasks;
 using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
+using nanoSDKHash;
 
 namespace nanoSDK
 {
     class nanoSDK_Manage : EditorWindow
     {
+
         // Login
         private string userInputText;
         private string passInputText;
@@ -62,6 +64,7 @@ namespace nanoSDK
 
         public async void OnEnable()
         {
+            nanoSDKCheckHashes.CheckHashes();
             titleContent.text = "nanoSDK";
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;
@@ -566,7 +569,7 @@ namespace nanoSDK
             EditorGUILayout.LabelField($"Premium:  {NanoApiManager.User.IsPremium}");
             if (GUI.Button(new Rect(115, 75, 100, 20), "Copy"))
             {
-
+                
                 string copyContent = $@"
 Username: {NanoApiManager.User.Username}
 Email: {NanoApiManager.User.Email}
@@ -575,8 +578,11 @@ ID: {NanoApiManager.User.ID}
                 EditorGUIUtility.systemCopyBuffer = copyContent;
                 NanoLog("Copyied!");
             }
-            if (GUI.Button(new Rect(5, 120, 100, 20), "Logout")) NanoApiManager.Logout();
-
+            if (GUI.Button(new Rect(115, 100, 100, 20), "Logout"))
+            {
+                NanoApiManager.Logout();
+                NanoLog("Logged out!");
+            }
             GUILayout.EndVertical();
         }
     }

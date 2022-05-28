@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -16,25 +17,45 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Premium/EasySearch", false, 1049)]
         public static void OpenEasySearch()
         {
-            if (NanoApiManager.User.IsPremium && NanoApiManager.IsLoggedInAndVerified())
+            try
             {
-                Premium.NanoSDK_EasySearch.OpenSplashScreen();
+                if (NanoApiManager.User.IsPremium && NanoApiManager.IsLoggedInAndVerified())
+                {
+                    Premium.NanoSDK_EasySearch.OpenSplashScreen();
+                }
+                else
+                {
+                    EditorUtility.DisplayDialog("Premium", "You need to be a premium user to use this feature.", "OK");
+                }
             }
-            else
+            catch (NullReferenceException)
             {
-                EditorUtility.DisplayDialog("Premium", "You need to be a premium user to use this feature.", "OK");
+                EditorUtility.DisplayDialog("Premium", "You need to be logged in to use this feature.", "OK");
+                NanoApiManager.OpenLoginWindow();
             }
+            
         }
         [MenuItem("nanoSDK/Premium/nanoLoader", false, 1049)]
         public static void OpenNanoLoader()
         {
-            if (NanoApiManager.User.IsPremium && NanoApiManager.IsLoggedInAndVerified())
+            try
             {
-                Premium.NanoLoader.OpenSplashScreen();
+
+                if (NanoApiManager.User.IsPremium && NanoApiManager.IsLoggedInAndVerified())
+                {
+                    Premium.NanoLoader.OpenSplashScreen();
+                }
+                else
+                {
+                    EditorUtility.DisplayDialog("Premium", "You need to be a premium user to use this feature.", "OK");
+                }
             }
-            else
+            catch (NullReferenceException)
             {
-                EditorUtility.DisplayDialog("Premium", "You need to be a premium user to use this feature.", "OK");
+
+                EditorUtility.DisplayDialog("Premium", "You need to be logged in to use this feature.", "OK");
+                NanoApiManager.OpenLoginWindow();
+             
             }
         }
 
