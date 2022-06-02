@@ -19,20 +19,8 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Generate Hashes", false, 800)]
         private static void OpenWindow()
         {
-            nanoSDK_AvatarAnimationSpoofer window = (nanoSDK_AvatarAnimationSpoofer)EditorWindow.GetWindow(typeof(nanoSDK_AvatarAnimationSpoofer));
-            window.Show();
+            GenerateHashes($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}nanoSDK");
 
-            window.titleContent = new GUIContent("RippingSaving");
-
-        }
-        private void OnGUI()
-        {
-
-            if (GUILayout.Button("GENERATE HASH"))
-            {
-                GenerateHashes($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}nanoSDK"); 
-
-            }
         }
 
         public static string GenerateHashes(string path)
