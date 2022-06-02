@@ -498,10 +498,9 @@ namespace nanoSDK
         {
             if (NanoApiManager.IsLoggedInAndVerified())
             {
-
-                
                 if (!runChangelog)
                 {
+                    GUILayout.TextArea("Loading Changelogs");
                     ReadChangelogs();
                     runChangelog = true;
                 }
