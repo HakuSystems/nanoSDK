@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Networking;
+using VRC.Editor;
 using VRC.SDKBase.Editor.BuildPipeline;
 using VRC.SDKBase.Editor.Validation;
 using VRC.SDKBase.Validation.Performance;
@@ -261,8 +262,6 @@ namespace VRC.SDKBase.Editor
             {
                 avatar.gameObject.SetActive(true);
                 NanoLog("Set " + avatar.gameObject.name + " active");
-               //_builder.OnGUIError(avatar, "Your avatar is disabled in the scene hierarchy!",
-                 //   delegate { Selection.activeObject = avatar.gameObject; }, null);
             }
             else
             {
@@ -329,14 +328,12 @@ namespace VRC.SDKBase.Editor
                 if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPlatform;
             }
         }
-
         private void NanoLog(string message)
         {
             message = "<color=magenta>" + message + "</color>";
             Debug.Log("[nanoSDK Automatic Actions]: " + message);
             message = "<color=white>" + message + "</color>";
         }
-
         public virtual void ValidateFeatures(VRC_AvatarDescriptor avatar, Animator anim, AvatarPerformanceStats perfStats)
         {
             // stub, used in SDK3A for Expression Menu, etc.

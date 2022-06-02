@@ -111,11 +111,12 @@ public class ShaderKeywordsUtility : EditorWindow
     //[MenuItem("VRChat SDK/Utilities/Avatar Shader Keywords Utility", false, 990)]
     static void Init()
     {
-        //ShaderKeywordsUtility window = EditorWindow.GetWindow<ShaderKeywordsUtility>();
-        //window.titleContent = new GUIContent("Shader Keywords Utility");
-       //window.minSize = new Vector2(325, 410);
-        //window.Show();
-
+        /*
+        ShaderKeywordsUtility window = EditorWindow.GetWindow<ShaderKeywordsUtility>();
+        window.titleContent = new GUIContent("Shader Keywords Utility");
+        window.minSize = new Vector2(325, 410);
+        window.Show();
+        */
         titleGuiStyle = new GUIStyle
         {
             fontSize = 15,
