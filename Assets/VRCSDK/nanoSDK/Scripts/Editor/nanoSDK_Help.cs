@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using nanoSDKHash;
 
 namespace nanoSDK
 {
@@ -17,6 +18,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Premium/EasySearch", false, 1049)]
         public static void OpenEasySearch()
         {
+            nanoSDKCheckHashes.CheckHashes();
             try
             {
                 if (NanoApiManager.User.IsPremium && NanoApiManager.IsLoggedInAndVerified())
@@ -38,6 +40,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Premium/nanoLoader", false, 1049)]
         public static void OpenNanoLoader()
         {
+            nanoSDKCheckHashes.CheckHashes();
             try
             {
 
