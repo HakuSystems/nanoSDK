@@ -328,12 +328,12 @@ namespace VRC.SDKBase.Editor
                 if (pm != null) pm.fallbackStatus = Core.PipelineManager.FallbackStatus.InvalidPlatform;
             }
         }
-        private void NanoLog(string message)
-        {
-            message = "<color=magenta>" + message + "</color>";
-            Debug.Log("[nanoSDK Automatic Actions]: " + message);
-            message = "<color=white>" + message + "</color>";
-        }
+            private void NanoLog(string message)
+            {
+                message = "<color=magenta>" + message + "</color>";
+                Debug.Log("[nanoSDK Automatic Actions]: " + message);
+                message = "<color=white>" + message + "</color>";
+            }
         public virtual void ValidateFeatures(VRC_AvatarDescriptor avatar, Animator anim, AvatarPerformanceStats perfStats)
         {
             // stub, used in SDK3A for Expression Menu, etc.

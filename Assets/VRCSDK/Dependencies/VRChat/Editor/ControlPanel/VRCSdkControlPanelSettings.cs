@@ -47,7 +47,7 @@ public partial class VRCSdkControlPanel : EditorWindow
         EditorGUILayout.LabelField("Developer", EditorStyles.boldLabel);
 
         VRCSettings.DisplayAdvancedSettings = EditorGUILayout.ToggleLeft("Show Extra Options on build page and account page", VRCSettings.DisplayAdvancedSettings);
-
+        
         EditorGUILayout.EndVertical();
 
         EditorGUILayout.Separator();
