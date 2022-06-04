@@ -19,10 +19,14 @@ namespace nanoSDK
 
         private const string _BASE_URL = "https://api.nanosdk.net";
         private static readonly Uri _SdkVersionUri = new Uri(_BASE_URL + "/public/sdk/version/list");
+        
+        private static readonly Uri _LatestSDKVersionUri = new Uri(_BASE_URL + $"/public/sdk/version?branch={SdkVersionBaseINTERNDATA.BranchType.Release}&type={SdkVersionBaseINTERNDATA.ReleaseType.Avatar}");
+
 
         public static string CurrentVersion { get; set; } = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace("\n", "");
         private static List<SdkVersionBaseINTERNDATA> SERVERVERSIONLIST;
 
+        
         //select where to be imported (sdk)
         private static string assetPath = $"Assets{Path.DirectorySeparatorChar}";
         //Custom name for downloaded unitypackage
