@@ -535,7 +535,8 @@ namespace nanoSDK
             if (File.Exists($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt"))
             {
                 var version = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt");
-                currentVersion = version;
+                currentVersion = version.Replace(";", " ");
+
             }
 
             //API Get Version List
