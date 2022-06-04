@@ -113,7 +113,7 @@ namespace nanoSDK
         public static async void CheckServerVersion(string version)
         {
             //finden fix ding
-            string currentVersion = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace(" ", "").Replace("\n", "");
+            string currentVersion = File.ReadAllText("Assets/VRCSDK/version.txt");
             Log("Getting Versions");
             var request = new HttpRequestMessage()
             {
