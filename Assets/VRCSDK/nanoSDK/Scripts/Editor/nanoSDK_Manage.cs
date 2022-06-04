@@ -534,9 +534,8 @@ namespace nanoSDK
             //todoo Json - Type + Version - and mix with autoupdater/versionSelector
             if (File.Exists($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt"))
             {
-                var version = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt");
-                currentVersion = version.Replace(";", " ");
-
+                var version = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace(" ", "").Replace("\n", "");
+                currentVersion = version;
             }
 
             //API Get Version List
