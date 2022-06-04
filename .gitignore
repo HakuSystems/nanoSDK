@@ -381,4 +381,5 @@ FodyWeavers.xsd
 /Assets/Reupload test
 .vscode
 *.sln
+*.csproj
 Assets\\VRCSDK\\nanoSDK\\Configs\\currentHWID.txt

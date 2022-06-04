@@ -146,7 +146,7 @@ namespace nanoSDK
                     menu.DropDown(new Rect(10, 755, 105, 20));
                 }
 
-                GUI.Label(new Rect(10, 775, 150, 20), currentVersion);
+                GUI.Label(new Rect(10, 775, 150, 20), currentVersion.Replace(';', ' '));
                 if (NanoApiManager.User.IsPremium)
                 {
                     if (EditorGUI.DropdownButton(new Rect(155, 775, 120, 20), new GUIContent("Manage Premium", "Select What window will be Shown"), FocusType.Passive))

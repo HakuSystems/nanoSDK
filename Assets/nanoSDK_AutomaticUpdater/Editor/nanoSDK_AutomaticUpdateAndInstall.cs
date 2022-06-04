@@ -47,7 +47,7 @@ namespace nanoSDK
             {
                 string result = await response.Content.ReadAsStringAsync();
                 var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionBaseINTERN<List<SdkVersionBaseINTERNDATA>>>(result);
-                SERVERVERSIONLIST = SERVERCHECKproperties.Data;
+                SERVERVERSIONLIST = removeEntries(SERVERCHECKproperties.Data, SdkVersionBaseINTERNDATA.ReleaseType.World);
             } //without AuthKey Sending
 
 
@@ -216,7 +216,7 @@ namespace nanoSDK
             {
                 string result = await response.Content.ReadAsStringAsync();
                 var SERVERCHECKproperties = JsonConvert.DeserializeObject<SdkVersionBaseINTERN<List<SdkVersionBaseINTERNDATA>>>(result);
-                return SERVERCHECKproperties.Data;
+                return removeEntries(SERVERCHECKproperties.Data, SdkVersionBaseINTERNDATA.ReleaseType.World);
             } //without AuthKey Sending
 
         }
@@ -246,6 +246,16 @@ namespace nanoSDK
 
             Debug.Log("[nanoSDK] AssetDownloadManager: " + message);
             message = "<color=white>" + message + "</color>";
+        }
+        private static List<SdkVersionBaseINTERNDATA> removeEntries(List<SdkVersionBaseINTERNDATA> list, SdkVersionBaseINTERNDATA.ReleaseType release)
+        {
+            List<SdkVersionBaseINTERNDATA> newList = new List<SdkVersionBaseINTERNDATA>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].Type == release) continue;
+                newList.Add(list[i]);
+            }
+            return newList;
         }
     }
 
