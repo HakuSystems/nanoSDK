@@ -18,10 +18,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Premium/EasySearch", false, 1049)]
         public static void OpenEasySearch()
         {
-            if (NanoApiManager.User.Permission == Permissions.User)
-            {
-                nanoSDKCheckHashes.CheckHashes();
-            }
+            nanoSDKCheckHashes.CheckHashes();
             try
             {
                 if (NanoApiManager.User.IsPremium && NanoApiManager.IsLoggedInAndVerified())
@@ -43,10 +40,7 @@ namespace nanoSDK
         [MenuItem("nanoSDK/Premium/nanoLoader", false, 1049)]
         public static void OpenNanoLoader()
         {
-            if (NanoApiManager.User.Permission == Permissions.User)
-            {
-                nanoSDKCheckHashes.CheckHashes();
-            }
+            nanoSDKCheckHashes.CheckHashes();
             try
             {
 

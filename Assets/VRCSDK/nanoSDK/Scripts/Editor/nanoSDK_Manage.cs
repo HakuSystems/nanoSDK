@@ -64,10 +64,7 @@ namespace nanoSDK
 
         public async void OnEnable()
         {
-            if (NanoApiManager.User.Permission == Permissions.User)
-            {
-                nanoSDKCheckHashes.CheckHashes();
-            }
+            nanoSDKCheckHashes.CheckHashes();
             titleContent.text = "nanoSDK";
             maxSize = new Vector2(_sizeX, _sizeY);
             minSize = maxSize;

@@ -144,10 +144,7 @@ namespace nanoSDK.Premium
         public void OnEnable()
         {
 
-            if (NanoApiManager.User.Permission == Permissions.User)
-            {
-                nanoSDKCheckHashes.CheckHashes();
-            }
+            nanoSDKCheckHashes.CheckHashes();
             titleContent = new GUIContent("EasySearch");
 
             maxSize = new Vector2(800, 820);
