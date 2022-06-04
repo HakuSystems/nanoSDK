@@ -38,7 +38,7 @@ namespace nanoSDK.Premium
             }
             if (GUILayout.Button("Reinstall SDK"))
             {
-                NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync();
+                NanoUpdater.DeleteAndDownloadAsync();
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();

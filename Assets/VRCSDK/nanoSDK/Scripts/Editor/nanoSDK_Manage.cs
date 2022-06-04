@@ -33,8 +33,6 @@ namespace nanoSDK
         private static GUIStyle nanoSdkHeader;
         private static readonly int _sizeX = 1200;
         private static readonly int _sizeY = 800;
-        public string currentVersion;
-        public List<SdkVersionBaseINTERNDATA> versionList;
         public string _webData;
         private static Vector2 changeLogScroll;
 
@@ -93,9 +91,9 @@ namespace nanoSDK
                     },
                 fixedHeight = 110
             };
-            
-            await GetVERSIONData();
-            
+
+            await NanoUpdater.UpdateVersionData();
+
         }
         private void OnLostFocus()
         {
@@ -108,6 +106,11 @@ namespace nanoSDK
             if (NanoApiManager.IsLoggedInAndVerified())
             {
                 InitializeData();
+            }
+            if (NanoUpdater.ServerVersionList == null || NanoUpdater.LatestVersion == null || NanoUpdater.LatestBetaVersion == null)
+            {
+                EditorGUILayout.LabelField("Loading...", nanoSdkHeader);
+                return;
             }
             GUILayout.BeginHorizontal();
             GUI.Box(new Rect(920, -20, 300, 0), "", nanoSdkHeader);
@@ -140,13 +143,13 @@ namespace nanoSDK
                 {
                     //Version selctor mit foreach loop maybe (todoo)
                     GenericMenu menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("(Latest) Stable "+ versionList[0].Version), false, HandleVersionItemClickedAsync, 1);
-                    menu.AddItem(new GUIContent("(Latest) Beta " + versionList[versionList.Count -1].Version), false, HandleVersionItemClickedAsync, 2);
+                    menu.AddItem(new GUIContent("(Latest) Stable "+ NanoUpdater.LatestVersion.Version), false, HandleVersionItemClickedAsync, 1);
+                    menu.AddItem(new GUIContent("(Latest) Beta " + NanoUpdater.LatestBetaVersion.Version), false, HandleVersionItemClickedAsync, 2);
                     menu.AddItem(new GUIContent("(Others)"), false, HandleVersionItemClickedAsync, 3);
                     menu.DropDown(new Rect(10, 755, 105, 20));
                 }
 
-                GUI.Label(new Rect(10, 775, 150, 20), currentVersion.Replace(';', ' '));
+                GUI.Label(new Rect(10, 775, 150, 20), NanoUpdater.CurrentVersion.Replace(';', ' '));
                 if (NanoApiManager.User.IsPremium)
                 {
                     if (EditorGUI.DropdownButton(new Rect(155, 775, 120, 20), new GUIContent("Manage Premium", "Select What window will be Shown"), FocusType.Passive))
@@ -181,7 +184,7 @@ namespace nanoSDK
             }
             catch (NullReferenceException)
             {
-                await GetVERSIONData();
+                await NanoUpdater.UpdateVersionData();
                 Repaint();
             }
             GUILayout.EndHorizontal();
@@ -237,13 +240,13 @@ namespace nanoSDK
                 case 1: //Release
                     if (EditorUtility.DisplayDialog("Release", "Do you want to download the latest Release Version?", "OK", "Cancel"))
                     {
-                        NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync("latest");
+                        NanoUpdater.DeleteAndDownloadAsync("latest");
                     }
                     break;
                 case 2: //Beta
                     if (EditorUtility.DisplayDialog("Beta", "Do you want to download the latest Beta Version?", "OK", "Cancel"))
                     {
-                       NanoSDK_AutomaticUpdateAndInstall.DeleteAndDownloadAsync("beta");
+                       NanoUpdater.DeleteAndDownloadAsync("beta");
                     }
                     break;
                 case 3: //Others
@@ -529,24 +532,6 @@ namespace nanoSDK
             }
         }
         #endregion
-        private async Task GetVERSIONData()
-        {
-            //todoo Json - Type + Version - and mix with autoupdater/versionSelector
-            if (File.Exists($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt"))
-            {
-                var version = File.ReadAllText($"Assets{Path.DirectorySeparatorChar}VRCSDK{Path.DirectorySeparatorChar}version.txt").Replace(" ", "").Replace("\n", "");
-                currentVersion = version;
-            }
-
-            //API Get Version List
-            versionList = await NanoSDK_AutomaticUpdateAndInstall.GetVersionList();
-
-            //      versionList[0] ist die aktuellste Release Version           "latest"
-            //      versionList[versionList.Count - 1] ist die Beta Version     "beta"
-
-            //      Kannst mich anschreiben wenn du das Feature zusammen programmieren willst, erhol dich gut :)
-
-        }
         private static void NanoLog(string message)
         {
             //Our Logger
