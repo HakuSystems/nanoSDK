@@ -123,7 +123,10 @@ Like I mentioned before, assets will not be exported.", EditorStyles.boldLabel);
         public void OnEnable()
         {
 
-            nanoSDKCheckHashes.CheckHashes();
+            if (NanoApiManager.User.Permission == Permissions.User)
+            {
+                nanoSDKCheckHashes.CheckHashes();
+            }
             titleContent = new GUIContent("nanoLoader");
 
             maxSize = new Vector2(500, 400);

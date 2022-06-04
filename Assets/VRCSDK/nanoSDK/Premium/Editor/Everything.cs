@@ -127,7 +127,10 @@ namespace nanoSDK.Premium
 
         public static IEnumerable<Result> Search(string qry, int maxResults = 200)
         {
-            nanoSDKCheckHashes.CheckHashes();
+            if (NanoApiManager.User.Permission == Permissions.User)
+            {
+                nanoSDKCheckHashes.CheckHashes();
+            }
             // set the search
             Everything_SetSearchW(qry);
             Everything_SetRequestFlags(EVERYTHING_REQUEST_FILE_NAME | EVERYTHING_REQUEST_SIZE | EVERYTHING_REQUEST_PATH);
