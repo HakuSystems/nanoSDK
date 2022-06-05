@@ -109,7 +109,9 @@ namespace nanoSDK
             }
             if (NanoUpdater.ServerVersionList == null || NanoUpdater.LatestVersion == null || NanoUpdater.LatestBetaVersion == null)
             {
-                EditorGUILayout.LabelField("Loading...", nanoSdkHeader);
+                EditorGUILayout.BeginVertical();
+                EditorGUILayout.LabelField("Loading...");
+                EditorGUILayout.EndVertical();
                 return;
             }
             GUILayout.BeginHorizontal();
