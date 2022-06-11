@@ -57,11 +57,13 @@ namespace nanoSDK
             
 
             var response = await HttpClient.SendAsync(request);
+            var props = JsonConvert.DeserializeObject<BaseResponse<object>>(await response.Content.ReadAsStringAsync());
+
             if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
                 Log("Got 401 from api, please reauthenticate.");
                 ClearLogin();
-                throw new Exception("API Call could not be completed.");
+                throw new Exception(props.Message);
             }
 
             return response;
