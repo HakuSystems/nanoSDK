@@ -50,7 +50,7 @@ namespace nanoSDK
             maxSize = new Vector2(600, 350);
             minSize = maxSize;
         }
-        /*
+        
         private void OnLostFocus()
         {
             if (NanoApiManager.IsLoggedInAndVerified()) return;
@@ -63,7 +63,7 @@ namespace nanoSDK
             if (NanoApiManager.IsLoggedInAndVerified()) return;
             EditorApplication.delayCall += NanoApiManager.OpenLoginWindow;
         }
-        */
+        
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
