@@ -50,19 +50,20 @@ namespace nanoSDK
             maxSize = new Vector2(600, 350);
             minSize = maxSize;
         }
+        /*
         private void OnLostFocus()
         {
             if (NanoApiManager.IsLoggedInAndVerified()) return;
             EditorUtility.DisplayDialog("nanoAPI", "Please login and provide a license key to use nanoSDK", "Okay");
             Focus();
         }
-
+        
         private void OnDestroy()
         {
             if (NanoApiManager.IsLoggedInAndVerified()) return;
             EditorApplication.delayCall += NanoApiManager.OpenLoginWindow;
         }
-
+        */
         private void OnGUI()
         {
             EditorGUILayout.BeginVertical();
@@ -72,8 +73,20 @@ namespace nanoSDK
 
                 if (!NanoApiManager.IsLoggedInAndVerified())
                 {
-                    EditorGUILayout.LabelField("License Key");
-                    redeemCode = EditorGUILayout.TextField("Key", redeemCode);
+                    
+                    EditorGUILayout.BeginHorizontal();
+                    redeemCode = EditorGUILayout.TextField("License Key", redeemCode);
+                    if (GUILayout.Button("?", GUILayout.Width(20)))
+                    {
+                        //display dialog
+                        if (EditorUtility.DisplayDialog("nanoAPI", "To receive your nanoSDK License, you have to join our discord server!", "Open Discord"))
+                        {
+                            Application.OpenURL("https://nanosdk.net/discord");
+                        }
+
+                    }
+
+                    EditorGUILayout.EndHorizontal();
                     if (GUILayout.Button("Redeem"))
                     {
                         if (string.IsNullOrWhiteSpace(redeemCode))
