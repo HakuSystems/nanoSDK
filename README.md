@@ -1,3 +1,5 @@
+## DEPRECATED AND NOT IN USE ANYMORE, WILL NOT BE UPDATED
+
 # nanoSDK
 nanoSDK is a modded SDK that bypasses and adds new futures, with nanoSDK you can upload avatars with a lot of polygons, make global audio sources without any limitations.
 
